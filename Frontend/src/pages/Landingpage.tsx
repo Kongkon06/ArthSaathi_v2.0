@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 // Importing icons from Lucide React
-import { ChevronRight, BarChart2, PiggyBank, BookOpen, Users, Shield, TrendingUp, ArrowRight, Play } from "lucide-react";
+import { ChevronRight, BarChart2, PiggyBank, BookOpen, Users, Shield, TrendingUp, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // Feature card component without animation
-const FeatureCard = ({ icon: Icon, title, description, delay }) => {
+const FeatureCard = ({ icon: Icon, title, description }:any) => {
   return (
     <div 
       className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center relative overflow-hidden group"
@@ -23,7 +25,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => {
 };
 
 // Statistic card component without animation
-const StatisticCard = ({ value, label, delay }) => {
+const StatisticCard = ({ value, label }:any) => {
   const [count, setCount] = useState(0);
   
   useEffect(() => {

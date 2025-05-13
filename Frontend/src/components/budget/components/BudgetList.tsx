@@ -14,23 +14,44 @@ import BudgetItem from "./BudgetItem";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { accountAtom } from "@/Atoms/Atom";
-import toast from "react-hot-toast";
+import toast from "react-hot-toast";// Import budgetService
+// types.ts or at the top of the component file
+export interface Account {
+  Groceries: number;
+  Transport: number;
+  Eating_Out: number;
+  Entertainment: number;
+  Utilities: number;
+  Healthcare: number;
+  Education: number;
+  Miscellaneous: number;
+  Income: number;
+  Disposable_Income: number;
+  Desired_Savings: number;
+};
 
+export type Budget = {
+  id: number;
+  name: string;
+  amount: number;
+};
+
+export type BudgetData = Omit<Budget, 'id'>;
 function BudgetList() {
-    const navigate = useNavigate();
-    const [accounts] = useRecoilState(accountAtom);
-    const [budgetList, setBudgetList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState('all'); // Add this line
-    const [budgetToEdit, setBudgetToEdit] = useState(null);
-    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  // ... other state declarations remain the same ...
+  const navigate = useNavigate();
+  const [accounts, setAccounts] = useRecoilState(accountAtom);
 
-  // Map accounts data to budget format
-  const mapAccountsToBudgets = useCallback(() => {
+
+  const [budgetList, setBudgetList] = useState<Budget[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [budgetToEdit, setBudgetToEdit] = useState<Budget | null>(null);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
+
+  const mapAccountsToBudgets = useCallback((): Budget[] => {
     if (!accounts) return [];
-    
+
     return [
       { id: 1, name: "Groceries", amount: accounts.Groceries || 0 },
       { id: 2, name: "Transport", amount: accounts.Transport || 0 },
@@ -39,14 +60,13 @@ function BudgetList() {
       { id: 5, name: "Utilities", amount: accounts.Utilities || 0 },
       { id: 6, name: "Healthcare", amount: accounts.Healthcare || 0 },
       { id: 7, name: "Education", amount: accounts.Education || 0 },
-      { id: 8, name: "Miscellaneous", amount: accounts.Miscellaneous || 0 }
+      { id: 8, name: "Miscellaneous", amount: accounts.Miscellaneous || 0 },
     ];
   }, [accounts]);
 
   const getBudgetList = useCallback(async () => {
     setLoading(true);
     try {
-      // Use mapped accounts data instead of API call
       const mappedBudgets = mapAccountsToBudgets();
       setBudgetList(mappedBudgets);
     } catch (error) {
@@ -59,10 +79,9 @@ function BudgetList() {
 
   useEffect(() => {
     getBudgetList();
-  }, [getBudgetList, accounts]); // Refresh when accounts change
+  }, [getBudgetList, accounts]);
 
-  // Update summary calculations to use accounts data directly
-  const totalBudgeted = Object.values({
+  const totalBudgeted: number = Object.values({
     Groceries: accounts?.Groceries || 0,
     Transport: accounts?.Transport || 0,
     Eating_Out: accounts?.Eating_Out || 0,
@@ -70,43 +89,46 @@ function BudgetList() {
     Utilities: accounts?.Utilities || 0,
     Healthcare: accounts?.Healthcare || 0,
     Education: accounts?.Education || 0,
-    Miscellaneous: accounts?.Miscellaneous || 0
+    Miscellaneous: accounts?.Miscellaneous || 0,
   }).reduce((sum, val) => sum + val, 0);
 
-  const totalSpent = accounts ? 
-    accounts.Income - accounts.Disposable_Income - accounts.Desired_Savings : 0;
+  const totalSpent: number = accounts
+    ? accounts.Income - accounts.Disposable_Income - accounts.Desired_Savings
+    : 0;
 
-  const overBudgetCount = budgetList.filter(budget => {
+  const overBudgetCount: number = budgetList.filter((budget) => {
     const spent = (budget.amount / totalBudgeted) * totalSpent;
     return spent > budget.amount;
   }).length;
 
- const handleDeleteBudget = async (id) => {
+  const handleDeleteBudget = async (id: number) => {
     try {
-      await budgetService.deleteBudget(id);
-      setBudgetList(prevList => prevList.filter(budget => budget.id !== id));
+  
       toast.success('Budget deleted successfully');
     } catch (error) {
       toast.error('Failed to delete budget');
     }
   };
 
-  const handleEditBudget = (budget) => {
+  const handleEditBudget = (budget: Budget) => {
     setBudgetToEdit(budget);
     setIsCreateDialogOpen(true);
   };
 
-  const handleCreateOrUpdateBudget = async (budgetData, isEdit) => {
+  const handleCreateOrUpdateBudget = async (
+    budgetData: BudgetData,
+    isEdit: boolean
+  ) => {
     try {
       if (isEdit && budgetToEdit) {
-        await budgetService.updateBudget(budgetToEdit.id, budgetData);
-        setBudgetList(prevList =>
-          prevList.map(item => item.id === budgetToEdit.id ? { ...item, ...budgetData } : item)
+    
+        setBudgetList((prevList) =>
+          prevList.map((item) =>
+            item.id === budgetToEdit.id ? { ...item, ...budgetData } : item
+          )
         );
         toast.success('Budget updated successfully');
       } else {
-        const newBudget = await budgetService.createBudget(budgetData);
-        setBudgetList(prevList => [...prevList, newBudget]);
         toast.success('Budget created successfully');
       }
       setIsCreateDialogOpen(false);
@@ -116,7 +138,7 @@ function BudgetList() {
     }
   };
 
-  const handleViewBudgetDetails = (budgetId) => {
+  const handleViewBudgetDetails = (budgetId:any) => {
     navigate(`/budgets/${budgetId}`);
   };
 
@@ -125,9 +147,10 @@ function BudgetList() {
     
     switch (selectedFilter) {
       case 'over':
-        return matchesSearch && budget.totalSpend > budget.amount;
+        const totalSpend = (budget.amount / totalBudgeted) * totalSpent;
+        return matchesSearch && totalSpend > budget.amount;
       case 'under':
-        return matchesSearch && budget.totalSpend <= budget.amount;
+        return matchesSearch && budget.id <= budget.amount;
       default:
         return matchesSearch;
     }
@@ -197,7 +220,6 @@ function BudgetList() {
           open={isCreateDialogOpen}
           setOpen={setIsCreateDialogOpen}
           onSave={handleCreateOrUpdateBudget}
-          budgetToEdit={budgetToEdit}
           clearBudgetToEdit={() => setBudgetToEdit(null)}
         />
 

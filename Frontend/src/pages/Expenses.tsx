@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 const MutualFundsPage = () => {
   const [loading, setLoading] = useState(false);
-  const [prediction, setPrediction] = useState(null);
-  const [error, setError] = useState(null);
+  const [prediction, setPrediction] = useState<{ "1_year_return": number; "3_year_return": number; "5_year_return": number } | null>(null);
+  const [error, setError] = useState<string>('');
   const [selectedFundId, setSelectedFundId] = useState(null);
   const [showGuidance, setShowGuidance] = useState(true); // Control guidance visibility
 
@@ -138,9 +138,9 @@ const MutualFundsPage = () => {
     setShowGuidance(false);
   };
 
-  const handleFundClick = async (fund) => {
+  const handleFundClick = async (fund:any) => {
     setLoading(true);
-    setError(null);
+    setError('');
     setPrediction(null);
     setSelectedFundId(fund.id);
     setShowGuidance(false); // Hide guidance when user clicks a fund
@@ -173,7 +173,7 @@ const MutualFundsPage = () => {
         throw new Error('Failed to get predictions');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error fetching prediction. Please try again.');
+      setError('Error fetching prediction. Please try again.');
     } finally {
       setLoading(false);
     }

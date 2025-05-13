@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,7 +62,7 @@ const Learn = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredVideos, setFilteredVideos] = useState(VIDEO_DATA);
   const [filteredRecommendations, setFilteredRecommendations] = useState(advancedRecommendations);
-  const [activeVideo, setActiveVideo] = useState(null);
+  const [activeVideo, setActiveVideo] = useState<number | null>(0);
 
   useEffect(() => {
     if (searchTerm) {
@@ -83,7 +83,7 @@ const Learn = () => {
     }
   }, [searchTerm]);
 
-  const handleRecommendationClick = (topic) => {
+  const handleRecommendationClick = (topic:any) => {
     setSearchTerm(topic);
   };
 

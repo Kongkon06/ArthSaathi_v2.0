@@ -20,31 +20,61 @@ import {
 } from "@/components/ui/popover";
 import { motion } from "framer-motion";
 
-function CreateBudget({ open, setOpen, onSave, budgetToEdit, clearBudgetToEdit }) {
-  const [formData, setFormData] = useState({
+type Budget = {
+  id?: number;
+  icon: string;
+  name: string;
+  amount: number;
+  description?: string;
+  totalSpend?: number;
+  totalItem?: number;
+};
+
+type CreateBudgetProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onSave: (budget: Budget, isEdit: boolean) => void;
+  budgetToEdit?: Budget | null;
+  clearBudgetToEdit: () => void;
+};
+
+type FormData = {
+  icon: string;
+  name: string;
+  amount: string;
+  description: string;
+};
+
+type FormErrors = Partial<Record<keyof FormData, string>>;
+
+function CreateBudget({
+  open,
+  setOpen,
+  onSave,
+  budgetToEdit,
+  clearBudgetToEdit,
+}: CreateBudgetProps) {
+  const [formData, setFormData] = useState<FormData>({
     icon: "💰",
     name: "",
     amount: "",
     description: "",
   });
-  const [errors, setErrors] = useState({});
 
-  // Reset form when dialog closes
+  const [errors, setErrors] = useState<FormErrors>({});
+
   useEffect(() => {
-    if (!open) {
-      if (!budgetToEdit) {
-        resetForm();
-      }
+    if (!open && !budgetToEdit) {
+      resetForm();
     }
   }, [open, budgetToEdit]);
 
-  // Populate form when editing
   useEffect(() => {
     if (budgetToEdit) {
       setFormData({
         icon: budgetToEdit.icon || "💰",
         name: budgetToEdit.name || "",
-        amount: budgetToEdit.amount ? budgetToEdit.amount.toString() : "",
+        amount: budgetToEdit.amount?.toString() || "",
         description: budgetToEdit.description || "",
       });
     }
@@ -60,44 +90,42 @@ function CreateBudget({ open, setOpen, onSave, budgetToEdit, clearBudgetToEdit }
     setErrors({});
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
+
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    
+    const newErrors: FormErrors = {};
+
     if (!formData.name.trim()) {
       newErrors.name = "Budget name is required";
     }
-    
+
     if (!formData.amount) {
       newErrors.amount = "Budget amount is required";
-    } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
+    } else if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
       newErrors.amount = "Please enter a valid amount greater than zero";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = () => {
     if (!validateForm()) return;
-    
-    const budgetData = {
+
+    const budgetData: Budget = {
       ...formData,
       amount: Number(formData.amount),
-      // Set initial values for new budgets
       totalSpend: budgetToEdit?.totalSpend || 0,
       totalItem: budgetToEdit?.totalItem || 0,
     };
-    
+
     onSave(budgetData, !!budgetToEdit);
   };
 
@@ -161,7 +189,7 @@ function CreateBudget({ open, setOpen, onSave, budgetToEdit, clearBudgetToEdit }
                 </PopoverTrigger>
                 <PopoverContent className="w-full p-0" align="start">
                   <EmojiPicker
-                    onEmojiClick={(emojiData) => {
+                    onEmojiClick={(emojiData:any) => {
                       setFormData(prev => ({ ...prev, icon: emojiData.emoji }));
                     }}
                     width="100%"

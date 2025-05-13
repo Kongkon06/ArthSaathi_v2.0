@@ -6,7 +6,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,11 +43,10 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Plus, Users, User, Wallet, Trash2, Edit, DollarSign, BadgePercent } from "lucide-react";
-import { AccountCard } from "@/components/AccountCard";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { accountAtom } from "@/Atom/Atoms";
+import { useRecoilState } from "recoil";
+import { accountAtom } from "@/Atoms/Atom";
 
 const FormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -67,14 +65,63 @@ const FormSchema = z.object({
   })),
 });
 
+type FormData = z.infer<typeof FormSchema>;
+type FamilyMember = {
+  name: string;
+  relation: string;
+};
+
+type Account = Omit<FormData, 'balance' | 'income' | 'age' | 'dependents' | 'disposableIncome' | 'desiredSavings'> & {
+  id: string;
+  balance: number;
+  income: number;
+  age: number;
+  dependents: number;
+  disposableIncome: number;
+  desiredSavings: number;
+};
+
+
 const Accounts = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [activeTab, setActiveTab] = useState("all");
-  const [familyMembers, setFamilyMembers] = useState([{ name: "", relation: "" }]);
-  const [accountToEdit, setAccountToEdit] = useState(null);
-  const [accounts, setAccounts] = useRecoilState(accountAtom);
+  const [activeTab, setActiveTab] = useState<"all" | "current" | "savings" | "family">("all");
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([{ name: "", relation: "" }]);
+  const [accountToEdit, setAccountToEdit] = useState<Account | null>(null);
+  const [accounts, setAccounts] = useState<Account[]>([
+  {
+    id: "1",
+    firstName: "John",
+    lastName: "Doe",
+    balance: 5000,
+    income: 3000,
+    age: 30,
+    dependents: 2,
+    disposableIncome: 1000,
+    desiredSavings: 1500,
+    accountType: "savings",
+    isDefault: true,
+    familyMembers: [],
+  },
+  {
+    id: "2",
+    firstName: "Jane",
+    lastName: "Smith",
+    balance: 8000,
+    income: 4500,
+    age: 40,
+    dependents: 1,
+    disposableIncome: 2000,
+    desiredSavings: 2500,
+    accountType: "family",
+    isDefault: false,
+    familyMembers: [
+      { name: "Alice Smith", relation: "Daughter" },
+      { name: "Bob Smith", relation: "Son" },
+    ],
+  },
+]);
 
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       firstName: "",
@@ -91,7 +138,6 @@ const Accounts = () => {
     },
   });
 
-  // Watch for account type changes to handle family member fields
   const accountType = form.watch("accountType");
 
   useEffect(() => {
@@ -99,11 +145,11 @@ const Accounts = () => {
       form.reset({
         ...accountToEdit,
         balance: accountToEdit.balance.toString(),
-        income: accountToEdit.income ? accountToEdit.income.toString() : "",
-        age: accountToEdit.age ? accountToEdit.age.toString() : "",
-        dependents: accountToEdit.dependents ? accountToEdit.dependents.toString() : "0",
-        disposableIncome: accountToEdit.disposableIncome ? accountToEdit.disposableIncome.toString() : "",
-        desiredSavings: accountToEdit.desiredSavings ? accountToEdit.desiredSavings.toString() : "",
+        income: accountToEdit.income?.toString() || "",
+        age: accountToEdit.age?.toString() || "",
+        dependents: accountToEdit.dependents?.toString() || "0",
+        disposableIncome: accountToEdit.disposableIncome?.toString() || "",
+        desiredSavings: accountToEdit.desiredSavings?.toString() || "",
         familyMembers: accountToEdit.familyMembers || [],
       });
 
@@ -114,32 +160,19 @@ const Accounts = () => {
   }, [accountToEdit, form]);
 
   const closeAndResetForm = () => {
-    form.reset({
-      firstName: "",
-      lastName: "",
-      balance: "",
-      income: "",
-      age: "",
-      dependents: "0",
-      disposableIncome: "",
-      desiredSavings: "",
-      accountType: "current",
-      isDefault: false,
-      familyMembers: [],
-    });
+    form.reset();
     setFamilyMembers([{ name: "", relation: "" }]);
     setAccountToEdit(null);
     setOpenDialog(false);
   };
 
-  const onSubmit = (data) => {
-    const accountData = {
+  const onSubmit = (data: FormData) => {
+    const accountData: Account = {
       ...data,
       id: accountToEdit ? accountToEdit.id : Date.now().toString(),
       balance: parseFloat(data.balance),
       income: parseFloat(data.income),
       age: parseInt(data.age),
-      accountType: data.accountType,
       dependents: parseInt(data.dependents),
       disposableIncome: parseFloat(data.disposableIncome),
       desiredSavings: parseFloat(data.desiredSavings),
@@ -151,7 +184,6 @@ const Accounts = () => {
         prev.map((acc) => (acc.id === accountToEdit.id ? accountData : acc))
       );
     } else {
-      // Fix 2: Add to array correctly
       setAccounts((prev) => [...prev, accountData]);
     }
 
@@ -162,23 +194,23 @@ const Accounts = () => {
     setFamilyMembers([...familyMembers, { name: "", relation: "" }]);
   };
 
-  const handleRemoveFamilyMember = (index) => {
+  const handleRemoveFamilyMember = (index: number) => {
     const updatedMembers = [...familyMembers];
     updatedMembers.splice(index, 1);
     setFamilyMembers(updatedMembers);
   };
 
-  const updateFamilyMember = (index, field, value) => {
+  const updateFamilyMember = (index: number, field: keyof FamilyMember, value: string) => {
     const updatedMembers = [...familyMembers];
     updatedMembers[index][field] = value;
     setFamilyMembers(updatedMembers);
   };
 
-  const handleDeleteAccount = (accountId) => {
+  const handleDeleteAccount = (accountId: string) => {
     setAccounts((prev) => prev.filter((acc) => acc.id !== accountId));
   };
 
-  const handleEditAccount = (account) => {
+  const handleEditAccount = (account: Account) => {
     setAccountToEdit(account);
     setOpenDialog(true);
   };
@@ -187,7 +219,7 @@ const Accounts = () => {
     ? accounts
     : accounts.filter((account) => account.accountType === activeTab);
 
-  const getAccountTypeIcon = (type) => {
+  const getAccountTypeIcon = (type: Account["accountType"]) => {
     switch (type) {
       case "family":
         return <Users className="h-5 w-5" />;
@@ -209,7 +241,7 @@ const Accounts = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-6">
+      <Tabs defaultValue="all" value={activeTab} className="mb-6">
         <TabsList className="mb-4">
           <TabsTrigger value="all">All Accounts</TabsTrigger>
           <TabsTrigger value="current">Current</TabsTrigger>
@@ -220,7 +252,7 @@ const Accounts = () => {
         <TabsContent value={activeTab} className="mt-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAccounts.length > 0 ? (
-              filteredAccounts.map((account) => (
+              filteredAccounts.map((account:any) => (
                 <Card key={account.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
@@ -278,7 +310,7 @@ const Accounts = () => {
                       <div className="mt-4">
                         <p className="text-sm font-medium mb-2">Family Members</p>
                         <div className="space-y-2">
-                          {account.familyMembers.map((member, idx) => (
+                          {account.familyMembers.map((member:any, idx:any) => (
                             <div key={idx} className="flex justify-between items-center text-sm">
                               <p>{member.name}</p>
                               <Badge variant="outline">{member.relation}</Badge>
@@ -547,7 +579,7 @@ const Accounts = () => {
                           value={member.name}
                           onChange={(e) => updateFamilyMember(index, "name", e.target.value)}
                           placeholder="Member name"
-                          size="sm"
+                          size={26}
                         />
                       </div>
                       <div className="col-span-2">
@@ -556,7 +588,7 @@ const Accounts = () => {
                           value={member.relation}
                           onChange={(e) => updateFamilyMember(index, "relation", e.target.value)}
                           placeholder="e.g. Spouse, Child"
-                          size="sm"
+                          size={26}
                         />
                       </div>
                       <div className="flex items-end">

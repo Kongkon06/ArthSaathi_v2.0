@@ -8,7 +8,7 @@ const InvestmentStrategy = () => {
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {

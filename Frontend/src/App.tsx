@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import Sidebar from "./components/sidebar/Sidebar";
+import Home from "./pages/Home";
+import Budget from "./pages/Budget";
+import Expenses from "./pages/Expenses";
+import Learn from "./pages/Learn";
+import Investment from "./pages/Investment";
+import Accounts from "./pages/Accounts";
+import Settings from "./pages/Settings";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); 
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      {isMobile ? (
+        <>
+          <Routes>
+           
+            <Route path="/" element={<Home />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/budget" element={<Budget />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/investment" element={<Investment />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </>
+      ) : (
+        <div className="min-h-screen flex bg-white lg:bg-[#F3F3F3]">
+          <Sidebar
+            isExpanded={isSidebarExpanded}
+            toggleSidebar={toggleSidebar}
+          />
+          <div
+            className={`flex ${
+              isSidebarExpanded ? "ml-[270px]" : "ml-24"
+            } lg:bg-[#F3F3F3] bg-white transition-all duration-300`}
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route path="/budget" element={<Budget />} />
+              <Route path="/expenses" element={<Expenses />} />
+              <Route path="/learn" element={<Learn />} />
+              <Route path="/investment" element={<Investment />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default App
+export default App;
