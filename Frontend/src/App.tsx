@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+//import Landingpage from "./pages/Landingpage";
 import Sidebar from "./components/sidebar/Sidebar";
 import Home from "./pages/Home";
 import Budget from "./pages/Budget";
@@ -30,8 +31,8 @@ const App = () => {
       {isMobile ? (
         <>
           <Routes>
-           
-            <Route path="/" element={<Home />} />
+          
+           <Route path="/" element={<Home />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/expenses" element={<Expenses />} />
@@ -52,6 +53,7 @@ const App = () => {
             } lg:bg-[#F3F3F3] bg-white transition-all duration-300`}
           >
             <Routes>
+              
               <Route path="/" element={<Home />} />
               <Route path="/accounts" element={<Accounts />} />
               <Route path="/budget" element={<Budget />} />
