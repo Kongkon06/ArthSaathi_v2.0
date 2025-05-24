@@ -1,11 +1,6 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import { CartesianGrid, XAxis } from "recharts";
+import React, { useState, useRef, useEffect } from "react";
+import { CartesianGrid, XAxis, YAxis } from "recharts";
 import { Area, AreaChart } from "recharts";
-import { useState, useRef, useEffect } from "react";
-
 import {
   Card,
   CardContent,
@@ -30,77 +25,134 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Wallet, 
+  CreditCard, 
+  PiggyBank, 
+  BarChart3,
+  MessageCircle,
+  X,
+  Send,
+  Bot,
+  User
+} from "lucide-react";
 
 interface ChatMessageProps {
   message: string;
   isUser: boolean;
 }
 
-const cards = [
+interface FinancialCard {
+  id: number;
+  title: string;
+  balance: string;
+  change: string;
+  changePercent: number;
+  icon: React.ComponentType<any>;
+  type: 'positive' | 'negative';
+}
+
+const cards: FinancialCard[] = [
   {
     id: 1,
-    title: "Total Blance",
-    blance: "₹ 1,00,000",
-    month: "+ 10% ",
+    title: "Total Balance",
+    balance: "₹1,00,000",
+    change: "+ ₹9,091",
+    changePercent: 10,
+    icon: Wallet,
+    type: 'positive'
   },
   {
     id: 2,
     title: "Monthly Expenses",
-    blance: "₹ 40,000",
-    month: "- 2.5% ",
+    balance: "₹40,000",
+    change: "- ₹1,020",
+    changePercent: -2.5,
+    icon: CreditCard,
+    type: 'negative'
   },
   {
     id: 3,
     title: "Monthly Investment",
-    blance: "₹ 2,000",
-    month: "+ 15.8% ",
+    balance: "₹2,000",
+    change: "+ ₹274",
+    changePercent: 15.8,
+    icon: PiggyBank,
+    type: 'positive'
   },
   {
     id: 4,
-    title: "Swing Rate",
-    blance: "₹ 400",
-    month: "+ 20.5% ",
+    title: "Savings Rate",
+    balance: "₹400",
+    change: "+ ₹68",
+    changePercent: 20.5,
+    icon: BarChart3,
+    type: 'positive'
   },
 ];
 
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  // ... rest of chart data ...
-  { date: "2024-06-30", desktop: 446, mobile: 400 },
-];
+// Generate more realistic chart data
+const generateChartData = () => {
+  const data = [];
+  const startDate = new Date('2024-01-01');
+  const endDate = new Date('2024-06-30');
+  
+  let currentInvestment = 15000;
+  let currentExpenses = 35000;
+  
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 7)) {
+    // Add some realistic variance
+    const investmentChange = (Math.random() - 0.5) * 2000;
+    const expenseChange = (Math.random() - 0.5) * 3000;
+    
+    currentInvestment = Math.max(10000, currentInvestment + investmentChange);
+    currentExpenses = Math.max(20000, currentExpenses + expenseChange);
+    
+    data.push({
+      date: d.toISOString().split('T')[0],
+      investment: Math.round(currentInvestment),
+      expenses: Math.round(currentExpenses),
+    });
+  }
+  
+  return data;
+};
 
-// Sample AI responses for the chat
+const chartData = generateChartData();
+
+// Enhanced AI responses with more context
 const sampleResponses = [
-  "Based on your spending patterns, you could save ₹5,000 more per month by reducing discretionary expenses.",
-  "Your investment portfolio is showing healthy growth. Consider increasing your SIP by ₹500 to maximize returns.",
-  "I notice your emergency fund is below the recommended 6-month expenses. Would you like me to suggest a savings plan?",
-  "Your mutual fund investments are performing well! The Growth Plus Equity Fund has given 12% returns in the last year.",
-  "Based on your financial goals, you're on track to reach your house down payment target by December 2025."
+  "Based on your spending patterns, you could save ₹5,000 more per month by reducing discretionary expenses like dining out and entertainment.",
+  "Your investment portfolio is showing healthy growth of 15.8%! Consider increasing your SIP by ₹500 to maximize compound returns.",
+  "I notice your emergency fund might be below the recommended 6-month expenses (₹2,40,000). Would you like me to create a savings plan?",
+  "Great news! Your mutual fund investments are outperforming the market. The Growth Plus Equity Fund has delivered 12% returns this year.",
+  "You're on track to reach your house down payment goal by December 2025. Keep up the excellent saving habits!",
+  "Consider diversifying your portfolio with some debt funds to balance risk. Your current equity allocation seems high at 80%.",
+  "Your monthly expenses have decreased by 2.5% - that's excellent cost management! This gives you room for higher investments."
 ];
 
-// Chat message component
-const ChatMessage : React.FC<ChatMessageProps> = ({ message, isUser }) => (
-  <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`}>
-    <div className="flex items-start gap-2.5 max-w-[80%]">
+// Enhanced Chat message component
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser }) => (
+  <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className="flex items-start gap-3 max-w-[85%]">
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 8V4H8"></path>
-            <rect width="16" height="12" x="4" y="8" rx="2"></rect>
-            <path d="M2 14h2"></path>
-            <path d="M20 14h2"></path>
-            <path d="M15 13v2"></path>
-            <path d="M9 13v2"></path>
-          </svg>
+        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+          <Bot size={16} />
         </div>
       )}
-      <div className={`p-3 rounded-lg ${isUser ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}>
-        <p className="text-sm">{message}</p>
+      <div className={`p-3 rounded-2xl shadow-sm ${
+        isUser 
+          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-br-md' 
+          : 'bg-gray-50 border border-gray-100 rounded-bl-md'
+      }`}>
+        <p className="text-sm leading-relaxed">{message}</p>
       </div>
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white flex-shrink-0">
-          <span className="text-xs font-medium">SG</span>
+        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-teal-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+          <User size={16} />
         </div>
       )}
     </div>
@@ -108,26 +160,24 @@ const ChatMessage : React.FC<ChatMessageProps> = ({ message, isUser }) => (
 );
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
+  investment: {
     label: "Investment",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(217, 91%, 60%)",
   },
-  mobile: {
-    label: "Expenses",
-    color: "hsl(var(--chart-2))",
+  expenses: {
+    label: "Expenses", 
+    color: "hsl(0, 84%, 60%)",
   },
 };
 
-// AI Chat Component
+// Enhanced AI Chat Component
 const AIChatBox = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hi Sourabh! I'm your AI financial assistant. How can I help you today?", isUser: false }
+    { text: "Hi Sourabh! I'm ArthSaathi, your AI financial assistant. I can help you analyze your spending, suggest investments, and optimize your financial goals. What would you like to know?", isUser: false }
   ]);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   
   const scrollToBottom = () => {
@@ -141,93 +191,103 @@ const AIChatBox = () => {
   const handleSendMessage = () => {
     if (input.trim() === "") return;
     
-    // Add user message
-    setMessages(prev => [...prev, { text: input, isUser: true }]);
+    const userMessage = input.trim();
+    setMessages(prev => [...prev, { text: userMessage, isUser: true }]);
     setInput("");
+    setIsTyping(true);
     
-    // Simulate AI response after a short delay
+    // Simulate realistic AI response delay
     setTimeout(() => {
       const randomResponse = sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
       setMessages(prev => [...prev, { text: randomResponse, isUser: false }]);
-    }, 1000);
+      setIsTyping(false);
+    }, 1500 + Math.random() * 1000);
   };
   
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === "Enter") {
-    handleSendMessage();
-  }
-};
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
   
   if (!isOpen) {
     return (
       <Button 
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg z-50 flex items-center justify-center"
+        className="fixed bottom-6 right-6 rounded-full w-16 h-16 shadow-xl z-50 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-110"
         onClick={() => setIsOpen(true)}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 8V4H8"></path>
-          <rect width="16" height="12" x="4" y="8" rx="2"></rect>
-          <path d="M2 14h2"></path>
-          <path d="M20 14h2"></path>
-          <path d="M15 13v2"></path>
-          <path d="M9 13v2"></path>
-        </svg>
+        <MessageCircle size={24} />
       </Button>
     );
   }
   
   return (
-    <Card className="fixed bottom-6 right-6 w-80 md:w-96 shadow-xl z-50 border border-gray-200">
-      <CardHeader className="p-4 pb-2 border-b">
+    <Card className="fixed bottom-6 right-6 w-80 md:w-96 h-[500px] shadow-2xl z-50 border-0 bg-white/95 backdrop-blur-sm">
+      <CardHeader className="p-4 pb-3 border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 8V4H8"></path>
-                <rect width="16" height="12" x="4" y="8" rx="2"></rect>
-                <path d="M2 14h2"></path>
-                <path d="M20 14h2"></path>
-                <path d="M15 13v2"></path>
-                <path d="M9 13v2"></path>
-              </svg>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <Bot size={20} />
             </div>
             <div>
-              <CardTitle className="text-md">ArthSaathi AI</CardTitle>
-              <CardDescription className="text-xs">Financial Assistant</CardDescription>
+              <CardTitle className="text-lg font-semibold">ArthSaathi AI</CardTitle>
+              <CardDescription className="text-blue-100 text-sm">
+                Financial Assistant • Online
+              </CardDescription>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsOpen(false)} 
+            className="h-8 w-8 text-white hover:bg-white/20"
+          >
+            <X size={18} />
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="h-80 overflow-y-auto p-4 pt-3">
+      
+      <CardContent className="flex-1 overflow-y-auto p-4 space-y-1" style={{ height: 'calc(100% - 140px)' }}>
         {messages.map((message, index) => (
           <ChatMessage key={index} message={message.text} isUser={message.isUser} />
         ))}
+        
+        {isTyping && (
+          <div className="flex justify-start mb-4">
+            <div className="flex items-start gap-3 max-w-[85%]">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0">
+                <Bot size={16} />
+              </div>
+              <div className="bg-gray-50 border border-gray-100 p-3 rounded-2xl rounded-bl-md">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </CardContent>
-      <CardFooter className="p-4 pt-2 border-t">
+      
+      <CardFooter className="p-4 border-t bg-gray-50 rounded-b-lg">
         <div className="relative w-full flex items-center">
           <Input
             placeholder="Ask about your finances..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="pr-10 rounded-full"
+            className="pr-12 rounded-full border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+            disabled={isTyping}
           />
           <Button 
             onClick={handleSendMessage} 
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 rounded-full p-0"
-            disabled={input.trim() === ""}
+            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 rounded-full p-0 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            disabled={input.trim() === "" || isTyping}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m22 2-7 20-4-9-9-4Z"></path>
-              <path d="M22 2 11 13"></path>
-            </svg>
+            <Send size={14} />
           </Button>
         </div>
       </CardFooter>
@@ -236,8 +296,8 @@ const AIChatBox = () => {
 };
 
 function Home() {
-  const [selectedCard, setSelectedCard] = React.useState(0);
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const [selectedCard, setSelectedCard] = useState(0);
+  const [timeRange, setTimeRange] = useState("90d");
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
@@ -254,198 +314,183 @@ function Home() {
   });
 
   return (
-    <div className="m-4">
-      {/* Greeting Section */}
-      <div className="flex flex-col items-start gap-1">
-        <p className="text-[24px] font-medium text-[#393939]">
-          Hello Sourabh Ghosh!
-        </p>
-        <p className="text-[16px] text-[#4B4B4B]">
-          Every small step brings you closer to your big dreams.
-        </p>
-      </div>
-      
-      {/* Cards Section */}
-      <div className="mt-4">
-        <Box
-          sx={{
-            width: "100%",
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr", // 1 column on extra-small screens
-              sm: "1fr 1fr", // 2 columns on small screens
-              md: "1fr 1fr 1fr 1fr", // 3 columns on medium screens and above
-            },
-            gap: 4,
-          }}
-        >
-          {cards.map((card, index) => (
-            <Card
-              key={card.id}
-              style={{
-                transition: "0.3s",
-                transform: "scale(1)",
-                boxShadow: "none",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = "scale(1.05)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "6px 6px 15px rgba(0, 0, 0, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
-              }}
-            >
-              <CardActionArea
-                onClick={() => setSelectedCard(index)}
-                data-active={selectedCard === index ? "" : undefined}
-                sx={{
-                  height: "100%",
-                  "&[data-active]": {
-                    backgroundColor: "action.selected",
-                    "&:hover": {
-                      backgroundColor: "action.selectedHover",
-                    },
-                  },
-                }}
-              >
-<Box sx={{ width: "100%", gap: 2, display: "flex", flexDirection: "column" }}>
-  <Typography variant="h5" component="div">
-    <div className="mt-2">{card.title}</div>
-  </Typography>
-  <Typography variant="h5" color="text.secondary">
-    <div className="font-bold text-3xl">{card.blance}</div>
-  </Typography>
-  <Typography variant="body2" color="text.secondary">
-    <div className="text-sm">{card.month} from last month</div>
-  </Typography>
-</Box>
-
-              </CardActionArea>
-            </Card>
-          ))}
-        </Box>
-      </div>
-
-      {/* Chart Section */}
-      <div className="mt-4">
-        <div className="border border-gray-200 rounded-lg">
-          <Card>
-            <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-              <div className="grid flex-1 gap-1 text-center sm:text-left">
-                <CardTitle>Area Chart - Interactive</CardTitle>
-                <CardDescription>
-                  Showing total visitors for the last 3 months
-                </CardDescription>
-              </div>
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger
-                  className="w-[160px] rounded-lg sm:ml-auto"
-                  aria-label="Select a value"
-                >
-                  <SelectValue placeholder="Last 3 months" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  <SelectItem value="90d" className="rounded-lg">
-                    Last 3 months
-                  </SelectItem>
-                  <SelectItem value="30d" className="rounded-lg">
-                    Last 30 days
-                  </SelectItem>
-                  <SelectItem value="7d" className="rounded-lg">
-                    Last 7 days
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </CardHeader>
-            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-              <ChartContainer
-                config={chartConfig}
-                className="aspect-auto h-[250px] w-full"
-              >
-                <AreaChart data={filteredData}>
-                  <defs>
-                    <linearGradient
-                      id="fillDesktop"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-desktop)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-desktop)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                    <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-mobile)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-mobile)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    minTickGap={32}
-                    tickFormatter={(value) => {
-                      const date = new Date(value);
-                      return date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      });
-                    }}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={
-                      <ChartTooltipContent
-                        labelFormatter={(value) => {
-                          return new Date(value).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          });
-                        }}
-                        indicator="dot"
-                      />
-                    }
-                  />
-                  <Area
-                    dataKey="mobile"
-                    type="natural"
-                    fill="url(#fillMobile)"
-                    stroke="var(--color-mobile)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="natural"
-                    fill="url(#fillDesktop)"
-                    stroke="var(--color-desktop)"
-                    stackId="a"
-                  />
-                  <ChartLegend content={<ChartLegendContent />} />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
+    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4"  style={{ width: "1360.17px", transform: "translate(7.11114px, 0px)" }}>
+      {/* Enhanced Greeting Section */}
+      <div className="mb-8 p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-white/50">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              Hello Sourabh Ghosh! 👋
+            </h1>
+            <p className="text-lg text-gray-600">
+              Every small step brings you closer to your big dreams.
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              {new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              SG
+            </div>
+          </div>
         </div>
       </div>
+      
+      {/* Enhanced Cards Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {cards.map((card, index) => {
+          const IconComponent = card.icon;
+          return (
+            <Card
+              key={card.id}
+              className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm ${
+                selectedCard === index 
+                  ? 'ring-2 ring-blue-500 shadow-lg transform -translate-y-1' 
+                  : 'hover:shadow-lg'
+              }`}
+              onClick={() => setSelectedCard(index)}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`p-3 rounded-xl ${
+                    card.type === 'positive' ? 'bg-green-100' : 'bg-red-100'
+                  }`}>
+                    <IconComponent 
+                      size={24} 
+                      className={card.type === 'positive' ? 'text-green-600' : 'text-red-600'} 
+                    />
+                  </div>
+                  <Badge 
+                    variant={card.type === 'positive' ? 'default' : 'destructive'}
+                    className="flex items-center gap-1"
+                  >
+                    {card.type === 'positive' ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                    {Math.abs(card.changePercent)}%
+                  </Badge>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-600">{card.title}</p>
+                  <p className="text-2xl font-bold text-gray-900">{card.balance}</p>
+                  <p className={`text-sm flex items-center gap-1 ${
+                    card.type === 'positive' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {card.change} from last month
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Enhanced Chart Section */}
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+        <CardHeader className="flex items-center gap-2 space-y-0 border-b py-6 sm:flex-row">
+          <div className="grid flex-1 gap-1 text-center sm:text-left">
+            <CardTitle className="text-xl font-bold">Financial Overview</CardTitle>
+            <CardDescription className="text-base">
+              Track your investment vs expenses over time
+            </CardDescription>
+          </div>
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-[160px] rounded-lg">
+              <SelectValue placeholder="Select timeframe" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="90d" className="rounded-lg">
+                Last 3 months
+              </SelectItem>
+              <SelectItem value="30d" className="rounded-lg">
+                Last 30 days
+              </SelectItem>
+              <SelectItem value="7d" className="rounded-lg">
+                Last 7 days
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </CardHeader>
+        
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[350px] w-full"
+          >
+            <AreaChart data={filteredData}>
+              <defs>
+                <linearGradient id="fillInvestment" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-investment)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="var(--color-investment)" stopOpacity={0.1} />
+                </linearGradient>
+                <linearGradient id="fillExpenses" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-expenses)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="var(--color-expenses)" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value);
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  });
+                }}
+              />
+              <YAxis 
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+              />
+              <ChartTooltip
+                cursor={{ strokeDasharray: '3 3' }}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric"
+                      });
+                    }}
+                    formatter={(value) => [`₹${value.toLocaleString()}`, ""]}
+                    indicator="dot"
+                  />
+                }
+              />
+              <Area
+                dataKey="expenses"
+                type="monotone"
+                fill="url(#fillExpenses)"
+                stroke="var(--color-expenses)"
+                strokeWidth={2}
+                stackId="a"
+              />
+              <Area
+                dataKey="investment"
+                type="monotone"
+                fill="url(#fillInvestment)"
+                stroke="var(--color-investment)"
+                strokeWidth={2}
+                stackId="a"
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
       
       {/* AI Chatbox Component */}
       <AIChatBox />
