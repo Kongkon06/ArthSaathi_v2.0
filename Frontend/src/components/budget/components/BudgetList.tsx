@@ -35,7 +35,7 @@ export type Budget = {
   id: number;
   name: string;
   amount: number;
-   icon?: string;
+  icon: string;
   description?: string;
   totalSpend?: number;
   totalItem?: number;
@@ -62,14 +62,14 @@ function BudgetList() {
     if (!accounts) return [];
 
     const categoryMapping = [
-      { key: 'Groceries', icon: '🛒', name: 'Groceries' },
-      { key: 'Transport', icon: '🚗', name: 'Transport' },
-      { key: 'Eating_Out', icon: '🍽️', name: 'Eating Out' },
-      { key: 'Entertainment', icon: '🎬', name: 'Entertainment' },
-      { key: 'Utilities', icon: '💡', name: 'Utilities' },
-      { key: 'Healthcare', icon: '🏥', name: 'Healthcare' },
-      { key: 'Education', icon: '📚', name: 'Education' },
-      { key: 'Miscellaneous', icon: '📦', name: 'Miscellaneous' },
+      { id: 1, key: "Groceries", name: "Groceries", amount: accounts.Groceries || 0, icon: "🛒" },
+      { id: 2, key: "Transport", name: "Transport", amount: accounts.Transport || 0, icon: "🚗" },
+      { id: 3, key: "Eating_Out", name: "Eating Out", amount: accounts.Eating_Out || 0, icon: "🍽️" },
+      { id: 4, key: "Entertainment", name: "Entertainment", amount: accounts.Entertainment || 0, icon: "🎬" },
+      { id: 5, key: "Utilities", name: "Utilities", amount: accounts.Utilities || 0, icon: "💡" },
+      { id: 6, key: "Healthcare", name: "Healthcare", amount: accounts.Healthcare || 0, icon: "💊" },
+      { id: 7, key: "Education", name: "Education", amount: accounts.Education || 0, icon: "📚" },
+      { id: 8, key: "Miscellaneous", name: "Miscellaneous", amount: accounts.Miscellaneous || 0, icon: "💰" },
     ];
 
     return categoryMapping.map((category, index) => {
