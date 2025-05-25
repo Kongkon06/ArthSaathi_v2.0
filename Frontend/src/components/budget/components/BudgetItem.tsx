@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { Trash2, Edit, ChevronRight, AlertTriangle, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { useState, type JSX } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -188,7 +188,7 @@ function BudgetItem({ budget, onDelete, onEdit, onViewDetails }: BudgetItemProps
             <Button
               variant="ghost"
               size="sm"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 viewBudgetDetails();
               }}
