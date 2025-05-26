@@ -140,6 +140,15 @@ exports.Prisma.AccountsScalarFieldEnum = {
   desired_saving: 'desired_saving'
 };
 
+exports.Prisma.TransactionsScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  status: 'status',
+  amount: 'amount',
+  type: 'type',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -154,9 +163,21 @@ exports.accountType = exports.$Enums.accountType = {
   Current: 'Current'
 };
 
+exports.trnxStatus = exports.$Enums.trnxStatus = {
+  Failed: 'Failed',
+  Success: 'Success',
+  Pending: 'Pending'
+};
+
+exports.trnxType = exports.$Enums.trnxType = {
+  Credit: 'Credit',
+  Debit: 'Debit'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  Accounts: 'Accounts'
+  Accounts: 'Accounts',
+  Transactions: 'Transactions'
 };
 
 /**
