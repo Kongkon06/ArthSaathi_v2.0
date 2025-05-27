@@ -379,7 +379,7 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-grow overflow-y-auto px-3 py-2 space-y-1 ">
+        <div className="flex-grow px-3 py-2 space-y-1 ">
           <AnimatePresence>
             {filteredMenuItems.map((item, index) => {
               const isActiveParent =

@@ -42,13 +42,13 @@ const App = () => {
           </Routes>
         </>
       ) : (
-        <div className="min-h-screen flex bg-white lg:bg-[#F3F3F3]">
+        <div className="w-full min-h-screen flex bg-white lg:bg-[#F3F3F3]">
           <Sidebar
             isExpanded={isSidebarExpanded}
             toggleSidebar={toggleSidebar}
           />
           <div
-            className={`flex ${
+            className={`flex w-full ${
               isSidebarExpanded ? "ml-[270px]" : "ml-24"
             } lg:bg-[#F3F3F3] bg-white transition-all duration-300`}
           >
