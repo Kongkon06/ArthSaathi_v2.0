@@ -1,5 +1,6 @@
 import express from 'express';
-const Router = express.Router();
+import { PrismaClient } from '../generated/prisma/client.js';
+const prisma = new PrismaClient();
 
 async function createAccount(req,res){
   try{
@@ -12,10 +13,11 @@ async function createAccount(req,res){
   age:age,
   dependents:dependents,
   account_type: accountType,
- initial_balance :initialBalance
- monthly_income : monthlyIncome,
- disposable_amount: disposableIncome,
- desired_saving : desiredSavings
+  initial_balance :initialBalance,
+  monthly_income : monthlyIncome,
+  disposable_amount: disposableIncome,
+  desired_saving : desiredSavings
+  }
   })
   return res.json();
 
@@ -24,23 +26,48 @@ async function createAccount(req,res){
   }
  }
 
-async function getAccount(){
+async function getAccount(req,res){
 try{
-  const { account_id } = req.body;
-  const account = await prisma.account.find({
+  const user_id = req.params.id;
+  const account = await prisma.accounts.findMany({
       where:{
-            id:account_id
+            userId:user_id
            }
       });
       if(!account){
       res.status(411).json({msg:"Invalid id"});
       return;
       }
-      
       res.json(account);
   return;
 }catch(error){
   res.status(500).json();
 }
 return;
+
+}
+
+async function deleteAccount(req,res){
+  try{
+  const { account_id } = req.params.id;
+  if(!account_id){
+    res.status(411).json({msg:'Missing id'});
+  }
+  const account = await prisma.accounts.delete({
+  where:{
+      id:account_id
+    }
+  }) 
+    res.json()
+    return
+  }catch(error){
+    res.status(500);
+  }
+  return;
+}
+
+export default {
+  createAccount,
+  getAccount,
+  deleteAccount
 }
