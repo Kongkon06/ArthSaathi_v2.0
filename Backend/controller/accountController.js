@@ -9,6 +9,8 @@ const router = express.Router();
  * /accounts/create:
  *   post:
  *     summary: Create a new account
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -16,8 +18,6 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               userId:
- *                 type: string
  *               firstName:
  *                 type: string
  *               lastName:
@@ -26,7 +26,7 @@ const router = express.Router();
  *                 type: number
  *               dependents:
  *                 type: number
- *               inttialBalance:
+ *               initialBalance:
  *                 type: number
  *               accountType:
  *                 type: string
@@ -34,7 +34,7 @@ const router = express.Router();
  *                 type: number
  *               disposableIncome:
  *                 type: number
- *               desiredSaving:
+ *               desiredSavings:
  *                 type: number
  *     responses:
  *       201:
@@ -45,26 +45,24 @@ router.post('/create', account.createAccount);
 
 /**
  * @swagger
- * /accounts/{id}:
+ * /accounts:
  *   get:
  *     summary: Get account by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Account retrieved
  */
-router.get('/:id', account.getAccount);
+router.get('/', account.getAccount);
 
 /**
  * @swagger
  * /accounts:
  *   delete:
- *     summary: Delete an accouD
+ *     summary: Delete an account
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -76,6 +74,50 @@ router.get('/:id', account.getAccount);
  *         description: Account deleted
  */
 router.delete('/:id', account.deleteAccount);
+
+/**
+ * @swagger
+ * /accounts/update/{id}:
+ *   put:
+ *     summary: Update an account
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               age:
+ *                 type: number
+ *               dependents:
+ *                 type: number
+ *               initialBalance:
+ *                 type: number
+ *               accountType:
+ *                 type: string
+ *               monthlyIncome:
+ *                 type: number
+ *               disposableIncome:
+ *                 type: number
+ *               desiredSavings:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Account updated
+ */
+router.put('/update/:id', account.updateAccount);
 
 export default router;
 
