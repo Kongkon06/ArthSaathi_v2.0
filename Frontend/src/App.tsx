@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 //import Landingpage from "./pages/Landingpage";
 import Sidebar from "./components/sidebar/Sidebar";
 import Home from "./pages/Home";
-import Budget from "./pages/Budget";
+//import Budget from "./pages/Budget";
 import Expenses from "./pages/Expenses";
 import Learn from "./pages/Learn";
 import Investment from "./pages/Investment";
@@ -34,7 +34,6 @@ const App = () => {
           
            <Route path="/" element={<Home />} />
             <Route path="/accounts" element={<Accounts />} />
-            <Route path="/budget" element={<Budget />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/investment" element={<Investment />} />
@@ -56,7 +55,6 @@ const App = () => {
               
               <Route path="/" element={<Home />} />
               <Route path="/accounts" element={<Accounts />} />
-              <Route path="/budget" element={<Budget />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/learn" element={<Learn />} />
               <Route path="/investment" element={<Investment />} />
