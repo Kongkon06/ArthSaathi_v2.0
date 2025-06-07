@@ -4,12 +4,13 @@ const prisma = new PrismaClient();
 
 async function createAccount(req,res){
   try{
-  const { userId ,firstname,lastname,age,dependents,initalBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
-  
-  const account = await prisma.accounts.create({
+  const { firstName,lastName,age,dependents,initialBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
+  const user = req.user
+  await prisma.accounts.create({
   data:{
-  firstname : firstname,
-  lastname: lastname,
+  userId: user.userId,
+  firstname : firstName,
+  lastname: lastName,
   age:age,
   dependents:dependents,
   account_type: accountType,
@@ -22,16 +23,17 @@ async function createAccount(req,res){
   return res.json();
 
   }catch(error){
+    console.error(error);
   res.status(500).json()
   }
  }
 
 async function getAccount(req,res){
 try{
-  const user_id = req.params.id;
+  const user = req.user;
   const account = await prisma.accounts.findMany({
       where:{
-            userId:user_id
+            userId:user.userId
            }
       });
       if(!account){
@@ -49,7 +51,7 @@ return;
 
 async function deleteAccount(req,res){
   try{
-  const { account_id } = req.params.id;
+  const account_id  = req.params.id;
   if(!account_id){
     res.status(411).json({msg:'Missing id'});
   }
@@ -66,8 +68,40 @@ async function deleteAccount(req,res){
   return;
 }
 
+async function updateAccount(req,res) {
+  try{
+    const { account_id } = req.params.id;
+    const { firstName,lastName,age,dependents,initialBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
+    if(!account_id){
+      res.status(411).json({msg:'Missing id'});
+    }
+    const account = await prisma.accounts.update({
+      where:{
+        id:account_id
+      },
+      data:{
+        firstname : firstName,
+        lastname: lastName,
+        age:age,
+        dependents:dependents,
+        account_type: accountType,
+        initial_balance :initialBalance,
+        monthly_income : monthlyIncome,
+        disposable_amount: disposableIncome,
+        desired_saving : desiredSavings
+      }
+    })
+    res.json(account);
+    return;
+  }catch(error){
+    res.status(500).json();
+  }
+  return;
+}
+
 export default {
   createAccount,
   getAccount,
-  deleteAccount
+  deleteAccount,
+  updateAccount
 }

@@ -314,7 +314,7 @@ function Home() {
   });
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4"  style={{ width: "1360.17px", transform: "translate(7.11114px, 0px)" }}>
+    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4" >
       {/* Enhanced Greeting Section */}
       <div className="mb-8 p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-white/50">
         <div className="flex items-center justify-between">
