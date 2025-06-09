@@ -30,14 +30,28 @@ export default function TabLayout() {
         name="dashboard"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="accounts"
         options={{
           title: 'Accounts',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bank-check" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="learning"
+        options={{
+          title: 'Learnings',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="search-web" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="investment"
+        options={{
+          title: 'Investments',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="trending-up" color={color} />,
         }}
       />
     </Tabs>
