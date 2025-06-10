@@ -80,12 +80,12 @@ import {  TooltipProvider } from "@/components/ui/tooltip";
 const FormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  balance: z.string().min(1, "Balance is required").refine((val) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  income: z.string().min(1, "Income is required").refine((val) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  age: z.string().min(1, "Age is required").refine((val) => parseInt(val) >= 18, "Must be at least 18 years old"),
-  dependents: z.string().refine((val) => parseInt(val) >= 0, "Cannot be negative"),
-  disposableIncome: z.string().min(1, "Disposable income is required").refine((val) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  desiredSavings: z.string().min(1, "Desired savings is required").refine((val) => !isNaN(parseFloat(val)), "Must be a valid number"),
+  balance: z.string().min(1, "Balance is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
+  income: z.string().min(1, "Income is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
+  age: z.string().min(1, "Age is required").refine((val: string) => parseInt(val) >= 18, "Must be at least 18 years old"),
+  dependents: z.string().refine((val: string) => parseInt(val) >= 0, "Cannot be negative"),
+  disposableIncome: z.string().min(1, "Disposable income is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
+  desiredSavings: z.string().min(1, "Desired savings is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
   accountType: z.enum(["current", "savings", "family"]),
   isDefault: z.boolean(),
   familyMembers: z.array(z.object({
@@ -545,7 +545,7 @@ const Accounts = () => {
                             <Users className="h-4 w-4" /> Family Members
                           </p>
                           <div className="space-y-1">
-                            {account.familyMembers.slice(0, 2).map((member, idx) => (
+                            {account.familyMembers.slice(0, 2).map((member: FamilyMember, idx: number) => (
                               <div key={idx} className="flex justify-between items-center text-sm">
                                 <span className="font-medium">{member.name}</span>
                                 <Badge variant="outline" className="text-xs">{member.relation}</Badge>

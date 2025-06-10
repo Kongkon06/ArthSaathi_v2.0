@@ -1,616 +1,334 @@
-import { useState, useEffect } from "react";
-// Importing icons from Lucide React
-import { ChevronRight, BarChart2, PiggyBank, BookOpen, Users, Shield, TrendingUp, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
-// Feature card component without animation
-const FeatureCard = ({ icon: Icon, title, description }:any) => {
+const partners = [
+  "facebook",
+  "Upwork",
+  "Spotify",
+  "airbnb",
+  "amazon",
+  "slack",
+  "Walmart",
+  "NETFLIX",
+];
+
+const testimonials = [
+  {
+    name: "Michael Red",
+    title: "Financial Expert",
+    review:
+      "The platform has revolutionized how I manage my finances. I can access real-time data and valuable insights to make informed decisions!",
+    rating: 5,
+    avatar: "/testimonials/avatar1.png",
+  },
+  {
+    name: "Zoey Lica",
+    title: "UI/UX Researcher",
+    review:
+      "This platform is so visually appealing and easy to use. I love the integrated budgeting tools and notifications!",
+    rating: 5,
+    avatar: "/testimonials/avatar2.png",
+  },
+  {
+    name: "Zach Son",
+    title: "Business Analyst",
+    review:
+      "I’ve never felt more in control of my money. The streamlined transaction tracking is a game-changer.",
+    rating: 5,
+    avatar: "/testimonials/avatar3.png",
+  },
+];
+
+const features = [
+  {
+    icon: (
+      <svg width="38" height="38" fill="none">
+        <circle cx="19" cy="19" r="19" fill="#e9f3ff" />
+        <path d="M12 23l7-7 7 7" stroke="#3366FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Multi-Account Integration",
+    description:
+      "Effortlessly manage multiple accounts—personal, business, or investment—under one roof.",
+  },
+  {
+    icon: (
+      <svg width="38" height="38" fill="none">
+        <circle cx="19" cy="19" r="19" fill="#f1eaff" />
+        <path d="M19 10v18M10 19h18" stroke="#A259FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Notifications and Alerts",
+    description:
+      "Receive instant alerts for unusual account activity, upcoming bills, and goal tracking.",
+  },
+  {
+    icon: (
+      <svg width="38" height="38" fill="none">
+        <circle cx="19" cy="19" r="19" fill="#eaffea" />
+        <path d="M14 19l5 5 5-5" stroke="#22C55E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Privacy and Security",
+    description:
+      "Advanced encryption and security protocols keep your data safe and private.",
+  },
+];
+
+const pricingPlans = [
+  {
+    name: "Basic Plan",
+    price: "$9.99",
+    period: "/Month",
+    features: [
+      "Expense tracking and categorization",
+      "Budget planning",
+      "Customer Support",
+    ],
+    highlighted: false,
+  },
+  {
+    name: "Premium",
+    price: "$9.99",
+    period: "/Month",
+    features: [
+      "All features of the Basic Plan",
+      "Comprehensive financial management",
+      "Multi-account analysis",
+      "Investment analytics",
+      "Customer Support",
+    ],
+    highlighted: true,
+    tag: "Most Popular",
+  },
+  {
+    name: "Business Plan",
+    price: "$19.99",
+    period: "/Month",
+    features: [
+      "Expense tracking & categorization",
+      "Financial reporting",
+      "Customer Support",
+    ],
+    highlighted: false,
+  },
+];
+
+export default function Landingpage() {
+  const navigate = useNavigate();
+
   return (
-    <div 
-      className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center relative overflow-hidden group"
-    >
-      {/* Background glow effect */}
-      <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/10 to-emerald-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg"></div>
-      
-      <div className="relative">
-        <div className="bg-gradient-to-r from-blue-600/20 to-emerald-600/20 p-4 rounded-full mb-4 transform transition-transform group-hover:scale-110 duration-300">
-          <Icon className="w-6 h-6 text-primary" />
+    <div className="bg-gradient-to-b from-[#2D3B8C] to-[#F6F7FB] w-full min-h-screen text-gray-900">
+      {/* Navigation */}
+      <header className="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-xl">
+            <svg width="28" height="28" fill="none"><circle cx="14" cy="14" r="14" fill="#fff"/><path d="M7 14l7-7 7 7" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+          <span className="font-extrabold text-xl tracking-tight text-white">Finanzen</span>
         </div>
-        <h3 className="text-xl font-semibold mb-3">{title}</h3>
-        <p className="text-muted-foreground">{description}</p>
-      </div>
-    </div>
-  );
-};
+        <nav className="hidden md:flex gap-8 text-white font-medium">
+          <a href="#home" className="hover:underline">Home</a>
+          <a href="#about" className="hover:underline">About Us</a>
+          <a href="#services" className="hover:underline">Services</a>
+          <a href="#contact" className="hover:underline">Contact Us</a>
+        </nav>
+        <div className="flex gap-3">
+          <Button variant="ghost" className="text-white border-white" onClick={() => navigate("/login")}>Log In</Button>
+          <Button className="bg-white text-blue-700 font-semibold" onClick={() => navigate("/signup")}>Sign Up</Button>
+        </div>
+      </header>
 
-// Statistic card component without animation
-const StatisticCard = ({ value, label }:any) => {
-  const [count, setCount] = useState(0);
-  
-  useEffect(() => {
-    let start = 0;
-    const end = parseInt(value.substring(0, value.length - 1));
-    const duration = 2000;
-    const increment = end / (duration / 16);
-    
-    const timer = setInterval(() => {
-      start += increment;
-      if (start > end) start = end;
-      setCount(Math.floor(start));
-      if (start === end) clearInterval(timer);
-    }, 16);
-    
-    return () => clearInterval(timer);
-  }, [value]);
-  
-  return (
-    <div className="relative">
-      <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/30 to-emerald-600/30 rounded-xl blur-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-      <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-        <div className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">{count}{value.slice(-1)}</div>
-        <div className="text-muted-foreground text-white">{label}</div>
-      </div>
-    </div>
-  );
-};
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center py-20 px-6 text-center">
+        <div className="mb-3">
+          <span className="px-4 py-1 rounded-full bg-white/10 border border-white/30 text-white text-xs font-medium tracking-wide">Financial Control Platform</span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-br from-white to-blue-300 bg-clip-text text-transparent mb-4">
+          Expert Guidance to Optimize<br />Your Financial Growth and Security
+        </h1>
+        <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
+          Our expert guidance will optimize your financial portfolio and lay the foundation for a secure and prosperous future.
+        </p>
+        <div className="flex justify-center gap-4 mb-12">
+          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl px-8 py-3" onClick={() => navigate("/signup")}>
+            Get Started
+          </Button>
+          <Button size="lg" variant="outline" className="text-white border-white/40 text-lg font-semibold rounded-xl px-8 py-3" onClick={() => navigate("/demo")}>
+            Try Demo
+          </Button>
+        </div>
+        <div className="w-full max-w-4xl mx-auto rounded-xl shadow-2xl overflow-hidden border border-white/10 bg-white/70 backdrop-blur-md">
+          {/* Replace with actual illustration or dashboard image */}
+          <img src="/landing/hero-dashboard.png" alt="Financial Dashboard Preview" className="w-full h-auto" />
+        </div>
+      </section>
 
-const LandingPage = () => {
-  const features = [
-    {
-      icon: BarChart2,
-      title: "Expense Tracking & Analytics",
-      description: "Comprehensive tools for tracking expenses with detailed analytics and visualizations.",
-    },
-    {
-      icon: PiggyBank,
-      title: "Budget Management",
-      description: "Intuitive budget planning tools to help families establish and maintain financial goals.",
-    },
-    {
-      icon: BookOpen,
-      title: "Financial Education",
-      description: "Interactive learning resources to improve financial literacy for all family members.",
-    },
-    {
-      icon: Users,
-      title: "Family-Focused Design",
-      description: "Tailored specifically for middle-class families with features designed for their unique needs.",
-    },
-    {
-      icon: Shield,
-      title: "Data-Driven Insights",
-      description: "Personalized recommendations based on spending patterns and financial behaviors.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Long-term Planning",
-      description: "Tools for setting and tracking long-term financial goals including savings and investments.",
-    },
-  ];
+      {/* Features Overview */}
+      <section className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {features.map((feature, idx) => (
+          <div key={idx} className="flex flex-col items-center bg-white rounded-2xl shadow p-8">
+            <div className="mb-4">{feature.icon}</div>
+            <h3 className="font-bold text-xl mb-2 text-gray-900 text-center">{feature.title}</h3>
+            <p className="text-gray-600 text-center">{feature.description}</p>
+          </div>
+        ))}
+      </section>
 
-  const statistics = [
-    { value: "65%", label: "Reduction in financial stress" },
-    { value: "40%", label: "Increase in savings rate" },
-    { value: "3x", label: "Financial literacy improvement" },
-    { value: "85%", label: "User satisfaction" },
-  ];
+      {/* Advanced Features Section */}
+      <section className="bg-white py-20 px-6" id="features">
+        <div className="max-w-4xl mx-auto text-center mb-10">
+          <span className="uppercase text-blue-600 font-bold text-xs mb-2 tracking-widest">Features</span>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-gray-900">
+            Exploring the Comprehensive Set of <span className="text-blue-600">Advanced Features</span>
+          </h2>
+          <p className="text-gray-600">A deep dive into the tools and insights that will transform your financial management, enabling informed decision-making and empowering financial success.</p>
+        </div>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Multi-Account Integration */}
+          <div className="bg-gray-50 rounded-2xl shadow p-8 flex flex-col gap-4">
+            <h4 className="font-semibold text-lg mb-2">Multi-Account Integration</h4>
+            <div className="flex-1">
+              <img src="/landing/card-sample.png" alt="Card Integration" className="rounded-lg shadow" />
+            </div>
+            <p className="text-gray-600 mt-2">Add and manage all your cards and accounts in one place, with a secure and seamless experience.</p>
+          </div>
+          {/* Simplified Transaction Tracking */}
+          <div className="bg-gray-50 rounded-2xl shadow p-8 flex flex-col gap-4">
+            <h4 className="font-semibold text-lg mb-2">Simplified Transaction Tracking</h4>
+            <div className="flex-1">
+              <img src="/landing/transaction-history.png" alt="Transaction History" className="rounded-lg shadow" />
+            </div>
+            <p className="text-gray-600 mt-2">Track all your transactions and finances in a single view, helping you understand where your money is going.</p>
+          </div>
+        </div>
 
-  return (
-    <div className="min-h-screen">
-      {/* Your existing content here */}
-      {/* Modern Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-        {/* Abstract Background Elements */}
-        <div className="absolute inset-0 z-0">
-          <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.1)" />
-                <stop offset="100%" stopColor="rgba(16, 185, 129, 0.1)" />
-              </linearGradient>
-            </defs>
-            <path fill="url(#grad1)" d="M0 0 Q 50 50 100 0 V100 H0 Z" />
-          </svg>
-          
-          {/* Floating Elements - Static version without animations */}
-          {[...Array(8)].map((_, i) => (
+        {/* Streamlined Budgeting & Savings */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          <div className="bg-gray-50 rounded-2xl shadow p-8 flex flex-col gap-4">
+            <h4 className="font-semibold text-lg mb-2">Streamlined Budgeting</h4>
+            <img src="/landing/budget.png" alt="Budgeting" className="rounded-lg shadow" />
+            <p className="text-gray-600 mt-2">Achieve your savings goals faster with advanced budgeting tools, insightful reports, and spending analysis.</p>
+          </div>
+          <div className="bg-blue-100 rounded-2xl shadow p-8 flex flex-col gap-4 items-center justify-center text-center">
+            <h4 className="font-semibold text-lg mb-2">Feel the next level of financing app with Finanzen</h4>
+            <Button className="bg-blue-600 text-white mt-4 px-8 py-3 text-lg rounded-xl" onClick={() => navigate("/signup")}>
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners/Clients Section */}
+      <section className="max-w-6xl mx-auto px-6 py-12 flex flex-wrap items-center justify-center gap-8 grayscale">
+        {partners.map((partner) => (
+          <span key={partner} className="text-2xl font-extrabold text-gray-400 opacity-80">{partner}</span>
+        ))}
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 px-6 bg-white" id="pricing">
+        <div className="max-w-4xl mx-auto text-center mb-12">
+          <span className="uppercase text-blue-600 font-bold text-xs mb-2 tracking-widest">Pricing</span>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-gray-900">
+            Customize Your Financial Destiny with <span className="text-blue-600">Transparent Pricing Plans</span>
+          </h2>
+          <p className="text-gray-600">Explore a diverse range of pricing options tailored to your financial goals and achieve unprecedented control over your prosperity.</p>
+        </div>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+          {pricingPlans.map((plan) => (
             <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: Math.random() * 100 + 50,
-                height: Math.random() * 100 + 50,
-                left: `${Math.random() * 90}%`,
-                top: `${Math.random() * 100}%`,
-                background: `rgba(${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)}, 255, 0.08)`,
-              }}
-            />
+              key={plan.name}
+              className={`rounded-2xl shadow-lg p-8 flex flex-col items-center bg-white border-2 ${
+                plan.highlighted
+                  ? "border-blue-600 scale-105 z-10"
+                  : "border-gray-100"
+              }`}
+            >
+              {plan.tag && (
+                <span className="mb-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+                  {plan.tag}
+                </span>
+              )}
+              <h3 className="font-bold text-xl mb-2">{plan.name}</h3>
+              <div className="text-4xl font-extrabold mb-2 text-blue-700">{plan.price}</div>
+              <div className="text-gray-400 mb-4">{plan.period}</div>
+              <ul className="mb-6 text-gray-600 space-y-2 text-center">
+                {plan.features.map((f, i) => (
+                  <li key={i}>{f}</li>
+                ))}
+              </ul>
+              <Button
+                className={`w-full px-6 py-2 rounded-xl ${plan.highlighted ? "bg-blue-600 text-white" : "bg-gray-100 text-blue-700"}`}
+                onClick={() => navigate("/signup")}
+              >
+                Get Started
+              </Button>
+            </div>
           ))}
         </div>
-
-        <div className="container mx-auto px-4 pt-20 pb-32 relative z-10">
-          <div className="flex flex-col items-center text-center mb-12">
-            <div
-              className="inline-block px-6 py-2 mb-6 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium text-sm"
-            >
-              Redefining Family Finance
-            </div>
-            
-            <h1 
-              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600 leading-tight max-w-4xl mx-auto"
-            >
-              Financial Wellness for Every Family
-            </h1>
-            
-            <p 
-              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
-            >
-              Empowering middle-class families with data-driven insights and personalized strategies for financial security and growth.
-            </p>
-            
-            <div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <a 
-                href="#signup" 
-                className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-base font-medium text-white hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              >
-                Sign Up for Free
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
-              <a 
-                href="#features" 
-                className="inline-flex items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-700 px-8 py-4 text-base text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                Learn More
-              </a>
-            </div>
-          </div>
-          
-          {/* Dashboard Preview */}
-          <div
-            className="max-w-5xl mx-auto relative"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur-lg opacity-30"></div>
-            <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-              <div className="w-full h-12 bg-gray-100 dark:bg-gray-700 flex items-center px-4 border-b border-gray-200 dark:border-gray-600">
-                <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4 p-6">
-                <div className="col-span-2 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 h-64">
-                  <div className="w-full h-8 mb-4 bg-blue-100 dark:bg-blue-900 rounded-md"></div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white dark:bg-gray-600 rounded-md h-24 p-2">
-                      <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                      <div className="w-3/4 h-6 bg-blue-200 dark:bg-blue-700 rounded mb-2"></div>
-                      <div className="w-full h-8 bg-gray-100 dark:bg-gray-500 rounded"></div>
-                    </div>
-                    <div className="bg-white dark:bg-gray-600 rounded-md h-24 p-2">
-                      <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                      <div className="w-3/4 h-6 bg-green-200 dark:bg-green-700 rounded mb-2"></div>
-                      <div className="w-full h-8 bg-gray-100 dark:bg-gray-500 rounded"></div>
-                    </div>
-                    <div className="bg-white dark:bg-gray-600 rounded-md h-24 p-2">
-                      <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                      <div className="w-3/4 h-6 bg-yellow-200 dark:bg-yellow-700 rounded mb-2"></div>
-                      <div className="w-full h-8 bg-gray-100 dark:bg-gray-500 rounded"></div>
-                    </div>
-                    <div className="bg-white dark:bg-gray-600 rounded-md h-24 p-2">
-                      <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                      <div className="w-3/4 h-6 bg-purple-200 dark:bg-purple-700 rounded mb-2"></div>
-                      <div className="w-full h-8 bg-gray-100 dark:bg-gray-500 rounded"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-1 space-y-4">
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 h-32">
-                    <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                    <div className="w-full h-20 bg-primary/20 rounded-md mt-2"></div>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 h-32">
-                    <div className="w-1/2 h-3 bg-gray-200 dark:bg-gray-500 rounded mb-2"></div>
-                    <div className="w-full h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-                    <div className="w-full h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-                    <div className="w-3/4 h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-                    <div className="w-1/2 h-4 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Wave divider */}
-          <div className="absolute bottom-0 left-0 w-full overflow-hidden">
-            <svg
-              preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1200 120"
-              className="w-full h-12 text-white dark:text-gray-900"
-            >
-              <path
-                d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-        </div>
       </section>
 
-      {/* About Section - REDESIGNED */}
-      <section className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden" id="about">
-        {/* Background Elements */}
-        <div className="absolute inset-0 z-0">
-          <svg className="absolute top-0 right-0 h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <circle cx="80" cy="20" r="20" fill="rgba(59, 130, 246, 0.3)" />
-            <circle cx="95" cy="60" r="30" fill="rgba(16, 185, 129, 0.3)" />
-          </svg>
-          
-          {/* Static version of floating elements */}
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: Math.random() * 80 + 40,
-                height: Math.random() * 80 + 40,
-                right: `${Math.random() * 40}%`,
-                top: `${Math.random() * 100}%`,
-                background: `rgba(${Math.floor(Math.random() * 200)}, ${Math.floor(Math.random() * 200)}, 255, 0.05)`,
-              }}
-            />
+      {/* Testimonials Section */}
+      <section className="max-w-6xl mx-auto px-6 py-20" id="testimonials">
+        <div className="text-center mb-10">
+          <span className="uppercase text-blue-600 font-bold text-xs mb-2 tracking-widest">Showcasing</span>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-gray-900">
+            Showcasing Remarkable <span className="text-blue-600">Success Stories by Our Users</span>
+          </h2>
+          <p className="text-gray-600">Highlighting the extraordinary achievements and inspirational transformations experienced by our cherished users.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((t, idx) => (
+            <div key={idx} className="bg-white rounded-2xl shadow p-6 flex flex-col items-center">
+              <img src={t.avatar} alt={t.name} className="w-20 h-20 rounded-full object-cover mb-3 border-4 border-blue-100" />
+              <h4 className="font-bold text-lg">{t.name}</h4>
+              <p className="text-xs text-gray-400 mb-1">{t.title}</p>
+              <div className="flex items-center mb-2">
+                {[...Array(t.rating)].map((_, i) => (
+                  <svg key={i} width="18" height="18" fill="#FFD700" className="inline-block"><polygon points="9,1 11,7 17,7 12,11 14,17 9,13 4,17 6,11 1,7 7,7" /></svg>
+                ))}
+              </div>
+              <p className="text-gray-600 text-center">{t.review}</p>
+            </div>
           ))}
         </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div 
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <div className="inline-block px-6 py-2 mb-6 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium text-sm">
-              Our Mission
-            </div>
-            <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-              Addressing Financial Challenges
-            </h2>
-            <p className="text-muted-foreground text-lg dark:text-gray-300">
-              Our platform is designed to address the unique financial challenges faced by middle-class families today, providing tools and resources that promote financial well-being and stability.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {statistics.map((stat, index) => (
-              <StatisticCard 
-                key={index} 
-                value={stat.value} 
-                label={stat.label} 
-                delay={0.1 * index}
-              />
-            ))}
-          </div>
-
-          <div 
-            className="relative rounded-2xl overflow-hidden"
-          >
-            {/* Gradient border effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-2xl blur-lg opacity-20"></div>
-            
-            <div className="relative flex flex-col md:flex-row bg-accent rounded-2xl p-8 md:p-12 overflow-hidden">
-              {/* Background pattern */}
-              <svg className="absolute top-0 left-0 w-full h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-                </pattern>
-                <rect width="100" height="100" fill="url(#grid)" />
-              </svg>
-              
-              <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8">
-                <div>
-                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-                    Improving Financial Resilience
-                  </h3>
-                  <p className="mb-4 text-white/70 dark:text-gray-300">
-                    Our platform has been developed in consultation with financial experts, economists, and family counselors to address the specific needs of middle-class households.
-                  </p>
-                  <p className="text-white/70 dark:text-gray-300">
-                    By combining education, practical tools, and personalized insights, we're helping families build financial resilience and work toward long-term prosperity.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="md:w-1/2">
-                <div 
-                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg relative overflow-hidden h-full"
-                >
-                  {/* Subtle corner accent */}
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-500/20 to-transparent rounded-bl-full"></div>
-                  
-                  <div className="space-y-4 relative text-white/70 dark:text-gray-300">
-                    {[
-                      "Comprehensive financial education modules",
-                      "Data-driven personalized recommendations",
-                      "Goal-based savings and investment planning",
-                      "Interactive budgeting and expense tracking",
-                      "Family-focused financial wellness metrics"
-                    ].map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="flex items-start"
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-500/20 to-emerald-500/20 flex items-center justify-center mr-3 transform transition-transform group-hover:scale-110 duration-300">
-                          <ChevronRight className="h-5 w-5 text-primary" />
-                        </div>
-                        <p className="pt-2">{item}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
-      {/* Impact Section  */}
-      <section className="py-20 relative overflow-hidden">
-        {/* Background effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-emerald-600/10"></div>
-        
-        {/* Abstract shapes */}
-        <svg className="absolute top-0 left-0 h-full w-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <circle cx="10" cy="10" r="5" fill="rgba(59, 130, 246, 0.3)" />
-          <circle cx="40" cy="20" r="8" fill="rgba(16, 185, 129, 0.3)" />
-          <circle cx="70" cy="50" r="10" fill="rgba(59, 130, 246, 0.2)" />
-          <circle cx="20" cy="70" r="7" fill="rgba(16, 185, 129, 0.2)" />
-          <circle cx="90" cy="90" r="6" fill="rgba(59, 130, 246, 0.3)" />
-        </svg>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div 
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <div className="inline-block px-6 py-2 mb-6 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium text-sm">
-              Results
-            </div>
-            <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-              Measurable Impact
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Our platform delivers meaningful results that contribute to long-term financial stability
-            </p>
-          </div>
-      
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Stat Card 1 */}
-            <div 
-              className="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 text-center"
-            >
-              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">94%</h3>
-              <p className="text-xl font-medium mb-1 text-white">Cost Reduction</p>
-              <p className="text-muted-foreground">Compared to traditional financial services</p>
-            </div>
-            
-            {/* Stat Card 2 */}
-            <div 
-              className="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 text-center"
-            >
-              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              </div>
-              <h3 className="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-emerald-500">2.5x</h3>
-              <p className="text-xl font-medium mb-1 text-white">ROI Increase</p>
-              <p className="text-muted-foreground">For Families using our platform</p>
-            </div>
-            
-            {/* Stat Card 3 */}
-            <div 
-              className="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 text-center"
-            >
-              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-500">10K+</h3>
-              <p className="text-xl font-medium mb-1 text-white">Active Families</p>
-              <p className="text-muted-foreground">Across 5+ Districts </p>
-            </div>
-          </div>
-      
-          {/* Testimonial */}
-          <div 
-            className="mt-20 bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8 max-w-4xl mx-auto"
-          >
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0">
-                <img src="/api/placeholder/96/96" alt="Customer testimonial" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <svg className="h-8 w-8 text-blue-500 mb-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
-                </svg>
-                <p className="text-lg italic mb-4 text-white/80">The platform transformed our middle-class families regarding financial management. We've seen substantial growth and stability since implementing the solution across our Dhemaji District.</p>
-                <div>
-                  <h4 className="font-semibold text-white">Rahul Suresh Javir</h4>
-                  <p className="text-sm text-muted-foreground text-white">District Commissioner, Dhemaji</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-     {/* Features Section */}
-<section className="py-20 relative overflow-hidden" id="features">
-  {/* Background gradient */}
-  <div className="absolute inset-0 bg-gradient-to-b from-blue-50/80 to-emerald-50/50 dark:from-gray-900 dark:to-gray-800 -z-10"></div>
-  
-  {/* Pattern overlay */}
-  <div className="absolute inset-0 opacity-10 -z-5">
-    <svg width="100%" height="100%">
-      <pattern id="hexagons" width="50" height="50" patternUnits="userSpaceOnUse" patternTransform="scale(0.5)">
-        <path d="M25,0 L50,15 L50,40 L25,55 L0,40 L0,15 Z" fill="none" stroke="currentColor" strokeWidth="1"/>
-      </pattern>
-      <rect width="100%" height="100%" fill="url(#hexagons)"/>
-    </svg>
-  </div>
-  
-  {/* Floating Elements */}
-  {[...Array(6)].map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute rounded-full bg-gradient-to-r from-blue-600/10 to-emerald-600/10"
-      style={{
-        width: Math.random() * 120 + 50,
-        height: Math.random() * 120 + 50,
-        left: `${Math.random() * 90}%`,
-        top: `${Math.random() * 100}%`,
-      }}
-      animate={{
-        y: [Math.random() * 30, Math.random() * -30, Math.random() * 30],
-        x: [Math.random() * 30, Math.random() * -30, Math.random() * 30],
-        scale: [1, 1.1, 1],
-        opacity: [0.5, 0.7, 0.5],
-      }}
-      transition={{
-        duration: 15 + Math.random() * 10,
-        repeat: Infinity,
-        repeatType: "mirror",
-      }}
-    />
-  ))}
-
-  <div className="container mx-auto px-4 relative z-10">
-    <motion.div 
-      className="text-center max-w-3xl mx-auto mb-16"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-    >
-      <div className="inline-block px-6 py-2 mb-6 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 font-medium text-sm">
-        Features
-      </div>
-      <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-        Key Platform Features
-      </h2>
-      <p className="text-muted-foreground text-lg dark:text-gray-300">
-        Our comprehensive suite of tools is designed to address every aspect of family financial management
-      </p>
-    </motion.div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {features.map((feature, index) => (
-        <FeatureCard 
-          key={index} 
-          icon={feature.icon} 
-          title={feature.title} 
-          description={feature.description} 
-          delay={0.1 * index}
-        />
-      ))}
-    </div>
-    
-    {/* Feature showcase */}
-    <motion.div 
-      className="mt-16 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Left side - Feature details */}
-        <div className="p-8 md:p-12 flex flex-col justify-center">
-          <div className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 p-3 rounded-full inline-flex items-center justify-center w-12 h-12 mb-6">
-            <BarChart2 className="w-6 h-6" />
-          </div>
-          
-          <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-            Advanced Analytics Dashboard
-          </h3>
-          
-          <p className="text-muted-foreground mb-6">
-            Our intuitive analytics dashboard provides comprehensive insights into your financial health. Track spending patterns, monitor budget adherence, and identify opportunities for improvement.
+      {/* Call to Action */}
+      <section className="bg-gradient-to-br from-blue-600 to-purple-600 py-16 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
+            Experience the Future of Money Management
+          </h2>
+          <p className="text-white/80 mb-8">
+            Your ultimate partner in comprehensive money control and financial mastery. Propel yourself towards prosperity and security!
           </p>
-          
-          <ul className="space-y-3 mb-8">
-            {[
-              "Real-time expense categorization",
-              "Visual budget tracking",
-              "Personalized savings recommendations",
-              "Financial trend analysis"
-            ].map((item, index) => (
-              <motion.li 
-                key={index} 
-                className="flex items-center"
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.7 + (index * 0.1) }}
-                viewport={{ once: true }}
-              >
-                <ChevronRight className="h-5 w-5 text-primary mr-2 flex-shrink-0" />
-                <span>{item}</span>
-              </motion.li>
-            ))}
-          </ul>
-          
-          <Link 
-            to="/features/analytics" 
-            className="inline-flex items-center text-primary font-medium hover:underline"
-          >
-            Learn more about our analytics
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </div>
-        
-        {/* Right side - Feature preview */}
-        <div className="relative">
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/20 mix-blend-overlay"></div>
-          
-          {/* Feature image or mockup */}
-          <div className="h-full bg-gray-100 dark:bg-gray-700 p-8 flex items-center justify-center">
-            <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
-              <div className="h-8 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 flex items-center px-4">
-                <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              </div>
-              
-              <div className="p-4">
-                <div className="h-6 bg-blue-100 dark:bg-blue-900 rounded-md w-1/3 mb-4"></div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="h-24 bg-blue-50 dark:bg-blue-900/30 rounded-md"></div>
-                  <div className="h-24 bg-emerald-50 dark:bg-emerald-900/30 rounded-md"></div>
-                </div>
-                <div className="h-32 bg-gray-50 dark:bg-gray-700 rounded-md mb-4"></div>
-                <div className="flex space-x-2">
-                  <div className="h-8 bg-blue-500 rounded-md w-1/4"></div>
-                  <div className="h-8 bg-emerald-500 rounded-md w-1/4"></div>
-                  <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded-md w-1/4"></div>
-                  <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded-md w-1/4"></div>
-                </div>
-              </div>
-            </div>
+          <div className="flex justify-center gap-4">
+            <Button size="lg" className="bg-white text-blue-700 font-semibold px-8 py-3 rounded-xl" onClick={() => navigate("/signup")}>
+              Get Started
+            </Button>
+            <Button size="lg" variant="outline" className="text-white border-white/60 font-semibold px-8 py-3 rounded-xl" onClick={() => navigate("/demo")}>
+              Try Demo
+            </Button>
           </div>
         </div>
-      </div>
-    </motion.div>
-  </div>
-</section>
-</div>
-);
-};
+      </section>
 
-export default LandingPage;
+      {/* Footer */}
+      <footer className="bg-white py-6 mt-8 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6">
+          <div className="flex items-center gap-2 mb-3 md:mb-0">
+            <span className="font-extrabold text-lg text-gray-900">Finanzen</span>
+            <span className="text-gray-400 text-sm">&copy; Finanzen 2023. All Rights Reserved</span>
+          </div>
+          <nav className="flex gap-6 text-gray-500 text-sm">
+            <a href="#about" className="hover:text-blue-600">About</a>
+            <a href="#services" className="hover:text-blue-600">Services</a>
+            <a href="#contact" className="hover:text-blue-600">Contact Us</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  );
+}

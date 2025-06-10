@@ -1,5 +1,5 @@
-// SettingsSidebar.jsx
-import React, { useState } from "react";
+
+import { useState } from "react";
 import { CiUser } from "react-icons/ci";
 import { IoNotificationsOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlinePrivacyTip } from "react-icons/md";
