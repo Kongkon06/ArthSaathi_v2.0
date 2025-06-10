@@ -14,11 +14,11 @@ const { width, height } = Dimensions.get('window');
 
 const LaunchScreen = () => {
  const handleGetStarted = () => {
-  router.push('/auth?mode=signup');
+  router.push('/auth');
 };
 
 const handleSignIn = () => {
-  router.push('/auth?mode=signin');
+  router.push('/auth');
 };
 
   return (
@@ -96,14 +96,14 @@ const styles = StyleSheet.create({
   headingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: -80,
   },
   mainHeading: {
     fontSize: 48,
     fontWeight: '700',
     color: 'white',
-    textAlign: 'center',
+    textAlign: 'left',
     lineHeight: 56,
     letterSpacing: -1,
   },
