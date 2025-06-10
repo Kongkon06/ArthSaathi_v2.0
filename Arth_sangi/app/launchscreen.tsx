@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,95 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
 const LaunchScreen = () => {
- const handleGetStarted = () => {
-  router.push('/auth');
-};
+  const router = useRouter();
 
-const handleSignIn = () => {
-  router.push('/auth');
-};
+  // Animated values
+  const brandNameOpacity = useRef(new Animated.Value(0)).current;
+  const brandNameTranslateY = useRef(new Animated.Value(30)).current;
+  const headingOpacity = useRef(new Animated.Value(0)).current;
+  const headingTranslateY = useRef(new Animated.Value(30)).current;
+  const sparkleScale = useRef(new Animated.Value(0)).current;
+  const sparkleRotation = useRef(new Animated.Value(0)).current;
+  const buttonsOpacity = useRef(new Animated.Value(0)).current;
+  const buttonsTranslateY = useRef(new Animated.Value(30)).current;
+
+  // Interpolated value for sparkle rotation
+  const sparkleRotationInterpolated = sparkleRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  useEffect(() => {
+    // Sequence animations
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(brandNameOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(brandNameTranslateY, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.delay(200),
+      Animated.parallel([
+        Animated.timing(headingOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(headingTranslateY, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(sparkleScale, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(sparkleRotation, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.delay(200),
+      Animated.parallel([
+        Animated.timing(buttonsOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(buttonsTranslateY, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, []);
+
+  const handleGetStarted = () => {
+    // Navigate to auth screen for sign up
+    router.push('/auth');
+  };
+
+  const handleSignIn = () => {
+    // Navigate to auth screen for sign in
+    router.push('/auth');
+  };
 
   return (
     <View style={styles.container}>
@@ -33,10 +108,28 @@ const handleSignIn = () => {
       >
         <View style={styles.content}>
           {/* Brand Name */}
-          <Text style={styles.brandName}>ArthSaathi</Text>
+          <Animated.Text 
+            style={[
+              styles.brandName,
+              {
+                opacity: brandNameOpacity,
+                transform: [{ translateY: brandNameTranslateY }],
+              }
+            ]}
+          >
+            ArthSaathi
+          </Animated.Text>
 
           {/* Main Heading */}
-          <View style={styles.headingContainer}>
+          <Animated.View 
+            style={[
+              styles.headingContainer,
+              {
+                opacity: headingOpacity,
+                transform: [{ translateY: headingTranslateY }],
+              }
+            ]}
+          >
             <Text style={styles.mainHeading}>Smart</Text>
             <Text style={styles.mainHeading}>Financial</Text>
             <Text style={styles.mainHeading}>Planning</Text>
@@ -45,12 +138,32 @@ const handleSignIn = () => {
             </View>
             <View style={styles.familiesContainer}>
               <Text style={styles.mainHeading}>Families</Text>
-              <Text style={styles.sparkle}>✦</Text>
+              <Animated.Text 
+                style={[
+                  styles.sparkle,
+                  {
+                    transform: [
+                      { scale: sparkleScale },
+                      { rotate: sparkleRotationInterpolated },
+                    ],
+                  }
+                ]}
+              >
+                ✦
+              </Animated.Text>
             </View>
-          </View>
+          </Animated.View>
 
           {/* CTA Buttons */}
-          <View style={styles.buttonContainer}>
+          <Animated.View 
+            style={[
+              styles.buttonContainer,
+              {
+                opacity: buttonsOpacity,
+                transform: [{ translateY: buttonsTranslateY }],
+              }
+            ]}
+          >
             <TouchableOpacity 
               style={styles.getStartedButton}
               onPress={handleGetStarted}
@@ -66,7 +179,7 @@ const handleSignIn = () => {
             >
               <Text style={styles.signInText}>Have an account? Sign in</Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         </View>
       </LinearGradient>
     </View>
@@ -95,9 +208,9 @@ const styles = StyleSheet.create({
   },
   headingContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'flex-start',
-    marginTop: -80,
+    marginBottom: 50,
   },
   mainHeading: {
     fontSize: 48,
