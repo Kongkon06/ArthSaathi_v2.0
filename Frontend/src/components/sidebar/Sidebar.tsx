@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, 
   Users, 
-  CircleDollarSign, 
+  //CircleDollarSign, 
   HandCoins, 
   Bitcoin, 
   BookOpen, 
@@ -150,13 +150,13 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
         },
       ],
     },
-    {
-      id: "budget",
-      name: "Budget",
-      icon: <CircleDollarSign size={20} />,
-      link: "/budget",
-      badge: "New",
-    },
+   // {
+   //   id: "budget",
+   //   name: "Budget",
+   //   icon: <CircleDollarSign size={20} />,
+   //   link: "/budget",
+    //  badge: "New",
+  //  },
     {
       id: "expenses",
       name: "Expenses",
