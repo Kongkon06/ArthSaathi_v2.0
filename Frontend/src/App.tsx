@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 //import Landingpage from "./pages/Landingpage";
 import Sidebar from "./components/sidebar/Sidebar";
 import Home from "./pages/Home";
-import Budget from "./pages/Budget";
+//import Budget from "./pages/Budget";
 import Expenses from "./pages/Expenses";
 import Learn from "./pages/Learn";
 import Investment from "./pages/Investment";
@@ -34,7 +34,6 @@ const App = () => {
           
            <Route path="/" element={<Home />} />
             <Route path="/accounts" element={<Accounts />} />
-            <Route path="/budget" element={<Budget />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/investment" element={<Investment />} />
@@ -42,13 +41,13 @@ const App = () => {
           </Routes>
         </>
       ) : (
-        <div className="min-h-screen flex bg-white lg:bg-[#F3F3F3]">
+        <div className="w-full min-h-screen flex bg-white lg:bg-[#F3F3F3]">
           <Sidebar
             isExpanded={isSidebarExpanded}
             toggleSidebar={toggleSidebar}
           />
           <div
-            className={`flex ${
+            className={`flex w-full ${
               isSidebarExpanded ? "ml-[270px]" : "ml-24"
             } lg:bg-[#F3F3F3] bg-white transition-all duration-300`}
           >
@@ -56,7 +55,6 @@ const App = () => {
               
               <Route path="/" element={<Home />} />
               <Route path="/accounts" element={<Accounts />} />
-              <Route path="/budget" element={<Budget />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/learn" element={<Learn />} />
               <Route path="/investment" element={<Investment />} />

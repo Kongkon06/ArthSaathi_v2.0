@@ -13,22 +13,19 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-enum accountType{
-  Savings
-  Current
-}
+
 model User {
-  id Int @id @default(autoincrement())
-  email String
+  id String @id @default(uuid())
+  email String  @unique
   password String
   accounts Accounts[]
 }
 
 model Accounts {
- id  Int    @id @default(autoincrement())
- userId Int
- firstname String
- lastname String
+ id  String    @id @default(uuid())
+ userId String  @unique
+ firstname String @db.VarChar(255)
+ lastname String  @db.VarChar(255)
  age Int
  account_type accountType @default(Savings)
  dependents Int
@@ -37,6 +34,32 @@ model Accounts {
  disposable_amount Int
  desired_saving Int
  user   User @relation(fields: [userId], references: [id])
+ transaction Transactions[]
 }
 
+model Transactions {
+  id String @id @default(uuid())
+  accountId String @unique
+  status trnxStatus  @default(Success)
+  amount Float  @default(0)
+  type trnxType @default(Debit)
+  createdAt DateTime @default(now())
+  account Accounts @relation(fields:[accountId] , references:[id])
+}
+
+enum accountType{
+  Savings
+  Current
+}
+
+enum trnxStatus {
+  Failed
+  Success
+  Pending
+}
+
+enum trnxType {
+  Credit
+  Debit
+}
 
