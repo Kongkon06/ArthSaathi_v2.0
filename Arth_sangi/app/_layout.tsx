@@ -7,6 +7,7 @@ import "../global.css";
 import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import React from 'react';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
