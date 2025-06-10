@@ -8,7 +8,7 @@ import Expenses from "./pages/Expenses";
 import Learn from "./pages/Learn";
 import Investment from "./pages/Investment";
 import Accounts from "./pages/Accounts";
-import Settings from "./pages/Settings";
+import Settings from "./pages/settings/Settings";
 
 const App = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -37,7 +37,7 @@ const App = () => {
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/investment" element={<Investment />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="./settings/settings" element={<Settings />} />
           </Routes>
         </>
       ) : (

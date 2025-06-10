@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, 
   Users, 
-  CircleDollarSign, 
+  //CircleDollarSign, 
   HandCoins, 
   Bitcoin, 
   BookOpen, 
@@ -23,9 +23,7 @@ import {
   User,
  // CreditCard,
   TrendingUp,
-  PieChart,
-  Calendar,
-  HelpCircle
+  PieChart
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 
@@ -152,13 +150,13 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
         },
       ],
     },
-    {
-      id: "budget",
-      name: "Budget",
-      icon: <CircleDollarSign size={20} />,
-      link: "/budget",
-      badge: "New",
-    },
+   // {
+   //   id: "budget",
+   //   name: "Budget",
+   //   icon: <CircleDollarSign size={20} />,
+   //   link: "/budget",
+    //  badge: "New",
+  //  },
     {
       id: "expenses",
       name: "Expenses",
@@ -186,22 +184,10 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
       ],
     },
     {
-      id: "calendar",
-      name: "Calendar",
-      icon: <Calendar size={20} />,
-      link: "/calendar",
-    },
-    {
       id: "learn",
       name: "Learning Hub",
       icon: <BookOpen size={20} />,
       link: "/learn",
-    },
-    {
-      id: "help",
-      name: "Help & Support",
-      icon: <HelpCircle size={20} />,
-      link: "/help",
     },
     {
       id: "settings",
