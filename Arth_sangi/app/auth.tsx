@@ -66,7 +66,7 @@ export default function AuthPage() {
         return;
       }
        auth({ userDetails: { ...formData }, type: "SignUp" }).then(() => {
-        router.push('(tabs)/dashboard'); // Navigate to home screen after successful sign up
+       router.push('/(tabs)/dashboard'); // Navigate to home screen after successful sign up
         Alert.alert('Success', 'Account created successfully!');
       });
     } else {
@@ -78,7 +78,7 @@ export default function AuthPage() {
        const res = await auth({ userDetails: { ...formData }, type: "Login" });
         assignDetails();
        Alert.alert('Success', res.accessToken ?? 'Login successful!');
-       router.push('(tabs)/dashboard');
+       router.push('/(tabs)/dashboard');
     }
   };
 
