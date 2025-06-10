@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import auth from '../services/userAuth'; // Adjust the import path as necessary
+import { useRouter } from 'expo-router';
+import { useSetRecoilState } from 'recoil';
+import userAtom from '@/atoms/userAtom';
 
 const { width } = Dimensions.get('window');
 
 export default function AuthPage() {
+  const setUser = useSetRecoilState(userAtom)
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -27,6 +32,17 @@ export default function AuthPage() {
     lastName: '',
   });
 
+  const assignDetails = useCallback(()=>{
+    setUser({
+      id: '',
+      name: formData.firstName,
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: '',
+      address: '',
+    })
+  },[])
+    const router = useRouter();
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -34,7 +50,7 @@ export default function AuthPage() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isSignUp) {
       // Sign up validation
       if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
@@ -49,14 +65,20 @@ export default function AuthPage() {
         Alert.alert('Error', 'Password must be at least 6 characters');
         return;
       }
-      Alert.alert('Success', 'Account created successfully!');
+       auth({ userDetails: { ...formData }, type: "SignUp" }).then(() => {
+        router.push('(tabs)/dashboard'); // Navigate to home screen after successful sign up
+        Alert.alert('Success', 'Account created successfully!');
+      });
     } else {
       // Sign in validation
       if (!formData.email || !formData.password) {
         Alert.alert('Error', 'Please fill in all fields');
         return;
       }
-      Alert.alert('Success', 'Signed in successfully!');
+       const res = await auth({ userDetails: { ...formData }, type: "Login" });
+        assignDetails();
+       Alert.alert('Success', res.accessToken ?? 'Login successful!');
+       router.push('(tabs)/dashboard');
     }
   };
 

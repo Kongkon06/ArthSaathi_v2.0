@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-interface User {
+export interface User {
 
   id: string;   // Unique identifier for the user    
   name: string; // Name of the user

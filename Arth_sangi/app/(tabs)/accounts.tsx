@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import AccountFrom from '../../components/AccountForm'
 
 const MyAccountsScreen = () => {
   const [selectedTab, setSelectedTab] = useState('All');
@@ -259,10 +260,7 @@ const MyAccountsScreen = () => {
           </View>
 
           {/* Create Account Button */}
-          <TouchableOpacity className="bg-blue-600 rounded-xl p-4 flex-row items-center justify-center mb-4">
-            <Text className="text-white text-lg mr-2">+</Text>
-            <Text className="text-white font-bold text-base">Create Account</Text>
-          </TouchableOpacity>
+          <AccountFrom />
         </View>
 
         {/* Tabs */}
