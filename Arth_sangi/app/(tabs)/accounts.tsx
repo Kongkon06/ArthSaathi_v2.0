@@ -10,6 +10,7 @@ import {
     View,
 } from 'react-native';
 import AccountFrom from '../../components/AccountForm'
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 const MyAccountsScreen = () => {
   const [selectedTab, setSelectedTab] = useState('All');
@@ -30,7 +31,7 @@ const MyAccountsScreen = () => {
       created: '10/3/2024',
       savingsProgress: 1200,
       disposableIncome: '100.0%',
-      icon: '💳',
+      icon: 'credit-card',
       iconBg: 'bg-blue-100',
       category: 'Current'
     },
@@ -45,7 +46,7 @@ const MyAccountsScreen = () => {
       created: '20/2/2024',
       savingsProgress: 2500,
       disposableIncome: '100.0%',
-      icon: '👥',
+      icon: 'account-multiple',
       iconBg: 'bg-pink-100',
       category: 'Family',
       familyMembers: [
@@ -64,7 +65,7 @@ const MyAccountsScreen = () => {
       created: '15/1/2024',
       savingsProgress: 1500,
       disposableIncome: '100.0%',
-      icon: '💰',
+      icon: 'cash',
       iconBg: 'bg-green-100',
       category: 'Savings',
       isDefault: true
@@ -82,21 +83,21 @@ const MyAccountsScreen = () => {
     {
       title: 'Total Balance',
       amount: '₹16,500',
-      icon: '💳',
+      icon: 'credit-card-outline',
       borderColor: 'border-blue-400',
       bgColor: 'bg-blue-50'
     },
     {
       title: 'Total Income',
       amount: '₹10,300',
-      icon: '📈',
+      icon: 'chart-line',
       borderColor: 'border-green-400',
       bgColor: 'bg-green-50'
     },
     {
       title: 'Savings Goal',
       amount: '₹5,200',
-      icon: '🎯',
+      icon: 'safe',
       borderColor: 'border-purple-400',
       bgColor: 'bg-purple-50'
     }
@@ -114,7 +115,10 @@ const MyAccountsScreen = () => {
       <View className="flex-row items-start justify-between mb-4">
         <View className="flex-row items-center flex-1">
           <View className={`w-12 h-12 ${account.iconBg} rounded-xl items-center justify-center mr-3`}>
-            <Text className="text-xl">{account.icon}</Text>
+            <IconSymbol 
+              name={account.icon} 
+              size={24} 
+              color="text-gray-700" />
           </View>
           <View className="flex-1">
             <View className="flex-row items-center">
@@ -224,7 +228,10 @@ const MyAccountsScreen = () => {
               className={`${card.bgColor} ${card.borderColor} border-2 rounded-2xl p-4 mr-3 min-w-[140px]`}
             >
               <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-lg">{card.icon}</Text>
+                <IconSymbol 
+                  name={card.icon} 
+                  size={24} 
+                  color="text-gray-700" />
               </View>
               <Text className="text-sm text-gray-600 mb-1">{card.title}</Text>
               <Text className="text-xl font-bold text-gray-900">{card.amount}</Text>

@@ -1,3 +1,4 @@
+import userAtom from '@/atoms/userAtom';
 import React, { useState } from 'react';
 import {
     Dimensions,
@@ -9,6 +10,7 @@ import {
     View,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { useRecoilValue } from 'recoil';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -42,6 +44,7 @@ const chartConfig = {
   },
 };
 export default function FinancialDashboard(){
+  const user = useRecoilValue(userAtom);
   const [selectedPeriod, setSelectedPeriod] = useState('Last 3 months');
 
   const StatCard = ({ icon, title, amount, change, changeColor, bgColor, isMain = false }:any) => (
@@ -82,7 +85,7 @@ export default function FinancialDashboard(){
           <View className="flex-1">
             <View className="flex-row items-center mb-1">
               <Text className="text-2xl font-bold text-gray-900 mr-2">
-                Hello Sourabh Ghosh!
+                Hello {user.email}
               </Text>
               <Text className="text-2xl">👋</Text>
             </View>
