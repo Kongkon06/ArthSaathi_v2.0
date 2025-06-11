@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import "../global.css";
 import { RecoilRoot } from 'recoil';
+import { UserProvider } from '@/atoms/UserContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
@@ -22,14 +23,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RecoilRoot>
+      <UserProvider>
       <Stack>
          <Stack.Screen name="launchscreen" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      </RecoilRoot>
+      </UserProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

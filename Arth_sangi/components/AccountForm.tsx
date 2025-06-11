@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useAccount } from "@/atoms/AccountContext";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 
 const CreateAccountModal = () => {
+  const {setAccount} = useAccount();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "John",
@@ -30,6 +32,20 @@ const CreateAccountModal = () => {
     "Business Account",
   ];
 
+  const assignAccount = useCallback(()=>{
+    setAccount({
+      id: '', // This should come from the auth response
+      FirstName: `${formData.firstName}`,
+      LastName:` ${formData.lastName}`,
+      Age:Number(formData.age),
+      AccountType:formData.accountType,
+      CurrentBalance:formData.currentBalance,
+      Dependents: Number(formData.dependents),
+      DesiredSavings: formData.desiredSavings,
+      DisposableIncome: formData.disposableIncome,
+      MonthlyIncome: formData.monthlyIncome,
+    });
+  },[])
   const handleInputChange = (field: any, value: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -44,7 +60,7 @@ const CreateAccountModal = () => {
       return;
     }
 
-    console.log("Creating account with data:", formData);
+   assignAccount()
     Alert.alert("Success", "Account created successfully!");
     setModalVisible(false);
   };
