@@ -16,7 +16,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import auth from '../services/userAuth';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useSetRecoilState } from 'recoil';
 import { useUser } from '@/atoms/UserContext';
 
 const { width } = Dimensions.get('window');
@@ -38,7 +37,7 @@ interface FormErrors {
 }
 
 export default function AuthPage() {
-  const { user, setUser, updateUserField } = useUser();
+  const { setUser } = useUser();
   const router = useRouter();
   const params = useLocalSearchParams();
   
