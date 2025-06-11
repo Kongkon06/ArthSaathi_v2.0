@@ -4,7 +4,6 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
@@ -53,6 +52,7 @@ export default function TabLayout() {
             android: 0,
             default: 0
           }),
+          
         },
         tabBarStyle: Platform.select({
           ios: {
@@ -79,17 +79,18 @@ export default function TabLayout() {
             paddingTop: 8,
             paddingBottom: 8,
             height: 68,
+            marginBottom: 4,
           },
           default: {
             backgroundColor: currentTheme.background,
             borderTopWidth: 0.5,
             borderTopColor: currentTheme.borderColor,
-            paddingTop: 8,
+            paddingTop: 4,
             height: 68,
           },
         }),
         tabBarItemStyle: {
-          paddingVertical: 4,
+          paddingVertical: 0,
           marginHorizontal: Platform.select({
             ios: 2,
             android: 4,
