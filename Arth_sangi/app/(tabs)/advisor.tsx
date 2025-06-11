@@ -5,7 +5,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Dimensions,
   Alert,
   ActivityIndicator,
@@ -151,98 +150,134 @@ const AdvisorScreen = () => {
     }).format(num);
   };
 
-  const MetricCard = ({ title, value, subtitle, color = '#4F46E5' }: any) => (
-    <View style={[styles.metricCard, { borderLeftColor: color }]}>
-      <Text style={styles.metricTitle}>{title}</Text>
-      <Text style={[styles.metricValue, { color }]}>{value}</Text>
-      {subtitle && <Text style={styles.metricSubtitle}>{subtitle}</Text>}
-    </View>
-  );
+  type MetricCardColor = 'indigo' | 'green' | 'blue' | 'amber' | 'purple';
+  interface MetricCardProps {
+    title: string;
+    value: string;
+    subtitle?: string;
+    color?: MetricCardColor;
+  }
 
-  const AllocationCard = ({ percentage, title, subtitle, color }: any) => (
-    <View style={[styles.allocationCard, { backgroundColor: color + '15' }]}>
-      <Text style={[styles.allocationPercentage, { color }]}>{percentage}%</Text>
-      <Text style={[styles.allocationTitle, { color }]}>{title}</Text>
-      <Text style={styles.allocationSubtitle}>{subtitle}</Text>
-    </View>
-  );
+  const MetricCard = ({ title, value, subtitle, color = 'indigo' }: MetricCardProps) => {
+    const colorStyles: Record<MetricCardColor, string> = {
+      indigo: 'border-l-indigo-600 text-indigo-600',
+      green: 'border-l-emerald-600 text-emerald-600', 
+      blue: 'border-l-blue-600 text-blue-600',
+      amber: 'border-l-amber-600 text-amber-600',
+      purple: 'border-l-purple-600 text-purple-600'
+    };
+
+    return (
+      <View className={`bg-white rounded-2xl p-4 mb-3 border-l-4 shadow-lg ${colorStyles[color]}`} 
+            style={{ width: (screenWidth - 60) / 2 }}>
+        <Text className="text-xs text-gray-500 mb-1 uppercase tracking-wide">{title}</Text>
+        <Text className={`text-lg font-bold mb-0.5 ${colorStyles[color].split(' ')[1]}`}>{value}</Text>
+        {subtitle && <Text className="text-xs text-gray-400">{subtitle}</Text>}
+      </View>
+    );
+  };
+
+  type AllocationCardColor = 'blue' | 'green' | 'amber';
+  interface AllocationCardProps {
+    percentage: number;
+    title: string;
+    subtitle: string;
+    color: AllocationCardColor;
+  }
+
+  const AllocationCard = ({ percentage, title, subtitle, color }: AllocationCardProps) => {
+    const colorStyles: Record<AllocationCardColor, string> = {
+      blue: 'bg-blue-50 text-blue-600',
+      green: 'bg-emerald-50 text-emerald-600',
+      amber: 'bg-amber-50 text-amber-600'
+    };
+
+    return (
+      <View className={`rounded-2xl p-4 items-center ${colorStyles[color]}`} 
+            style={{ width: (screenWidth - 80) / 3 }}>
+        <Text className={`text-3xl font-bold mb-1 ${colorStyles[color].split(' ')[1]}`}>{percentage}%</Text>
+        <Text className={`text-sm font-semibold mb-0.5 ${colorStyles[color].split(' ')[1]}`}>{title}</Text>
+        <Text className="text-xs text-gray-500 text-center">{subtitle}</Text>
+      </View>
+    );
+  };
 
   if (showResults) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView className="flex-1 bg-slate-50">
         <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
         <LinearGradient
           colors={['#4F46E5', '#7C3AED', '#EC4899']}
-          style={styles.header}
+          className="pt-5 pb-8 px-5"
         >
-          <View style={styles.headerContent}>
-            <TouchableOpacity onPress={handleReset} style={styles.backButton}>
-              <Text style={styles.backButtonText}>← Back</Text>
+          <View className="items-center">
+            <TouchableOpacity onPress={handleReset} className="self-start mb-2.5">
+              <Text className="text-white text-base font-semibold">← Back</Text>
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Your Investment Strategy</Text>
-            <Text style={styles.headerSubtitle}>
+            <Text className="text-3xl font-bold text-white text-center mb-2">Your Investment Strategy</Text>
+            <Text className="text-base text-white/90 text-center leading-6">
               Personalized for {formData.financialGoal} • {formData.timeHorizon} years
             </Text>
           </View>
         </LinearGradient>
 
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <ScrollView className="flex-1 bg-slate-50" showsVerticalScrollIndicator={false}>
           {/* Financial Overview */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Financial Overview</Text>
-            <View style={styles.metricsGrid}>
+          <View className="px-5 mb-6">
+            <Text className="text-xl font-bold text-gray-800 mb-4">Financial Overview</Text>
+            <View className="flex-row flex-wrap justify-between">
               <MetricCard
                 title="Annual Income"
                 value={formatCurrency(formData.income)}
-                color="#10B981"
+                color="green"
               />
               <MetricCard
                 title="Monthly Investment"
                 value={calculateInvestmentPlan ? formatCurrency(calculateInvestmentPlan.actualSavings) : 'N/A'}
-                color="#3B82F6"
+                color="blue"
               />
               <MetricCard
                 title="Risk Level"
                 value={formData.riskTolerance.charAt(0).toUpperCase() + formData.riskTolerance.slice(1)}
-                color="#F59E0B"
+                color="amber"
               />
               <MetricCard
                 title="Time Horizon"
                 value={`${formData.timeHorizon} Years`}
-                color="#8B5CF6"
+                color="purple"
               />
             </View>
           </View>
 
           {/* Projected Returns */}
           {calculateProjectedReturns && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Projected Portfolio Growth</Text>
+            <View className="px-5 mb-6">
+              <Text className="text-xl font-bold text-gray-800 mb-4">Projected Portfolio Growth</Text>
               <LinearGradient
                 colors={['#10B981', '#059669']}
-                style={styles.projectionCard}
+                className="rounded-3xl p-6 mb-4"
               >
-                <View style={styles.projectionGrid}>
-                  <View style={styles.projectionItem}>
-                    <Text style={styles.projectionLabel}>Total Investment</Text>
-                    <Text style={styles.projectionValue}>
+                <View className="flex-row justify-between mb-4">
+                  <View className="flex-1 items-center">
+                    <Text className="text-xs text-white/80 mb-1 text-center">Total Investment</Text>
+                    <Text className="text-base font-bold text-white text-center">
                       {formatCurrency(calculateProjectedReturns.totalInvested)}
                     </Text>
                   </View>
-                  <View style={styles.projectionItem}>
-                    <Text style={styles.projectionLabel}>Expected Returns</Text>
-                    <Text style={styles.projectionValue}>
+                  <View className="flex-1 items-center">
+                    <Text className="text-xs text-white/80 mb-1 text-center">Expected Returns</Text>
+                    <Text className="text-base font-bold text-white text-center">
                       {formatCurrency(calculateProjectedReturns.totalReturns)}
                     </Text>
                   </View>
-                  <View style={styles.projectionItem}>
-                    <Text style={styles.projectionLabel}>Future Value</Text>
-                    <Text style={[styles.projectionValue, styles.projectionHighlight]}>
+                  <View className="flex-1 items-center">
+                    <Text className="text-xs text-white/80 mb-1 text-center">Future Value</Text>
+                    <Text className="text-xl font-bold text-white text-center">
                       {formatCurrency(calculateProjectedReturns.totalFutureValue)}
                     </Text>
                   </View>
                 </View>
-                <Text style={styles.projectionFooter}>
+                <Text className="text-sm text-white/90 text-center font-semibold">
                   Expected Annual Return: {calculateProjectedReturns.weightedReturn}%
                 </Text>
               </LinearGradient>
@@ -251,26 +286,26 @@ const AdvisorScreen = () => {
 
           {/* Asset Allocation */}
           {calculateAssetAllocation && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Recommended Asset Allocation</Text>
-              <View style={styles.allocationGrid}>
+            <View className="px-5 mb-6">
+              <Text className="text-xl font-bold text-gray-800 mb-4">Recommended Asset Allocation</Text>
+              <View className="flex-row justify-between mb-4">
                 <AllocationCard
                   percentage={calculateAssetAllocation.equity}
                   title="Equity"
                   subtitle="Growth potential"
-                  color="#3B82F6"
+                  color="blue"
                 />
                 <AllocationCard
                   percentage={calculateAssetAllocation.debt}
                   title="Debt"
                   subtitle="Stability & income"
-                  color="#10B981"
+                  color="green"
                 />
                 <AllocationCard
                   percentage={calculateAssetAllocation.gold}
                   title="Gold"
                   subtitle="Inflation hedge"
-                  color="#F59E0B"
+                  color="amber"
                 />
               </View>
             </View>
@@ -278,26 +313,24 @@ const AdvisorScreen = () => {
 
           {/* Investment Breakdown */}
           {calculateInvestmentPlan && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Monthly Investment Breakdown</Text>
-              <View style={styles.breakdownCard}>
-                <View style={styles.breakdownRow}>
-                  <Text style={styles.breakdownLabel}>Monthly Income</Text>
-                  <Text style={styles.breakdownValue}>
+            <View className="px-5 mb-6">
+              <Text className="text-xl font-bold text-gray-800 mb-4">Monthly Investment Breakdown</Text>
+              <View className="bg-white rounded-2xl p-5 shadow-lg">
+                <View className="flex-row justify-between py-3 border-b border-gray-100">
+                  <Text className="text-sm text-gray-500">Monthly Income</Text>
+                  <Text className="text-sm font-semibold text-gray-800">
                     {formatCurrency(calculateInvestmentPlan.monthlyIncome)}
                   </Text>
                 </View>
-                <View style={styles.breakdownRow}>
-                  <Text style={styles.breakdownLabel}>Monthly Expenses</Text>
-                  <Text style={styles.breakdownValue}>
+                <View className="flex-row justify-between py-3 border-b border-gray-100">
+                  <Text className="text-sm text-gray-500">Monthly Expenses</Text>
+                  <Text className="text-sm font-semibold text-gray-800">
                     {formatCurrency(formData.monthlyExpenses)}
                   </Text>
                 </View>
-                <View style={[styles.breakdownRow, styles.breakdownHighlight]}>
-                  <Text style={[styles.breakdownLabel, styles.breakdownLabelHighlight]}>
-                    Available for Investment
-                  </Text>
-                  <Text style={[styles.breakdownValue, styles.breakdownValueHighlight]}>
+                <View className="flex-row justify-between py-3 bg-sky-50 -mx-5 px-5 rounded-xl">
+                  <Text className="text-sm font-semibold text-gray-800">Available for Investment</Text>
+                  <Text className="text-base font-semibold text-sky-600">
                     {formatCurrency(calculateInvestmentPlan.availableForInvestment)}
                   </Text>
                 </View>
@@ -306,9 +339,9 @@ const AdvisorScreen = () => {
           )}
 
           {/* Next Steps */}
-          <View style={[styles.section, { marginBottom: 30 }]}>
-            <Text style={styles.sectionTitle}>Next Steps</Text>
-            <View style={styles.stepsCard}>
+          <View className="px-5 mb-8">
+            <Text className="text-xl font-bold text-gray-800 mb-4">Next Steps</Text>
+            <View className="bg-white rounded-2xl p-5 shadow-lg">
               {[
                 'Open a Demat account if you don\'t have one',
                 'Start SIPs in recommended mutual funds',
@@ -316,11 +349,11 @@ const AdvisorScreen = () => {
                 'Build an emergency fund (6-12 months expenses)',
                 'Review and rebalance portfolio annually'
               ].map((step, index) => (
-                <View key={index} style={styles.stepItem}>
-                  <View style={styles.stepNumber}>
-                    <Text style={styles.stepNumberText}>{index + 1}</Text>
+                <View key={index} className="flex-row items-start mb-4">
+                  <View className="w-6 h-6 rounded-full bg-indigo-600 justify-center items-center mr-3 mt-0.5">
+                    <Text className="text-white text-xs font-bold">{index + 1}</Text>
                   </View>
-                  <Text style={styles.stepText}>{step}</Text>
+                  <Text className="flex-1 text-sm text-gray-700 leading-5">{step}</Text>
                 </View>
               ))}
             </View>
@@ -331,27 +364,27 @@ const AdvisorScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
       <LinearGradient
         colors={['#4F46E5', '#7C3AED']}
-        style={styles.header}
+        className="pt-5 pb-8 px-5"
       >
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Investment Strategy Advisor</Text>
-          <Text style={styles.headerSubtitle}>
+        <View className="items-center">
+          <Text className="text-3xl font-bold text-white text-center mb-2">Investment Strategy Advisor</Text>
+          <Text className="text-base text-white/90 text-center leading-6">
             Get personalized investment recommendations based on your financial profile
           </Text>
         </View>
       </LinearGradient>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.formContainer}>
-          <View style={styles.inputRow}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Annual Income (₹) *</Text>
+      <ScrollView className="flex-1 bg-slate-50" showsVerticalScrollIndicator={false}>
+        <View className="p-5">
+          <View className="flex-row justify-between mb-5">
+            <View className="flex-1 mr-2.5 mb-5">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">Annual Income (₹) *</Text>
               <TextInput
-                style={styles.textInput}
+                className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 shadow-sm"
                 value={formData.income}
                 onChangeText={(value) => handleInputChange('income', value)}
                 placeholder="e.g., 500000"
@@ -359,10 +392,10 @@ const AdvisorScreen = () => {
                 placeholderTextColor="#9CA3AF"
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Your Age *</Text>
+            <View className="flex-1 mr-2.5 mb-5">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">Your Age *</Text>
               <TextInput
-                style={styles.textInput}
+                className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 shadow-sm"
                 value={formData.age}
                 onChangeText={(value) => handleInputChange('age', value)}
                 placeholder="e.g., 25"
@@ -372,11 +405,11 @@ const AdvisorScreen = () => {
             </View>
           </View>
 
-          <View style={styles.inputRow}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Monthly Expenses (₹) *</Text>
+          <View className="flex-row justify-between mb-5">
+            <View className="flex-1 mr-2.5 mb-5">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">Monthly Expenses (₹) *</Text>
               <TextInput
-                style={styles.textInput}
+                className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 shadow-sm"
                 value={formData.monthlyExpenses}
                 onChangeText={(value) => handleInputChange('monthlyExpenses', value)}
                 placeholder="e.g., 25000"
@@ -384,10 +417,10 @@ const AdvisorScreen = () => {
                 placeholderTextColor="#9CA3AF"
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Current Savings (₹)</Text>
+            <View className="flex-1 mr-2.5 mb-5">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">Current Savings (₹)</Text>
               <TextInput
-                style={styles.textInput}
+                className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 shadow-sm"
                 value={formData.currentSavings}
                 onChangeText={(value) => handleInputChange('currentSavings', value)}
                 placeholder="e.g., 100000"
@@ -397,13 +430,13 @@ const AdvisorScreen = () => {
             </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Financial Goal *</Text>
-            <View style={styles.pickerContainer}>
+          <View className="flex-1 mr-2.5 mb-5">
+            <Text className="text-sm font-semibold text-gray-700 mb-2">Financial Goal *</Text>
+            <View className="bg-white border-2 border-gray-200 rounded-xl shadow-sm">
               <Picker
                 selectedValue={formData.financialGoal}
                 onValueChange={(value: string) => handleInputChange('financialGoal', value)}
-                style={styles.picker}
+                className="h-14 text-gray-800"
               >
                 <Picker.Item label="Retirement Planning" value="retirement" />
                 <Picker.Item label="Wealth Creation" value="wealth" />
@@ -414,13 +447,13 @@ const AdvisorScreen = () => {
             </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Risk Tolerance *</Text>
-            <View style={styles.pickerContainer}>
+          <View className="flex-1 mr-2.5 mb-5">
+            <Text className="text-sm font-semibold text-gray-700 mb-2">Risk Tolerance *</Text>
+            <View className="bg-white border-2 border-gray-200 rounded-xl shadow-sm">
               <Picker
                 selectedValue={formData.riskTolerance}
                 onValueChange={(value: string) => handleInputChange('riskTolerance', value)}
-                style={styles.picker}
+                className="h-14 text-gray-800"
               >
                 <Picker.Item label="Conservative (Low Risk)" value="conservative" />
                 <Picker.Item label="Moderate (Medium Risk)" value="moderate" />
@@ -429,10 +462,10 @@ const AdvisorScreen = () => {
             </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Investment Time Horizon (Years) *</Text>
+          <View className="flex-1 mr-2.5 mb-5">
+            <Text className="text-sm font-semibold text-gray-700 mb-2">Investment Time Horizon (Years) *</Text>
             <TextInput
-              style={styles.textInput}
+              className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 shadow-sm"
               value={formData.timeHorizon}
               onChangeText={(value) => handleInputChange('timeHorizon', value)}
               placeholder="e.g., 20"
@@ -441,24 +474,25 @@ const AdvisorScreen = () => {
             />
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-              <Text style={styles.resetButtonText}>Reset</Text>
+          <View className="flex-row justify-between mt-8 gap-3">
+            <TouchableOpacity className="flex-1 bg-gray-100 rounded-xl p-4 items-center" onPress={handleReset}>
+              <Text className="text-gray-600 text-base font-semibold">Reset</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={styles.submitButton} 
+              className="flex-1 rounded-xl overflow-hidden"
               onPress={handleSubmit}
               disabled={loading}
+              style={{ flex: 2 }}
             >
               <LinearGradient
                 colors={['#4F46E5', '#7C3AED']}
-                style={styles.submitButtonGradient}
+                className="p-4 items-center justify-center"
               >
                 {loading ? (
                   <ActivityIndicator color="white" size="small" />
                 ) : (
-                  <Text style={styles.submitButtonText}>Get My Strategy</Text>
+                  <Text className="text-white text-base font-bold">Get My Strategy</Text>
                 )}
               </LinearGradient>
             </TouchableOpacity>
@@ -468,309 +502,5 @@ const AdvisorScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8FAFC',
-  },
-  header: {
-    paddingTop: 20,
-    paddingBottom: 30,
-    paddingHorizontal: 20,
-  },
-  headerContent: {
-    alignItems: 'center',
-  },
-  backButton: {
-    alignSelf: 'flex-start',
-    marginBottom: 10,
-  },
-  backButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: 'rgba(255,255,255,0.9)',
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  scrollView: {
-    flex: 1,
-    backgroundColor: '#F8FAFC',
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 16,
-  },
-  formContainer: {
-    padding: 20,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  inputContainer: {
-    flex: 1,
-    marginRight: 10,
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  textInput: {
-    backgroundColor: 'white',
-    borderWidth: 1.5,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    color: '#1F2937',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  pickerContainer: {
-    backgroundColor: 'white',
-    borderWidth: 1.5,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  picker: {
-    height: 56,
-    color: '#1F2937',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-    gap: 12,
-  },
-  resetButton: {
-    flex: 1,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  resetButtonText: {
-    color: '#6B7280',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  submitButton: {
-    flex: 2,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  submitButtonGradient: {
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  metricsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  metricCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    width: (screenWidth - 60) / 2,
-    borderLeftWidth: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  metricTitle: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginBottom: 4,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  metricValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 2,
-  },
-  metricSubtitle: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  projectionCard: {
-    borderRadius: 20,
-    padding: 24,
-    marginBottom: 16,
-  },
-  projectionGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  projectionItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  projectionLabel: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.8)',
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  projectionValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
-  },
-  projectionHighlight: {
-    fontSize: 20,
-  },
-  projectionFooter: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.9)',
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  allocationGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  allocationCard: {
-    width: (screenWidth - 80) / 3,
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-  },
-  allocationPercentage: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  allocationTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  allocationSubtitle: {
-    fontSize: 11,
-    color: '#6B7280',
-    textAlign: 'center',
-  },
-  breakdownCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  breakdownRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  breakdownHighlight: {
-    backgroundColor: '#F0F9FF',
-    marginHorizontal: -20,
-    paddingHorizontal: 20,
-    borderBottomWidth: 0,
-    borderRadius: 12,
-  },
-  breakdownLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  breakdownLabelHighlight: {
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  breakdownValue: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  breakdownValueHighlight: {
-    color: '#0EA5E9',
-    fontSize: 16,
-  },
-  stepsCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  stepItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 16,
-  },
-  stepNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#4F46E5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-    marginTop: 2,
-  },
-  stepNumberText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  stepText: {
-    flex: 1,
-    fontSize: 14,
-    color: '#374151',
-    lineHeight: 20,
-  },
-});
 
 export default AdvisorScreen;
