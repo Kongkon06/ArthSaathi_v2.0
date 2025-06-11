@@ -53,6 +53,7 @@ export default function TabLayout() {
             android: 0,
             default: 0
           }),
+          
         },
         tabBarStyle: Platform.select({
           ios: {
@@ -79,17 +80,18 @@ export default function TabLayout() {
             paddingTop: 8,
             paddingBottom: 8,
             height: 68,
+            marginBottom: 4,
           },
           default: {
             backgroundColor: currentTheme.background,
             borderTopWidth: 0.5,
             borderTopColor: currentTheme.borderColor,
-            paddingTop: 8,
+            paddingTop: 4,
             height: 68,
           },
         }),
         tabBarItemStyle: {
-          paddingVertical: 4,
+          paddingVertical: 0,
           marginHorizontal: Platform.select({
             ios: 2,
             android: 4,

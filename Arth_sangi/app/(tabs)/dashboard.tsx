@@ -10,7 +10,10 @@ import {
     View,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useRecoilValue } from 'recoil';
+import StatCard from '@/components/StatCard';
+import ChatModal from '@/components/ChatModel';
+import { useRecoilValue } from "recoil"
+
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -44,36 +47,8 @@ const chartConfig = {
   },
 };
 export default function FinancialDashboard(){
-  const user = useRecoilValue(userAtom);
   const [selectedPeriod, setSelectedPeriod] = useState('Last 3 months');
-
-  const StatCard = ({ icon, title, amount, change, changeColor, bgColor, isMain = false }:any) => (
-    <View className={`${isMain ? 'border-2 border-blue-400' : ''} bg-white rounded-2xl p-4 mb-4 shadow-sm`}>
-      <View className="flex-row items-center justify-between mb-3">
-        <View className={`w-10 h-10 ${bgColor} rounded-xl items-center justify-center`}>
-          <Text className="text-lg">{icon}</Text>
-        </View>
-        {change && (
-          <View className="flex-row items-center">
-            <Text className="text-xs text-gray-500 mr-1">📈</Text>
-            <Text className="text-xs font-medium text-gray-700">{change}</Text>
-          </View>
-        )}
-      </View>
-      
-      <Text className="text-sm text-gray-600 mb-1">{title}</Text>
-      <Text className={`text-2xl font-bold ${isMain ? 'text-gray-900' : 'text-gray-800'} mb-2`}>
-        {amount}
-      </Text>
-      
-      {changeColor && (
-        <Text className={`text-sm ${changeColor}`}>
-          {changeColor.includes('green') ? '+' : '-'} 
-          {changeColor.includes('green') ? '₹9,091' : '₹1,020'} from last month
-        </Text>
-      )}
-    </View>
-  );
+  const userDetails = useRecoilValue(userAtom)
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50 pt-12">
@@ -85,7 +60,7 @@ export default function FinancialDashboard(){
           <View className="flex-1">
             <View className="flex-row items-center mb-1">
               <Text className="text-2xl font-bold text-gray-900 mr-2">
-                Hello {user.email}
+                Hello {userDetails?.name || 'User'}!
               </Text>
               <Text className="text-2xl">👋</Text>
             </View>
@@ -106,7 +81,7 @@ export default function FinancialDashboard(){
         <View className="mb-6">
           {/* Main Balance Card */}
           <StatCard
-            icon="💳"
+            icon="credit-card"
             title="Total Balance"
             amount="₹1,00,000"
             change="10%"
@@ -119,7 +94,7 @@ export default function FinancialDashboard(){
           <View className="flex-row justify-between mb-4">
             <View className="flex-1 mr-2">
               <StatCard
-                icon="💸"
+                icon="cash"
                 title="Monthly Expenses"
                 amount="₹40,000"
                 changeColor="text-red-500"
@@ -128,7 +103,7 @@ export default function FinancialDashboard(){
             </View>
             <View className="flex-1 ml-2">
               <StatCard
-                icon="💰"
+                icon="chart-line"
                 title="Monthly Investment"
                 amount="₹2,000"
                 change="15.8%"
@@ -139,7 +114,7 @@ export default function FinancialDashboard(){
           </View>
           
           <StatCard
-            icon="📊"
+            icon="safe"
             title="Savings Rate"
             amount="₹400"
             change="20.5%"
@@ -192,9 +167,7 @@ export default function FinancialDashboard(){
       </ScrollView>
 
       {/* Floating Action Button */}
-      <TouchableOpacity className="absolute bottom-6 right-6 w-14 h-14 bg-indigo-600 rounded-full items-center justify-center shadow-lg">
-        <Text className="text-white text-xl">💬</Text>
-      </TouchableOpacity>
+     <ChatModal />
     </SafeAreaView>
   );
 };
