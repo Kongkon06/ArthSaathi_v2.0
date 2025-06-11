@@ -88,12 +88,12 @@ const LaunchScreen = () => {
 
   const handleGetStarted = () => {
     // Navigate to auth screen for sign up
-    router.push('/auth');
+    router.push('/auth?mode=signup');
   };
 
   const handleSignIn = () => {
     // Navigate to auth screen for sign in
-    router.push('/auth');
+    router.push('/auth?mode=signin');
   };
 
   return (
@@ -119,6 +119,7 @@ const LaunchScreen = () => {
           >
             ArthSaathi
           </Animated.Text>
+          <Text style={styles.tagline}>Your Financial Companion</Text>
 
           {/* Main Heading */}
           <Animated.View 
@@ -181,6 +182,9 @@ const LaunchScreen = () => {
             </TouchableOpacity>
           </Animated.View>
         </View>
+        <View style={styles.decorativeCircle1} />
+        <View style={styles.decorativeCircle2} />
+        <View style={styles.decorativeCircle3} />
       </LinearGradient>
     </View>
   );
@@ -205,6 +209,13 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'left',
     marginBottom: 60,
+  },
+  tagline: {
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.8)',
+    textAlign: 'left',
+    bottom: 64,
+    fontWeight: '400',
   },
   headingContainer: {
     flex: 1,
@@ -268,6 +279,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
+  },
+   decorativeCircle1: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  decorativeCircle2: {
+    position: 'absolute',
+    bottom: -80,
+    left: -80,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  decorativeCircle3: {
+    position: 'absolute',
+    top: height * 0.3,
+    left: -30,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
 });
 
