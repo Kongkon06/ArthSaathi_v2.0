@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -24,7 +24,7 @@ model Accounts {
   age               Int
   account_type      accountType   @default(Savings)
   dependents        Int
-  initial_balance   Int
+  current_balance   Int           @default(0)
   monthly_income    Int
   disposable_amount Int
   desired_saving    Int

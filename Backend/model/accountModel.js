@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function createAccount(req,res){
   try{
-  const { firstName,lastName,age,dependents,initialBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
+  const { firstName,lastName,age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
   const user = req.user
   await prisma.accounts.create({
   data:{
@@ -14,7 +14,7 @@ async function createAccount(req,res){
   age:age,
   dependents:dependents,
   account_type: accountType,
-  initial_balance :initialBalance,
+  current_balance :currentBalance,
   monthly_income : monthlyIncome,
   disposable_amount: disposableIncome,
   desired_saving : desiredSavings
@@ -71,7 +71,7 @@ async function deleteAccount(req,res){
 async function updateAccount(req,res) {
   try{
     const { account_id } = req.params.id;
-    const { firstName,lastName,age,dependents,initialBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
+    const { firstName,lastName,age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
     if(!account_id){
       res.status(411).json({msg:'Missing id'});
     }
@@ -85,7 +85,7 @@ async function updateAccount(req,res) {
         age:age,
         dependents:dependents,
         account_type: accountType,
-        initial_balance :initialBalance,
+        current_balance :currentBalance,
         monthly_income : monthlyIncome,
         disposable_amount: disposableIncome,
         desired_saving : desiredSavings
