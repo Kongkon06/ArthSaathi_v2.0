@@ -1,9 +1,8 @@
 import { BlurView } from 'expo-blur';
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView, Animated } from 'react-native';
-import { Modal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView, Animated, Modal } from 'react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+
 
 interface Message {
   id: string;
@@ -17,7 +16,6 @@ const ChatModal = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
 
@@ -97,7 +95,7 @@ const ChatModal = () => {
       {/* Trigger Button */}
       <TouchableOpacity
         onPress={toggleModal}
-        className="absolute bottom-6 right-6 w-16 h-16 bg-gray-100  rounded-full items-center justify-center shadow-xl"
+        className="absolute bottom-6 right-6 w-16 h-16 bg-gray-100 rounded-full items-center justify-center shadow-xl"
         style={{
           shadowColor: '#8B5CF6',
           shadowOffset: { width: 0, height: 4 },
@@ -115,12 +113,14 @@ const ChatModal = () => {
         animationType="fade"
         transparent={true}
         onRequestClose={toggleModal}
+       
       >
         <BlurView intensity={20} tint="light" style={{ flex: 1 }}>
           <View className="flex-1 bg-black/20 justify-center items-center p-4">
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               className="w-full max-w-sm"
+             
             >
               <Animated.View
                 style={[
@@ -153,7 +153,7 @@ const ChatModal = () => {
                 className="bg-white rounded-3xl overflow-hidden shadow-2xl"
               >
                 {/* Header */}
-                <View className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4">
+                <View className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4"style={{ backgroundColor: '#8B5CF6' }}>
                   <View className="flex-row justify-between items-center">
                     <View className="flex-row items-center">
                       <View className="w-10 h-10 bg-white/20 rounded-full items-center justify-center mr-3">
@@ -175,6 +175,7 @@ const ChatModal = () => {
                   className="flex-1 px-4 py-4"
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{ paddingBottom: 8 }}
+                 
                 >
                   {messages.length === 0 && (
                     <View className="items-center justify-center py-8">
@@ -195,9 +196,10 @@ const ChatModal = () => {
                       <View
                         className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                           msg.isUser 
-                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 rounded-tr-md' 
+                            ? ' rounded-tr-md' 
                             : 'bg-gray-100 rounded-tl-md'
                         }`}
+                         style={msg.isUser ? { backgroundColor: '#8B5CF6' } : {}}
                       >
                         <Text className={`text-base ${msg.isUser ? 'text-white' : 'text-gray-800'}`}>
                           {msg.text}
@@ -224,15 +226,16 @@ const ChatModal = () => {
                       onSubmitEditing={handleSend}
                       multiline
                       maxLength={500}
+                     
+                      
                     />
                     <TouchableOpacity
                       onPress={handleSend}
                       disabled={message.trim() === ''}
-                      className={`ml-2 w-10 h-10 rounded-full items-center justify-center ${
-                        message.trim() === '' 
-                          ? 'bg-gray-300' 
-                          : 'bg-gradient-to-r from-purple-600 to-blue-600'
-                      }`}
+                       className={`ml-2 w-10 h-10 rounded-full items-center justify-center`}
+                      style={{ 
+                        backgroundColor: message.trim() === '' ? '#D1D5DB' : '#8B5CF6'
+                      }}
                     >
                       <IconSymbol 
                         name="send" 
