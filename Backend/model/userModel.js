@@ -47,7 +47,8 @@ async function userLogin(req,res) {
     return 
     }
     const { accessToken ,refreshToken } = await auth.generateTokens(user);
-    res.json({accessToken,refreshToken});
+    const userId = user.id;
+    res.json({accessToken,refreshToken,userId});
     return
   }catch(error){
     console.error(error); // Logs the error for server-side debugging

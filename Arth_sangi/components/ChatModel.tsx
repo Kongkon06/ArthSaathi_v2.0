@@ -1,9 +1,8 @@
 import { BlurView } from 'expo-blur';
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView, Animated } from 'react-native';
-import { Modal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView, Animated, Modal } from 'react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+
 
 interface Message {
   id: string;
@@ -17,7 +16,6 @@ const ChatModal = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
 
@@ -84,9 +82,9 @@ const ChatModal = () => {
     <View className="items-start mb-3">
       <View className="bg-gray-200 rounded-2xl rounded-tl-md px-4 py-3">
         <View className="flex-row items-center space-x-1">
-          <View className="w-2 h-2 bg-gray-400 rounded-full" style={{ opacity: 0.5 }} />
-          <View className="w-2 h-2 bg-gray-400 rounded-full" style={{ opacity: 0.75 }} />
-          <View className="w-2 h-2 bg-gray-400 rounded-full" />
+          <View className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" />
+          <View className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <View className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
         </View>
       </View>
     </View>
@@ -115,30 +113,60 @@ const ChatModal = () => {
         animationType="fade"
         transparent={true}
         onRequestClose={toggleModal}
+       
       >
-        <BlurView intensity={50} tint="light" className="flex-1 justify-end">
-          <View className="flex-1 bg-black/50 justify-end px-4">
+        <BlurView intensity={20} tint="light" style={{ flex: 1 }}>
+          <View className="flex-1 bg-black/20 justify-center items-center p-4">
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              keyboardVerticalOffset={insets.bottom}
+              className="w-full max-w-sm"
+             
             >
               <Animated.View
-                style={{
-                  transform: [{
-                    translateY: slideAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [500, 0],
-                    })
-                  }],
-                }}
-                className="bg-white rounded-t-3xl shadow-lg"
+                style={[
+                  {
+                    transform: [
+                      {
+                        translateY: slideAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [300, 0],
+                        }),
+                      },
+                      {
+                        scale: slideAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0.9, 1],
+                        }),
+                      },
+                    ],
+                    opacity: slideAnim,
+                  },
+                  {
+                    height: 500,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 10 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 20,
+                    elevation: 20,
+                  }
+                ]}
+                className="bg-white rounded-3xl overflow-hidden shadow-2xl"
               >
                 {/* Header */}
-                <View className="flex-row justify-between items-center p-4 border-b border-gray-200">
-                  <Text className="text-lg font-bold">Chat Support</Text>
-                  <TouchableOpacity onPress={toggleModal}>
-                    <Text className="text-gray-500 text-lg">✕</Text>
-                  </TouchableOpacity>
+                <View className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4"style={{ backgroundColor: '#8B5CF6' }}>
+                  <View className="flex-row justify-between items-center">
+                    <View className="flex-row items-center">
+                      <View className="w-10 h-10 bg-white/20 rounded-full items-center justify-center mr-3">
+                        <IconSymbol name="assistant" size={20} color="white" />
+                      </View>
+                      <View>
+                        <Text className="text-white text-lg font-bold">AI Assistant</Text>
+                      </View>
+                    </View>
+                    <TouchableOpacity onPress={toggleModal} className="w-8 h-8 bg-white/20 rounded-full items-center justify-center">
+                      <IconSymbol name="close" size={16} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
                 {/* Messages */}
@@ -147,6 +175,7 @@ const ChatModal = () => {
                   className="flex-1 px-4 py-4"
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{ paddingBottom: 8 }}
+                 
                 >
                   {messages.length === 0 && (
                     <View className="items-center justify-center py-8">
@@ -162,14 +191,15 @@ const ChatModal = () => {
                   {messages.map(msg => (
                     <View
                       key={msg.id}
-                      className={`mb-4 ${msg.isUser ? 'items-end' : 'items-start'}`}
+                      className={`mb-4 ${msg.isUser ? 'items-end' : 'items-start'}` }
                     >
                       <View
                         className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                           msg.isUser 
-                            ? 'bg-purple-600 rounded-tr-md' 
+                            ? ' rounded-tr-md' 
                             : 'bg-gray-100 rounded-tl-md'
                         }`}
+                         style={msg.isUser ? { backgroundColor: '#8B5CF6' } : {}}
                       >
                         <Text className={`text-base ${msg.isUser ? 'text-white' : 'text-gray-800'}`}>
                           {msg.text}
@@ -196,15 +226,16 @@ const ChatModal = () => {
                       onSubmitEditing={handleSend}
                       multiline
                       maxLength={500}
+                     
+                      
                     />
                     <TouchableOpacity
                       onPress={handleSend}
                       disabled={message.trim() === ''}
-                      className={`ml-2 w-10 h-10 rounded-full items-center justify-center ${
-                        message.trim() === '' 
-                          ? 'bg-gray-300' 
-                          : 'bg-purple-600'
-                      }`}
+                       className={`ml-2 w-10 h-10 rounded-full items-center justify-center`}
+                      style={{ 
+                        backgroundColor: message.trim() === '' ? '#D1D5DB' : '#8B5CF6'
+                      }}
                     >
                       <IconSymbol 
                         name="send" 

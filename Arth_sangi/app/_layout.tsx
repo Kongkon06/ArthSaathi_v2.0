@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 import "../global.css";
 import { RecoilRoot } from 'recoil';
 import { UserProvider } from '@/atoms/UserContext';
+import { AccountProvider } from '@/atoms/AccountContext'; 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
