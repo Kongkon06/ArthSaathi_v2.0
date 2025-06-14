@@ -1,3 +1,4 @@
+'use client'
 import { useAccount } from "@/atoms/AccountContext";
 import React, { useCallback, useState } from "react";
 import {

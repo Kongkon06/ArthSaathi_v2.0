@@ -4,11 +4,10 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import "../global.css";
-import { RecoilRoot } from 'recoil';
-import { UserProvider } from '@/atoms/UserContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
+import { AppProvider } from '@/atoms/AppProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -23,14 +22,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <UserProvider>
+      <AppProvider>
       <Stack>
          <Stack.Screen name="launchscreen" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      </UserProvider>
+      </AppProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

@@ -191,11 +191,11 @@ const MyAccountsScreen = () => {
       {/* Action Buttons */}
       <View className="flex-row justify-end space-x-3">
         <TouchableOpacity className="flex-row items-center bg-gray-100 px-4 py-2 rounded-lg">
-          <Text className="text-gray-700 text-sm mr-1">✏️</Text>
+          <IconSymbol name='account-edit' size={20} color='black'/>
           <Text className="text-gray-700 text-sm font-medium">Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-row items-center bg-red-100 px-4 py-2 rounded-lg">
-          <Text className="text-red-600 text-sm mr-1">🗑️</Text>
+          <IconSymbol name='delete-forever-outline' size={20} color='black'/>
           <Text className="text-red-600 text-sm font-medium">Delete</Text>
         </TouchableOpacity>
       </View>

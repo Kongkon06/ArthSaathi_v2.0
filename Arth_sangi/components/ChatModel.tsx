@@ -65,7 +65,7 @@ const ChatModal = () => {
         <BlurView intensity={50} tint="light" style={{ flex: 1, justifyContent: 'flex-end' }}>
         <View className="flex-1 bg-black/50 bg-opacity-50 justify-end px-4">
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
             keyboardVerticalOffset={insets.bottom}
           >
             <View className="bg-white rounded-t-3xl h-2/3">

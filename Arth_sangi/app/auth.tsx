@@ -135,7 +135,7 @@ export default function AuthPage() {
     return undefined;
   };
 
-  const assignUserDetails = useCallback(() => {
+  const assignUserDetails = useCallback(({ token }: { token: string }) => {
     setUser({
       id: '', // This should come from the auth response
       name: `${formData.firstName} ${formData.lastName}`.trim() || formData.email.split('@')[0],
@@ -143,6 +143,7 @@ export default function AuthPage() {
       password: formData.password,
       phoneNumber: '',
       address: '',
+      token:token
     });
   }, [formData, setUser]);
 
@@ -200,14 +201,14 @@ export default function AuthPage() {
     
     try {
       if (isSignUp) {
-        await auth({ userDetails: { ...formData }, type: "SignUp" });
-        assignUserDetails();
+        const res = await auth({ userDetails: { ...formData }, type: "SignUp" });
+        assignUserDetails({ token: res.token });
         Alert.alert('Success', 'Account created successfully!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }
         ]);
       } else {
         const res = await auth({ userDetails: { ...formData }, type: "Login" });
-        assignUserDetails();
+        assignUserDetails({ token: res.accessToken });
         Alert.alert('Success', 'Login successful!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }
         ]);

@@ -8,6 +8,7 @@ export interface User {
   password: string;
   phoneNumber: string;
   address: string;
+  token:string;
 }
 
 // Step 2: Define the context value type
@@ -25,6 +26,7 @@ const defaultUser: User = {
   password: '',
   phoneNumber: '',
   address: '',
+  token:''
 };
 
 // Step 4: Create the context
