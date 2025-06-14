@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     Dimensions,
     SafeAreaView,
@@ -7,16 +7,22 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Animated,
+    RefreshControl,
+    Modal,
+    Alert,
+    Platform,
 } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
+//import { BlurView } from 'expo-blur';
+import { LineChart, PieChart } from 'react-native-chart-kit';
 import StatCard from '@/components/StatCard';
 import ChatModal from '@/components/ChatModel';
 import { useUser } from '@/atoms/UserContext';
-
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 const screenWidth = Dimensions.get('window').width;
 
-// Mock chart data
+// Enhanced chart data with multiple datasets
 const chartData = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
@@ -25,8 +31,46 @@ const chartData = {
       color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
       strokeWidth: 3,
     },
+    {
+      data: [30000, 32000, 35000, 33000, 36000, 38000],
+      color: (opacity = 1) => `rgba(34, 197, 94, ${opacity})`,
+      strokeWidth: 2,
+    },
   ],
+  legend: ['Income', 'Expenses'],
 };
+
+// Expense breakdown data
+const expenseData = [
+  {
+    name: 'Food',
+    population: 12000,
+    color: '#6366F1',
+    legendFontColor: '#64748B',
+    legendFontSize: 12,
+  },
+  {
+    name: 'Transport',
+    population: 8000,
+    color: '#10B981',
+    legendFontColor: '#64748B',
+    legendFontSize: 12,
+  },
+  {
+    name: 'Shopping',
+    population: 10000,
+    color: '#F59E0B',
+    legendFontColor: '#64748B',
+    legendFontSize: 12,
+  },
+  {
+    name: 'Bills',
+    population: 10000,
+    color: '#EF4444',
+    legendFontColor: '#64748B',
+    legendFontSize: 12,
+  },
+];
 
 const chartConfig = {
   backgroundGradientFrom: '#ffffff',
@@ -37,66 +81,222 @@ const chartConfig = {
   useShadowColorFromDataset: false,
   decimalPlaces: 0,
   propsForLabels: {
-    fontSize: 12,
-    fill: '#6B7280',
+    fontSize: 11,
+    fill: '#64748B',
   },
   propsForBackgroundLines: {
     strokeWidth: 1,
-    stroke: '#E5E7EB',
+    stroke: '#F1F5F9',
   },
 };
-export default function FinancialDashboard(){
-  const [selectedPeriod, setSelectedPeriod] = useState('Last 3 months');
+
+export default function PremiumFinancialDashboard() {
   const { user } = useUser();
+  const [selectedPeriod, setSelectedPeriod] = useState('Last 6 months');
+  const [refreshing, setRefreshing] = useState(false);
+  const [showPeriodModal, setShowPeriodModal] = useState(false);
+  const [showExpenseBreakdown, setShowExpenseBreakdown] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [pressedStat, setPressedStat] = useState<string | null>(null);
+  
+  // Animation values
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
+
+  const periods = ['Last 7 days', 'Last month', 'Last 3 months', 'Last 6 months', 'Last year'];
+
+  const notifications = [
+    { id: '1', title: 'Investment Update', message: 'Your SIP investment has been processed successfully', time: '2 hours ago' },
+    { id: '2', title: 'Expense Alert', message: 'You have exceeded your monthly dining budget', time: '5 hours ago' },
+    { id: '3', title: 'Goal Achievement', message: 'Congratulations! You reached your vacation savings goal', time: '1 day ago' },
+  ];
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 2000);
+  };
+
+  // const handleQuickAction = (action: { id: string; title: string; icon: string; color: string; bgColor: string }) => {
+  //   Alert.alert('Quick Action', `${action.title} feature coming soon!`);
+  // };
+
+  type QuickAction = {
+    id: string;
+    title: string;
+    icon: string;
+    color: string;
+    bgColor: string;
+  };
+
+  // const QuickActionButton: React.FC<{ item: QuickAction }> = ({ item }) => (
+  //   <TouchableOpacity
+  //     onPress={() => handleQuickAction(item)}
+  //     className="items-center flex-1 mx-2"
+  //   >
+  //     <View className={`w-16 h-16 ${item.bgColor} rounded-2xl items-center justify-center mb-3 border border-gray-100`}>
+  //       <Text className="text-2xl">{item.icon}</Text>
+  //     </View>
+  //     <Text className="text-sm text-gray-700 font-medium text-center">{item.title}</Text>
+  //   </TouchableOpacity>
+  // );
+
+  type Notification = {
+    id: string;
+    title: string;
+    message: string;
+    time: string;
+  };
+
+  const NotificationItem: React.FC<{ item: Notification }> = ({ item }) => (
+    <View className="p-4 bg-gray-50 rounded-xl mb-3">
+      <Text className="font-semibold text-gray-800 mb-1">{item.title}</Text>
+      <Text className="text-sm text-gray-600 mb-2">{item.message}</Text>
+      <Text className="text-xs text-gray-400">{item.time}</Text>
+    </View>
+  );
+
+  // Enhanced Modal Backdrop with Blur Effect
+  const ModalBackdrop: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <View className="flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+      <View 
+        className="flex-1" 
+        style={{ 
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        {children}
+      </View>
+    </View>
+  );
+
+  
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 pt-12">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }} className="bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
-      <ScrollView className="flex-1 px-4 pt-2" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View className="flex-row items-center justify-between mb-6">
-          <View className="flex-1">
-            <View className="flex-row items-center mb-1">
-              <Text className="text-2xl font-bold text-gray-900 mr-2">
+      <ScrollView 
+        className="flex-1 px-5 pt-2" 
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        {/* Premium Header with Notification */}
+        <Animated.View 
+          style={{ 
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }] 
+          }}
+          className="flex-row items-start justify-between mb-8 mt-4"
+        >
+          <View style={{flex: 1, minWidth: 0}}>
+            <View className="flex-row items-center mb-2 flex-wrap">
+              <Text className="text-2xl font-bold text-gray-900 mr-2 flex-shrink" numberOfLines={2} ellipsizeMode="tail">
                 Hello {user.email.split(/\d/)[0]}!
               </Text>
               <Text className="text-2xl">👋</Text>
             </View>
-            <Text className="text-gray-600 text-base">
+            <Text className="text-gray-600 text-base font-medium">
               Every small step brings you closer to your big dreams.
             </Text>
-            <Text className="text-gray-500 text-sm mt-1">
-              Friday, June 6, 2025
+            <Text className="text-gray-400 text-sm mt-1">
+              {formattedDate}
             </Text>
           </View>
-          
-          <View className="w-12 h-12 bg-indigo-500 rounded-full items-center justify-center">
-            <Text className="text-white font-bold text-lg">SG</Text>
+          <View className="flex-row items-center space-x-3 ml-2" style={{flexShrink: 0}}>
+            {/* Notification Bell */}
+            <TouchableOpacity 
+              onPress={() => setShowNotifications(true)}
+              className="w-12 h-12 items-center justify-center "
+            >
+              <IconSymbol name="bell-outline" size={20} color="#3B82F6" />
+              
+            </TouchableOpacity>
+            {/* Profile */}
+            <TouchableOpacity className="w-12 h-12 bg-white rounded-2xl items-center justify-center shadow-sm">
+              <IconSymbol name="account-settings" size={20} color="#27283A" />
+            </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
-        {/* Stats Grid */}
+        {/* Quick Actions - Only Invest and Add Expense */}
+        {/*
+        <Animated.View 
+          style={{ 
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+            elevation: 2,
+          }}
+          className="bg-white rounded-2xl p-6 mb-6 shadow-sm"
+        >
+          <Text className="text-lg font-bold text-gray-900 mb-5">Quick Actions</Text>
+          <View className="flex-row justify-center">
+            {quickActions.map((item) => (
+              <QuickActionButton key={item.id} item={item} />
+            ))}
+          </View>
+        </Animated.View>
+        */}
+
+        {/* Premium Stats Grid - Using imported StatCard component */}
         <View className="mb-6">
-          {/* Main Balance Card */}
           <StatCard
-            icon="credit-card"
+            icon="wallet"
             title="Total Balance"
             amount="₹1,00,000"
-            change="10%"
+            change="10.2%"
             changeColor="text-green-600"
-            bgColor="bg-green-100"
-            isMain={true}
+            bgColor="bg-blue-100"
+            isMain={pressedStat === 'Total Balance'}
+            onPressIn={() => setPressedStat('Total Balance')}
+            onPressOut={() => setPressedStat(null)}
           />
-          
-          {/* Other Stats */}
           <View className="flex-row justify-between mb-4">
             <View className="flex-1 mr-2">
               <StatCard
                 icon="cash"
                 title="Monthly Expenses"
                 amount="₹40,000"
+                change="5.2%"
                 changeColor="text-red-500"
                 bgColor="bg-red-100"
+                isMain={pressedStat === 'Monthly Expenses'}
+                onPress={() => setShowExpenseBreakdown(true)}
+                onPressIn={() => setPressedStat('Monthly Expenses')}
+                onPressOut={() => setPressedStat(null)}
               />
             </View>
             <View className="flex-1 ml-2">
@@ -107,43 +307,55 @@ export default function FinancialDashboard(){
                 change="15.8%"
                 changeColor="text-green-600"
                 bgColor="bg-green-100"
+                isMain={pressedStat === 'Monthly Investment'}
+                onPressIn={() => setPressedStat('Monthly Investment')}
+                onPressOut={() => setPressedStat(null)}
               />
             </View>
           </View>
-          
           <StatCard
             icon="safe"
             title="Savings Rate"
             amount="₹400"
             change="20.5%"
             changeColor="text-green-600"
-            bgColor="bg-green-100"
+            bgColor="bg-purple-100"
+            isMain={pressedStat === 'Savings Rate'}
+            onPressIn={() => setPressedStat('Savings Rate')}
+            onPressOut={() => setPressedStat(null)}
           />
         </View>
 
-        {/* Financial Overview */}
-        <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
-          <View className="flex-row items-center justify-between mb-4">
-            <View>
+        {/* Enhanced Financial Overview */}
+        <Animated.View 
+          style={{ opacity: fadeAnim }}
+          className="bg-white rounded-2xl p-6 mb-6 shadow-sm"
+        >
+          <View className="flex-row items-center justify-between mb-6">
+            <View className="flex-1">
               <Text className="text-lg font-bold text-gray-900 mb-1">
                 Financial Overview
               </Text>
-              <Text className="text-gray-600 text-sm">
-                Track your investment vs expenses over time
+              <Text className="text-gray-500 text-sm">
+                Track your Invesments vs Expenses over time
               </Text>
             </View>
             
-            <TouchableOpacity className="bg-gray-100 px-3 py-2 rounded-lg flex-row items-center">
-              <Text className="text-sm text-gray-700 mr-1">{selectedPeriod}</Text>
-              <Text className="text-gray-500">▼</Text>
+            <TouchableOpacity 
+              onPress={() => setShowPeriodModal(true)}
+              className="bg-gray-50 px-4 py-2 rounded-lg flex-row items-center border border-gray-200"
+            >
+              <Text className="text-sm text-gray-700 mr-2 font-medium">{selectedPeriod}</Text>
+              <View className="w-4 h-4 items-center justify-center">
+                <Text className="text-gray-400 text-xs">▼</Text>
+              </View>
             </TouchableOpacity>
           </View>
 
-          {/* Chart */}
           <View className="items-center">
             <LineChart
               data={chartData}
-              width={screenWidth - 60}
+              width={screenWidth - 70}
               height={200}
               chartConfig={chartConfig}
               bezier
@@ -156,16 +368,145 @@ export default function FinancialDashboard(){
               withVerticalLines={false}
               withHorizontalLines={true}
               segments={4}
+              withShadow={false}
             />
           </View>
-        </View>
+        </Animated.View>
 
-        {/* Bottom spacing */}
         <View className="h-6" />
       </ScrollView>
 
-      {/* Floating Action Button */}
-     <ChatModal />
+      {/* Modern AI Assistant Button */}
+      <Animated.View 
+        style={{ 
+          opacity: fadeAnim,
+          transform: [{ scale: scaleAnim }] 
+        }}
+        className="absolute bottom-6 right-5"
+      >
+      <ChatModal />
+      </Animated.View>
+
+      {/* Notifications Modal with Blur Effect */}
+      <Modal
+        visible={showNotifications}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowNotifications(false)}
+      >
+        <ModalBackdrop>
+          <View className="flex-1 justify-end">
+            <View className="bg-white rounded-t-3xl p-6 min-h-[400px]" style={{ 
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+            }}>
+              <View className="w-12 h-1 bg-gray-300 rounded-full self-center mb-6" />
+              <View className="flex-row items-center justify-between mb-6">
+                <Text className="text-xl font-bold text-gray-900">Notifications</Text>
+                <TouchableOpacity onPress={() => setShowNotifications(false)}>
+                  <Text className="text-blue-500 font-semibold">Close</Text>
+                </TouchableOpacity>
+              </View>
+              
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {notifications.map((notification) => (
+                  <NotificationItem key={notification.id} item={notification} />
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </ModalBackdrop>
+      </Modal>
+
+      {/* Period Selection Modal with Blur Effect */}
+      <Modal
+        visible={showPeriodModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowPeriodModal(false)}
+      >
+        <ModalBackdrop>
+          <View className="flex-1 justify-end">
+            <View className="bg-white rounded-t-3xl p-6 min-h-[300px]" style={{ 
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+            }}>
+              <View className="w-12 h-1 bg-gray-300 rounded-full self-center mb-6" />
+              <Text className="text-xl font-bold text-gray-900 mb-4">Select Time Period</Text>
+              
+              {periods.map((period) => (
+                <TouchableOpacity
+                  key={period}
+                  onPress={() => {
+                    setSelectedPeriod(period);
+                    setShowPeriodModal(false);
+                  }}
+                  className={`p-4 rounded-xl mb-2 ${
+                    selectedPeriod === period ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'
+                  }`}
+                >
+                  <Text className={`font-semibold ${
+                    selectedPeriod === period ? 'text-blue-700' : 'text-gray-700'
+                  }`}>
+                    {period}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </ModalBackdrop>
+      </Modal>
+
+      {/* Expense Breakdown Modal with Blur Effect */}
+      <Modal
+        visible={showExpenseBreakdown}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowExpenseBreakdown(false)}
+      >
+        <ModalBackdrop>
+          <View className="flex-1 justify-end">
+            <View className="bg-white rounded-t-3xl p-6 min-h-[400px]" style={{ 
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+            }}>
+              <View className="w-12 h-1 bg-gray-300 rounded-full self-center mb-6" />
+              <Text className="text-xl font-bold text-gray-900 mb-4">Expense Breakdown</Text>
+              
+              <View className="items-center mb-4">
+                <PieChart
+                  data={expenseData}
+                  width={screenWidth - 80}
+                  height={200}
+                  chartConfig={{
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  }}
+                  accessor="population"
+                  backgroundColor="transparent"
+                  paddingLeft="15"
+                  absolute
+                />
+              </View>
+              
+              <TouchableOpacity
+                onPress={() => setShowExpenseBreakdown(false)}
+                className="bg-blue-500 p-4 rounded-xl mt-4"
+              >
+                <Text className="text-white font-semibold text-center">Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalBackdrop>
+      </Modal>
     </SafeAreaView>
   );
-};
+}

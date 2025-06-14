@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
@@ -364,8 +365,8 @@ const AdvisorScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
-      <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
+    //Header section 
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F1F5F9', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }} className="bg-slate-50">
       <LinearGradient
         colors={['#4F46E5', '#7C3AED']}
         className="pt-5 pb-8 px-5"

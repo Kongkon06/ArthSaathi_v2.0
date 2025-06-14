@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Text,
     View,
+    TouchableOpacity,
 } from 'react-native';
 import { IconSymbol } from './ui/IconSymbol';
-export default function StatCard({ icon, title, amount, change, changeColor, bgColor, isMain = false }:any) {
-  return (
-    <View className={`${isMain ? 'border-2 border-blue-400' : ''} bg-white rounded-2xl p-4 mb-4 shadow-sm`}>
+
+export default function StatCard({ icon, title, amount, change, changeColor, bgColor, isMain = false, onPress, onPressIn, onPressOut }:any) {
+  const borderColor = isMain ? 'border-blue-400' : 'border-transparent';
+  const CardContent = (
+    <View className={`border-2 ${borderColor} bg-white rounded-2xl p-4 mb-4 shadow-sm`}>
       <View className="flex-row items-center justify-between mb-3">
         <View className={`w-10 h-10 ${bgColor} rounded-xl items-center justify-center`}>
             <IconSymbol name={icon} size={24} color="#1D4ED8" />
@@ -32,4 +35,17 @@ export default function StatCard({ icon, title, amount, change, changeColor, bgC
       )}
     </View>
   );
+  if (onPress || onPressIn || onPressOut) {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+      >
+        {CardContent}
+      </TouchableOpacity>
+    );
+  }
+  return CardContent;
 }

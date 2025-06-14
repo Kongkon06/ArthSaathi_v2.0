@@ -2,7 +2,7 @@
 data_preprocessing.py
 
 This module handles the data collection, cleaning, and preprocessing steps for mutual fund analysis.
-Author: Satej
+
 """
 
 import pandas as pd
