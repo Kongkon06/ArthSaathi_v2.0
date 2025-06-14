@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import AccountFrom from '../../components/AccountForm'
+import AccountForm from '../../components/AccountForm'
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 const MyAccountsScreen = () => {
@@ -267,7 +267,7 @@ const MyAccountsScreen = () => {
           </View>
 
           {/* Create Account Button */}
-          <AccountFrom />
+          <AccountForm />
         </View>
 
         {/* Tabs */}
