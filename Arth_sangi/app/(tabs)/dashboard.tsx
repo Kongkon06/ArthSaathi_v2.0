@@ -19,6 +19,7 @@ import StatCard from '@/components/StatCard';
 import ChatModal from '@/components/ChatModel';
 import { useUser } from '@/atoms/UserContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { accountService } from '@/services/getAccount';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -112,6 +113,9 @@ export default function PremiumFinancialDashboard() {
     { id: '3', title: 'Goal Achievement', message: 'Congratulations! You reached your vacation savings goal', time: '1 day ago' },
   ];
 
+  const fetchAccount = ()=>{
+   const account =  accountService.getAccount(user.token);
+  }
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -131,6 +135,7 @@ export default function PremiumFinancialDashboard() {
         useNativeDriver: true,
       }),
     ]).start();
+
   }, []);
 
   const onRefresh = () => {

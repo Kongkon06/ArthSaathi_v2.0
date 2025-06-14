@@ -135,9 +135,9 @@ export default function AuthPage() {
     return undefined;
   };
 
-  const assignUserDetails = useCallback(({ token }: { token: string }) => {
+  const assignUserDetails = useCallback(({ token , userId }: { token: string, userId?:string }) => {
     setUser({
-      id: '', // This should come from the auth response
+      id: userId ?? '', // This should come from the auth response
       name: `${formData.firstName} ${formData.lastName}`.trim() || formData.email.split('@')[0],
       email: formData.email,
       password: formData.password,
@@ -208,7 +208,7 @@ export default function AuthPage() {
         ]);
       } else {
         const res = await auth({ userDetails: { ...formData }, type: "Login" });
-        assignUserDetails({ token: res.accessToken });
+        assignUserDetails({ token: res.accessToken, userId: res.userId });
         Alert.alert('Success', 'Login successful!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }
         ]);

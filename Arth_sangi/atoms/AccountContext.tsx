@@ -3,15 +3,15 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 // Step 1: Define the User interface
 export interface Account {
   id: string;
-  FirstName: string;
-  LastName: string;
-  Age:number;
-  Dependents:number;
-  CurrentBalance: string;
-  AccountType: string;
-  MonthlyIncome: string;
-  DisposableIncome: string;
-  DesiredSavings:string;
+  firstName: string;
+  lastName: string;
+  age:number;
+  dependents:number;
+  currentBalance: string;
+  accountType: string;
+  monthlyIncome: string;
+  disposableIncome: string;
+  desiredSavings:string;
 }
 
 // Step 2: Define the context value type
@@ -24,15 +24,15 @@ interface AccountContextType {
 // Step 3: Create default Account object
 const defaultAccount: Account = {
   id: '',
-  FirstName: '',
-  LastName: '',
-  Age: 18,
-  Dependents: 0,
-  CurrentBalance: '',
-  AccountType:'',
-  MonthlyIncome:'',
-  DisposableIncome:'',
-  DesiredSavings:''
+  firstName: '',
+  lastName: '',
+  age: 18,
+  dependents: 0,
+  currentBalance: '',
+  accountType:'',
+  monthlyIncome:'',
+  disposableIncome:'',
+  desiredSavings:''
 };
 
 // Step 4: Create the context

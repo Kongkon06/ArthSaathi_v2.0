@@ -1,4 +1,3 @@
-'use client'
 import { useAccount } from "@/atoms/AccountContext";
 import React, { useCallback, useState } from "react";
 import {
@@ -10,8 +9,11 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import { useUser } from '../atoms/UserContext';
+import { accountService, AccountDetails } from '@/services/getAccount';
 
 const CreateAccountModal = () => {
+  const { user } = useUser();
   const {setAccount} = useAccount();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,7 +22,7 @@ const CreateAccountModal = () => {
     age: "25",
     dependents: "0",
     currentBalance: "5000.00",
-    accountType: "Current Account",
+    accountType: "Current",
     monthlyIncome: "5000.00",
     disposableIncome: "1000.00",
     desiredSavings: "500.00",
@@ -28,25 +30,34 @@ const CreateAccountModal = () => {
   });
 
   const accountTypes = [
-    "Current Account",
-    "Savings Account",
-    "Business Account",
+    "Current",
+    "Savings"
   ];
 
-  const assignAccount = useCallback(()=>{
-    setAccount({
-      id: '', // This should come from the auth response
-      FirstName: `${formData.firstName}`,
-      LastName:` ${formData.lastName}`,
-      Age:Number(formData.age),
-      AccountType:formData.accountType,
-      CurrentBalance:formData.currentBalance,
-      Dependents: Number(formData.dependents),
-      DesiredSavings: formData.desiredSavings,
-      DisposableIncome: formData.disposableIncome,
-      MonthlyIncome: formData.monthlyIncome,
+  const assignAccount = useCallback(() => {
+  const data: AccountDetails = {
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    age: Number(formData.age),
+    accountType: formData.accountType,
+    initialBalance: Number(formData.currentBalance),
+    dependents: Number(formData.dependents),
+    desiredSavings: Number(formData.desiredSavings),
+    disposableIncome: Number(formData.disposableIncome),
+    monthlyIncome: Number(formData.monthlyIncome),
+  };
+
+
+  accountService
+    .create(data, user.token)
+    .then((response) => {
+      console.log('Account created:', response);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to create account.');
     });
-  },[])
+}, [formData, user.token]);
   const handleInputChange = (field: any, value: any) => {
     setFormData((prev) => ({
       ...prev,
