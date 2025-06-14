@@ -134,7 +134,7 @@ exports.Prisma.AccountsScalarFieldEnum = {
   age: 'age',
   account_type: 'account_type',
   dependents: 'dependents',
-  initial_balance: 'initial_balance',
+  current_balance: 'current_balance',
   monthly_income: 'monthly_income',
   disposable_amount: 'disposable_amount',
   desired_saving: 'desired_saving'

@@ -41,7 +41,7 @@ const router = express.Router();
  *         description: Account created
  */
 
-router.post('/create', account.createAccount);
+router.post('/', account.createAccount);
 
 /**
  * @swagger
