@@ -113,12 +113,45 @@ const CreateAccountModal = () => {
   return (
     <View className=" bg-gray-100">
       {/* Trigger Button */}
+      <View className="mb-6 text-center">
+        <Text className="text-2xl font-bold text-gray-800 text-center mb-2">
+          Start Your Financial Journey
+        </Text>
+        <Text className="text-gray-600 text-center text-base leading-6 mb-1">
+          Take control of your finances and build a secure future.
+        </Text>
+        <Text className="text-gray-600 text-center text-base leading-6">
+          Create your account in just a few simple steps!
+        </Text>
+      </View>
+
+      {/* Benefits Section */}
+      <View className="mb-6">
+        <View className="flex-row items-center mb-3">
+          <View className="w-2 h-2 bg-green-500 rounded-full mr-3"></View>
+          <Text className="text-gray-700 flex-1">Track your savings and expenses effortlessly</Text>
+        </View>
+        <View className="flex-row items-center mb-3">
+          <View className="w-2 h-2 bg-green-500 rounded-full mr-3"></View>
+          <Text className="text-gray-700 flex-1">Set and achieve your financial goals</Text>
+        </View>
+        <View className="flex-row items-center mb-3">
+          <View className="w-2 h-2 bg-green-500 rounded-full mr-3"></View>
+          <Text className="text-gray-700 flex-1">Get personalized insights and recommendations</Text>
+        </View>
+      </View>
+
+      {/* CTA Button */}
       <TouchableOpacity className="bg-blue-600 rounded-xl p-4 flex-row items-center justify-center mb-4"
       onPress={() => setModalVisible(true)}>
         <Text className="text-white text-lg mr-2">+</Text>
         <Text className="text-white font-bold text-base">Create Account</Text>
       </TouchableOpacity>
 
+      {/* Additional Encouragement */}
+      <Text className="text-center text-sm text-gray-500">
+        Join thousands of users already managing their finances smarter
+      </Text>
       {/* Modal */}
       <Modal
         animationType="fade"

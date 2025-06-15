@@ -255,32 +255,7 @@ export default function PremiumFinancialDashboard() {
             </TouchableOpacity>
           </View>
         </Animated.View>
-
-        {/* Quick Actions - Only Invest and Add Expense */}
-        {/*
-        <Animated.View 
-          style={{ 
-            opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.05,
-            shadowRadius: 8,
-            elevation: 2,
-          }}
-          className="bg-white rounded-2xl p-6 mb-6 shadow-sm"
-        >
-          <Text className="text-lg font-bold text-gray-900 mb-5">Quick Actions</Text>
-          <View className="flex-row justify-center">
-            {quickActions.map((item) => (
-              <QuickActionButton key={item.id} item={item} />
-            ))}
-          </View>
-        </Animated.View>
-        */}
-
-        {/* Premium Stats Grid - Using imported StatCard component */}
-        <View className="mb-6">
+        <View className="mb-2">
           <StatCard
             icon="wallet"
             title="Total Balance"
@@ -292,7 +267,7 @@ export default function PremiumFinancialDashboard() {
             onPressIn={() => setPressedStat('Total Balance')}
             onPressOut={() => setPressedStat(null)}
           />
-          <View className="flex-row justify-between mb-4">
+          <View className="flex-row justify-between">
             <View className="flex-1 mr-2">
               <StatCard
                 icon="cash"
@@ -309,29 +284,18 @@ export default function PremiumFinancialDashboard() {
             </View>
             <View className="flex-1 ml-2">
               <StatCard
-                icon="chart-line"
-                title="Monthly Investment"
-                amount="₹2,000"
-                change="15.8%"
-                changeColor="text-green-600"
-                bgColor="bg-green-100"
-                isMain={pressedStat === 'Monthly Investment'}
-                onPressIn={() => setPressedStat('Monthly Investment')}
-                onPressOut={() => setPressedStat(null)}
-              />
-            </View>
-          </View>
-          <StatCard
             icon="safe"
             title="Savings Rate"
             amount="₹400"
             change="20.5%"
             changeColor="text-green-600"
-            bgColor="bg-purple-100"
+            bgColor="bg-green-100"
             isMain={pressedStat === 'Savings Rate'}
             onPressIn={() => setPressedStat('Savings Rate')}
             onPressOut={() => setPressedStat(null)}
           />
+            </View>
+          </View>
         </View>
 
         {/* Enhanced Financial Overview */}

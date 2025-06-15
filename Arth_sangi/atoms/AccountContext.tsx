@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+// 1. Account interface
 export interface Account {
   id: string;
   userId: string;
@@ -14,40 +15,34 @@ export interface Account {
   desired_savings: number;
 }
 
+// 2. Context type for single account
 interface AccountContextType {
-  accounts: Account[];
-  setAccounts: (accounts: Account[]) => void;
-  updateAccountField: (
-    id: string,
-    field: keyof Account,
-    value: string | number
-  ) => void;
+  account: Account | null;
+  setAccount: (account: Account) => void;
+  updateAccountField: (field: keyof Account, value: string | number) => void;
 }
 
+// 3. Create context
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
+// 4. Provider component
 export const AccountProvider = ({ children }: { children: ReactNode }) => {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [account, setAccount] = useState<Account | null>(null);
 
-  const updateAccountField = (
-    id: string,
-    field: keyof Account,
-    value: string | number
-  ) => {
-    setAccounts((prevAccounts) =>
-      prevAccounts.map((account) =>
-        account.id === id ? { ...account, [field]: value } : account
-      )
+  const updateAccountField = (field: keyof Account, value: string | number) => {
+    setAccount((prev) =>
+      prev ? { ...prev, [field]: value } : prev
     );
   };
 
   return (
-    <AccountContext.Provider value={{ accounts, setAccounts, updateAccountField }}>
+    <AccountContext.Provider value={{ account, setAccount, updateAccountField }}>
       {children}
     </AccountContext.Provider>
   );
 };
 
+// 5. Custom hook
 export const useAccount = () => {
   const context = useContext(AccountContext);
   if (!context) {

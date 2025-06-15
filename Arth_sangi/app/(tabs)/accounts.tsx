@@ -5,81 +5,20 @@ import {
     ScrollView,
     StatusBar,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
 } from 'react-native';
 import AccountForm from '../../components/AccountForm'
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useAccount } from '@/atoms/AccountContext';
+import { accountService } from '@/services/getAccount';
+import { useUser } from '@/atoms/UserContext';
 
 const MyAccountsScreen = () => {
   const { account } = useAccount();
-  const [selectedTab, setSelectedTab] = useState('All');
-  const [searchText, setSearchText] = useState('');
+  const { user } = useUser();
   const [sortBy, setSortBy] = useState('Date Created');
   const [showSortModal, setShowSortModal] = useState(false);
-
-  // Mock data
-  const tstaccounts = [
-    {
-      id: 1,
-      name: 'Mike Johnson',
-      type: 'Current Account',
-      balance: 3500,
-      monthlyIncome: 2800,
-      age: 28,
-      dependents: 0,
-      created: '10/3/2024',
-      savingsProgress: 1200,
-      disposableIncome: '100.0%',
-      icon: 'credit-card',
-      iconBg: 'bg-blue-100',
-      category: 'Current'
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      type: 'Family Account',
-      balance: 8000,
-      monthlyIncome: 4500,
-      age: 40,
-      dependents: 1,
-      created: '20/2/2024',
-      savingsProgress: 2500,
-      disposableIncome: '100.0%',
-      icon: 'account-multiple',
-      iconBg: 'bg-pink-100',
-      category: 'Family',
-      familyMembers: [
-        { name: 'Alice Smith', relation: 'Daughter' },
-        { name: 'Bob Smith', relation: 'Son' }
-      ]
-    },
-    {
-      id: 3,
-      name: 'John Doe',
-      type: 'Savings Account',
-      balance: 5000,
-      monthlyIncome: 3000,
-      age: 30,
-      dependents: 2,
-      created: '15/1/2024',
-      savingsProgress: 1500,
-      disposableIncome: '100.0%',
-      icon: 'cash',
-      iconBg: 'bg-green-100',
-      category: 'Savings',
-      isDefault: true
-    }
-  ];
-
-  const tabs = [
-    { name: 'All', count: 3 },
-    { name: 'Current', count: 1 },
-    { name: 'Savings', count: 1 },
-    { name: 'Family', count: 1 }
-  ];
 
   const summaryCards = [
     {
@@ -188,11 +127,7 @@ const MyAccountsScreen = () => {
 
       {/* Action Buttons */}
       <View className="flex-row justify-end space-x-3">
-        <TouchableOpacity className="flex-row items-center bg-gray-100 px-4 py-2 rounded-lg">
-          <IconSymbol name='account-edit' size={20} color='black'/>
-          <Text className="text-gray-700 text-sm font-medium">Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center bg-red-100 px-4 py-2 rounded-lg">
+        <TouchableOpacity onPress={() => accountService.deleteAccount(account.id, user.token)} className="flex-row items-center bg-red-100 px-4 py-2 rounded-lg">
           <IconSymbol name='delete-forever-outline' size={20} color='black'/>
           <Text className="text-red-600 text-sm font-medium">Delete</Text>
         </TouchableOpacity>
@@ -220,7 +155,7 @@ const MyAccountsScreen = () => {
           className="px-4 mb-6"
           contentContainerStyle={{ paddingRight: 20 }}
         >
-          {summaryCards.map((card, index) => (
+          {account && summaryCards.map((card, index) => (
             <View 
               key={index}
               className={`${card.bgColor} ${card.borderColor} border-2 rounded-2xl p-4 mr-3 min-w-[140px]`}
@@ -239,62 +174,7 @@ const MyAccountsScreen = () => {
 
         {/* Search and Controls */}
         <View className="px-4 mb-4">
-          <View className="flex-row items-center space-x-3 mb-4">
-            <View className="flex-1 bg-white rounded-xl p-3 flex-row items-center">
-              <Text className="text-gray-400 mr-2">🔍</Text>
-              <TextInput
-                placeholder="Search accounts..."
-                value={searchText}
-                onChangeText={setSearchText}
-                className="flex-1 text-gray-900"
-                placeholderTextColor="#9CA3AF"
-              />
-            </View>
-            
-            <TouchableOpacity 
-              onPress={() => setShowSortModal(true)}
-              className="bg-white rounded-xl p-3 flex-row items-center"
-            >
-              <Text className="text-gray-700 text-sm mr-1">{sortBy}</Text>
-              <Text className="text-gray-500">▼</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity className="bg-white rounded-xl p-3">
-              <Text className="text-gray-700">⚙️</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Create Account Button */}
-          <AccountForm />
-        </View>
-
-        {/* Tabs */}
-        <View className="px-4 mb-4">
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex-row space-x-4">
-              {tabs.map((tab) => (
-                <TouchableOpacity
-                  key={tab.name}
-                  onPress={() => setSelectedTab(tab.name)}
-                  className={`px-4 py-2 rounded-full ${
-                    selectedTab === tab.name
-                      ? 'bg-blue-600'
-                      : 'bg-white'
-                  }`}
-                >
-                  <Text
-                    className={`font-medium ${
-                      selectedTab === tab.name
-                        ? 'text-white'
-                        : 'text-gray-700'
-                    }`}
-                  >
-                    {tab.name} ({tab.count})
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
+          {account ? null : <AccountForm />}
         </View>
 
         {/* Account Cards */}

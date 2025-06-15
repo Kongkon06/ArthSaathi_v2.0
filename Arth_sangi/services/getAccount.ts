@@ -44,4 +44,17 @@ export const accountService = {
       throw new Error('Get account failed');
     }
   },
+  deleteAccount: async (accountId: string, token: string) => {
+    try {
+      const response = await axios.delete(
+        `https://arthsaathi-v2-0.onrender.com/accounts/${accountId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Delete account failed');
+    }
+  }
 };
