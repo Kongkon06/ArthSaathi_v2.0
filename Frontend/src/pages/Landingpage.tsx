@@ -5,7 +5,11 @@ import OurMissionSection from "@/components/OurMissionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
 
-const Index = () => {
+interface LandingpageProps {
+  onSignIn: () => void;
+}
+
+const Landingpage = ({ onSignIn }: LandingpageProps) => {
   return (
     <div className="min-h-screen">
       <Header />
@@ -13,9 +17,17 @@ const Index = () => {
       <FeaturesSection />
       <OurMissionSection />
       <TestimonialsSection />
+      <div className="flex justify-center my-8">
+        <button
+          onClick={onSignIn}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Sign In
+        </button>
+      </div>
       <Footer />
     </div>
   );
 };
 
-export default Index;
+export default Landingpage;
