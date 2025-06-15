@@ -115,7 +115,7 @@ const ChatModal = () => {
         onRequestClose={toggleModal}
        
       >
-        <BlurView intensity={20} tint="light" style={{ flex: 1 }}>
+        <BlurView intensity={6} tint="light" style={{ flex: 1 }}>
           <View className="flex-1 bg-black/20 justify-center items-center p-4">
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
