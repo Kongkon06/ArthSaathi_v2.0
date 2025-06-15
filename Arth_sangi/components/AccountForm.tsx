@@ -40,7 +40,7 @@ const CreateAccountModal = () => {
     lastName: formData.lastName,
     age: Number(formData.age),
     accountType: formData.accountType,
-    initialBalance: Number(formData.currentBalance),
+    currentBalance: Number(formData.currentBalance),
     dependents: Number(formData.dependents),
     desiredSavings: Number(formData.desiredSavings),
     disposableIncome: Number(formData.disposableIncome),

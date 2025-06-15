@@ -31,7 +31,7 @@ async function createAccount(req,res){
 async function getAccount(req,res){
 try{
   const user = req.user;
-  const account = await prisma.accounts.findMany({
+  const account = await prisma.accounts.findFirst({
       where:{
             userId:user.userId
            }

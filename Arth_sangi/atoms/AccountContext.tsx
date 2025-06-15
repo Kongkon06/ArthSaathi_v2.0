@@ -1,67 +1,57 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Step 1: Define the User interface
 export interface Account {
   id: string;
-  firstName: string;
-  lastName: string;
-  age:number;
-  dependents:number;
-  currentBalance: string;
-  accountType: string;
-  monthlyIncome: string;
-  disposableIncome: string;
-  desiredSavings:string;
+  userId: string;
+  firstname: string;
+  lastname: string;
+  age: number;
+  dependents: number;
+  current_balance: number;
+  account_type: string;
+  monthly_income: number;
+  disposable_amount: number;
+  desired_savings: number;
 }
 
-// Step 2: Define the context value type
 interface AccountContextType {
-  Account: Account;
-  setAccount: (Account: Account) => void;
-  updateAccountField: (field: keyof Account, value: string) => void;
+  accounts: Account[];
+  setAccounts: (accounts: Account[]) => void;
+  updateAccountField: (
+    id: string,
+    field: keyof Account,
+    value: string | number
+  ) => void;
 }
 
-// Step 3: Create default Account object
-const defaultAccount: Account = {
-  id: '',
-  firstName: '',
-  lastName: '',
-  age: 18,
-  dependents: 0,
-  currentBalance: '',
-  accountType:'',
-  monthlyIncome:'',
-  disposableIncome:'',
-  desiredSavings:''
-};
-
-// Step 4: Create the context
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
-// Step 5: Create a provider component
 export const AccountProvider = ({ children }: { children: ReactNode }) => {
-  const [Account, setAccount] = useState<Account>(defaultAccount);
+  const [accounts, setAccounts] = useState<Account[]>([]);
 
-  // Update a single field of the Account
-  const updateAccountField = (field: keyof Account, value: string) => {
-    setAccount((prevAccount) => ({
-      ...prevAccount,
-      [field]: value,
-    }));
+  const updateAccountField = (
+    id: string,
+    field: keyof Account,
+    value: string | number
+  ) => {
+    setAccounts((prevAccounts) =>
+      prevAccounts.map((account) =>
+        account.id === id ? { ...account, [field]: value } : account
+      )
+    );
   };
 
   return (
-    <AccountContext.Provider value={{ Account, setAccount, updateAccountField }}>
+    <AccountContext.Provider value={{ accounts, setAccounts, updateAccountField }}>
       {children}
     </AccountContext.Provider>
   );
 };
 
-// Step 6: Create a custom hook for consuming the context
 export const useAccount = () => {
   const context = useContext(AccountContext);
   if (!context) {
-    throw new Error('useAccount must be used within a AccountProvider');
+    throw new Error('useAccount must be used within an AccountProvider');
   }
   return context;
 };
