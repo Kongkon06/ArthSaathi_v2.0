@@ -272,7 +272,7 @@ export default function PremiumFinancialDashboard() {
               <StatCard
                 icon="cash"
                 title="Monthly Expenses"
-                amount="₹40,000"
+                amount="₹0"
                 change="5.2%"
                 changeColor="text-red-500"
                 bgColor="bg-red-100"
@@ -286,7 +286,7 @@ export default function PremiumFinancialDashboard() {
               <StatCard
             icon="safe"
             title="Savings Rate"
-            amount="₹400"
+            amount="₹0"
             change="20.5%"
             changeColor="text-green-600"
             bgColor="bg-green-100"
