@@ -1,8 +1,8 @@
 @import "tailwindcss/preflight";
 @tailwind utilities;
+@tailwind utilities;
 
-
-
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
 
 @layer base {
   :root {
@@ -77,7 +77,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border;
   }
 
   body {
