@@ -12,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import {
   Form,
   FormControl,
@@ -39,8 +38,6 @@ import {
 import {
   Tabs,
   TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "@/components/ui/tabs";
 import {
   AlertDialog,
@@ -61,9 +58,6 @@ import {
   Edit, 
   DollarSign, 
   BadgePercent,
-  Search,
-  //Filter,
-  ArrowUpDown,
   TrendingUp,
   PiggyBank,
   Star,
@@ -155,22 +149,7 @@ const Accounts = () => {
         { name: "Bob Smith", relation: "Son" },
       ],
       createdAt: new Date('2024-02-20'),
-    },
-    {
-      id: "3",
-      firstName: "Mike",
-      lastName: "Johnson",
-      balance: 3500,
-      income: 2800,
-      age: 28,
-      dependents: 0,
-      disposableIncome: 800,
-      desiredSavings: 1200,
-      accountType: "current",
-      isDefault: false,
-      familyMembers: [],
-      createdAt: new Date('2024-03-10'),
-    },
+    }
   ]);
 
   const form = useForm<FormData>({
@@ -355,7 +334,7 @@ const Accounts = () => {
 
   return (
     <TooltipProvider>
-      <div className="container mx-auto p-6 space-y-8" style={{ width: "1351.28px", transform: "translate(12.4444px, 0px)" }}>
+      <div className="container mx-auto p-6 space-y-8" >
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6">
           <div className="space-y-2">
@@ -409,39 +388,6 @@ const Accounts = () => {
 
         {/* Controls Section */}
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-4 items-center flex-1">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search accounts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="created">Date Created</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="balance">Balance</SelectItem>
-                  <SelectItem value="income">Income</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              >
-                <ArrowUpDown className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
           
           <div className="flex items-center gap-2">
             <Button
@@ -460,18 +406,11 @@ const Accounts = () => {
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
-          <TabsList className="grid w-full grid-cols-4 lg:w-96">
-            <TabsTrigger value="all">All ({accounts.length})</TabsTrigger>
-            <TabsTrigger value="current">Current ({accounts.filter(a => a.accountType === 'current').length})</TabsTrigger>
-            <TabsTrigger value="savings">Savings ({accounts.filter(a => a.accountType === 'savings').length})</TabsTrigger>
-            <TabsTrigger value="family">Family ({accounts.filter(a => a.accountType === 'family').length})</TabsTrigger>
-          </TabsList>
-
           <TabsContent value={activeTab} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredAndSortedAccounts.length > 0 ? (
                 filteredAndSortedAccounts.map((account) => (
-                  <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md" style={{ height: "513.125px", transition: "none" }}>
+                  <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md">
                     <CardHeader className="pb-3 bg-gradient-to-r from-slate-50 to-slate-100/50">
                       <div className="flex justify-between items-start">
                         <div className="flex gap-3 items-center">
@@ -859,27 +798,6 @@ const Accounts = () => {
                     ))}
                   </div>
                 )}
-
-                <FormField
-                  control={form.control}
-                  name="isDefault"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                      <div>
-                        <FormLabel>Set as Default Account</FormLabel>
-                        <p className="text-xs text-muted-foreground">
-                          This account will be used for primary transactions
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
 
                 <div className="flex justify-end gap-3 pt-2">
                   <Button 

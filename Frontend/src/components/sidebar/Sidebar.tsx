@@ -10,20 +10,14 @@ import {
   Bitcoin, 
   BookOpen, 
   Settings, 
-  Search, 
   ChevronLeft, 
   ChevronRight, 
   LogOut, 
-  FileText,
   ChevronDown,
-  X,
   Bell,
   Moon,
   Sun,
-  User,
- // CreditCard,
-  TrendingUp,
-  PieChart
+  User
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 
@@ -55,11 +49,9 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Close submenu when sidebar is collapsed
@@ -84,25 +76,7 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
 
   // Keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Ctrl/Cmd + K to focus search
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-        event.preventDefault();
-        if (isExpanded && searchInputRef.current) {
-          searchInputRef.current.focus();
-        }
-      }
-      // Escape to close search or menus
-      if (event.key === 'Escape') {
-        setSearchQuery("");
-        setActiveSubmenu(null);
-        setShowUserMenu(false);
-        searchInputRef.current?.blur();
-      }
-    };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isExpanded]);
 
 
@@ -118,10 +92,6 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
     navigate('/login');
   }, [navigate]);
 
-  const clearSearch = useCallback(() => {
-    setSearchQuery("");
-  }, []);
-
   const menuItems: MenuItem[] = [
     {
       id: "home",
@@ -134,29 +104,8 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
       name: "Accounts",
       icon: <Users size={20} />,
       link: "/accounts",
-      hasSubmenu: true,
-      submenuItems: [
-        { 
-          name: "All Accounts", 
-          link: "/accounts", 
-          icon: <FileText size={16} />,
-          badge: "3"
-        },
-
-        {
-          name: "Account Settings",
-          link: "/account-settings",
-          icon: <Settings size={16} />,
-        },
-      ],
+      hasSubmenu: false,
     },
-   // {
-   //   id: "budget",
-   //   name: "Budget",
-   //   icon: <CircleDollarSign size={20} />,
-   //   link: "/budget",
-    //  badge: "New",
-  //  },
     {
       id: "expenses",
       name: "Expenses",
@@ -168,20 +117,7 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
       name: "Investments",
       icon: <Bitcoin size={20} />,
       link: "/investment",
-      hasSubmenu: true,
-      submenuItems: [
-        { 
-          name: "Advisor", 
-          link: "/investment", 
-          icon: <PieChart size={16} /> 
-        },
-        { 
-          name: "Analytics", 
-          link: "/analytics", 
-          icon: <TrendingUp size={16} /> 
-        }
-        
-      ],
+      hasSubmenu: false
     },
     {
       id: "learn",
@@ -196,13 +132,6 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
       link: "/settings",
     },
   ];
-
-  const filteredMenuItems = menuItems.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.submenuItems?.some(subItem => 
-      subItem.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
 
   const sidebarVariants = {
     expanded: { width: 280 },
@@ -331,43 +260,10 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
           </AnimatePresence>
         </div>
 
-        {/* Search Bar */}
-        <div className={cn("px-4 mb-4", !isExpanded && "flex justify-center")}>
-          {isExpanded ? (
-            <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search... (Ctrl+K)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2.5 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-700 transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          ) : (
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm"
-            >
-              <Search size={18} />
-            </motion.button>
-          )}
-        </div>
-
         {/* Navigation Menu */}
         <div className="flex-grow px-3 py-2 space-y-1 ">
           <AnimatePresence>
-            {filteredMenuItems.map((item, index) => {
+            {menuItems.map((item, index) => {
               const isActiveParent =
                 location.pathname === item.link ||
                 (item.hasSubmenu &&
@@ -519,18 +415,6 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
               );
             })}
           </AnimatePresence>
-
-          {/* No results message */}
-          {filteredMenuItems.length === 0 && searchQuery && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="px-3 py-8 text-center text-slate-500 dark:text-slate-400"
-            >
-              <Search size={32} className="mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No results found for "{searchQuery}"</p>
-            </motion.div>
-          )}
         </div>
 
         {/* Footer */}
