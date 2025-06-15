@@ -11,15 +11,17 @@ import {
 } from 'react-native';
 import AccountFrom from '../../components/AccountForm'
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useAccount } from '@/atoms/AccountContext';
 
 const MyAccountsScreen = () => {
+  const { account } = useAccount();
   const [selectedTab, setSelectedTab] = useState('All');
   const [searchText, setSearchText] = useState('');
   const [sortBy, setSortBy] = useState('Date Created');
   const [showSortModal, setShowSortModal] = useState(false);
 
   // Mock data
-  const accounts = [
+  const tstaccounts = [
     {
       id: 1,
       name: 'Mike Johnson',
@@ -103,33 +105,29 @@ const MyAccountsScreen = () => {
     }
   ];
 
-  const filteredAccounts = accounts.filter(account => {
-    const matchesSearch = account.name.toLowerCase().includes(searchText.toLowerCase());
-    const matchesTab = selectedTab === 'All' || account.category === selectedTab;
-    return matchesSearch && matchesTab;
-  });
+  const filteredAccounts = account ? [account] : [];
 
   const AccountCard = ({ account }:any) => (
     <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
       {/* Header */}
       <View className="flex-row items-start justify-between mb-4">
         <View className="flex-row items-center flex-1">
-          <View className={`w-12 h-12 ${account.iconBg} rounded-xl items-center justify-center mr-3`}>
+          <View className={`w-12 h-12 ${account.account_type == 'Current' ? 'bg-blue-100' : account.account_type == 'Savings' ? 'bg-green-100' : 'bg-pink-100'} rounded-xl items-center justify-center mr-3`}>
             <IconSymbol 
-              name={account.icon} 
+              name={account.account_type === 'Current' ? 'credit-card' : account.account_type === 'Savings' ? 'cash' : 'account-multiple'} 
               size={24} 
               color="text-gray-700" />
           </View>
           <View className="flex-1">
             <View className="flex-row items-center">
-              <Text className="text-lg font-bold text-gray-900 mr-2">{account.name}</Text>
+              <Text className="text-lg font-bold text-gray-900 mr-2">{account.firstname + ' ' + account.lastname}</Text>
               {account.isDefault && (
                 <View className="bg-yellow-100 px-2 py-1 rounded-full">
                   <Text className="text-xs text-yellow-800 font-medium">⭐ Default</Text>
                 </View>
               )}
             </View>
-            <Text className="text-sm text-gray-600">{account.type}</Text>
+            <Text className="text-sm text-gray-600">{account.account_type}</Text>
           </View>
         </View>
       </View>
@@ -138,11 +136,11 @@ const MyAccountsScreen = () => {
       <View className="flex-row justify-between mb-4">
         <View className="flex-1 mr-4">
           <Text className="text-sm text-gray-600 mb-1">Balance</Text>
-          <Text className="text-xl font-bold text-green-600">₹{account.balance.toLocaleString()}</Text>
+          <Text className="text-xl font-bold text-green-600">₹{account.current_balance}</Text>
         </View>
         <View className="flex-1">
           <Text className="text-sm text-gray-600 mb-1">Monthly Income</Text>
-          <Text className="text-xl font-bold text-gray-900">₹{account.monthlyIncome.toLocaleString()}</Text>
+          <Text className="text-xl font-bold text-gray-900">₹{account.monthly_income}</Text>
         </View>
       </View>
 
@@ -166,7 +164,7 @@ const MyAccountsScreen = () => {
       <View className="mb-4">
         <View className="flex-row justify-between mb-2">
           <Text className="text-sm text-gray-600">Savings Progress</Text>
-          <Text className="text-sm font-medium text-gray-900">₹{account.savingsProgress} / month</Text>
+          <Text className="text-sm font-medium text-gray-900">₹{account.savingsProgress ?? 0} / month</Text>
         </View>
         <Text className="text-xs text-blue-600">{account.disposableIncome} of disposable income</Text>
       </View>

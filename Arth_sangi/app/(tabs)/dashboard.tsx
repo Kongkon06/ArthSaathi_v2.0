@@ -20,6 +20,7 @@ import ChatModal from '@/components/ChatModel';
 import { useUser } from '@/atoms/UserContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { accountService } from '@/services/getAccount';
+import { Account, useAccount } from '@/atoms/AccountContext';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -93,6 +94,7 @@ const chartConfig = {
 
 export default function PremiumFinancialDashboard() {
   const { user } = useUser();
+  const { account,setAccount } = useAccount();
   const [selectedPeriod, setSelectedPeriod] = useState('Last 6 months');
   const [refreshing, setRefreshing] = useState(false);
   const [showPeriodModal, setShowPeriodModal] = useState(false);
@@ -113,8 +115,9 @@ export default function PremiumFinancialDashboard() {
     { id: '3', title: 'Goal Achievement', message: 'Congratulations! You reached your vacation savings goal', time: '1 day ago' },
   ];
 
-  const fetchAccount = ()=>{
-   const account =  accountService.getAccount(user.token);
+  const fetchAccount = async ()=>{
+   const userAccount : Account = await  accountService.getAccount(user.token);
+   setAccount(userAccount);
   }
   useEffect(() => {
     Animated.parallel([
@@ -135,7 +138,7 @@ export default function PremiumFinancialDashboard() {
         useNativeDriver: true,
       }),
     ]).start();
-
+    fetchAccount();
   }, []);
 
   const onRefresh = () => {
@@ -281,7 +284,7 @@ export default function PremiumFinancialDashboard() {
           <StatCard
             icon="wallet"
             title="Total Balance"
-            amount="₹1,00,000"
+            amount={account?.current_balance?? '₹0'}
             change="10.2%"
             changeColor="text-green-600"
             bgColor="bg-blue-100"

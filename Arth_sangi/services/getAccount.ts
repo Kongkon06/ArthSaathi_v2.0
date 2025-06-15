@@ -7,7 +7,7 @@ export interface AccountDetails {
   lastName: string;
   age: number;
   dependents: number;
-  initialBalance: number;
+  currentBalance: number;
   accountType: string;
   monthlyIncome: number;
   disposableIncome: number;
@@ -17,8 +17,9 @@ export interface AccountDetails {
 export const accountService = {
   create: async (accountData: AccountDetails, token: string) => {
     try {
+      console.log(accountData);
       const response = await axios.post(
-        'https://arthsaathi-v2-0.onrender.com/accounts/create',
+        'https://arthsaathi-v2-0.onrender.com/accounts',
         accountData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -32,9 +33,8 @@ export const accountService = {
 
   getAccount: async (token: string) => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         'https://arthsaathi-v2-0.onrender.com/accounts',
-        {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
