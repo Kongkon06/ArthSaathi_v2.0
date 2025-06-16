@@ -14,48 +14,62 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#6366f1]/10 via-[#8b5cf6]/10 to-[#a855f7]/10 backdrop-blur-md border-b border-white/20 shadow-lg">
-      <div className="container mx-auto px-4 lg:px-6">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+      <div className="container mx-auto px-4 lg:px-6 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-sm">AS</span>
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
+              <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                <div className="w-2 h-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full"></div>
+              </div>
             </div>
-            <span className="font-display font-bold text-xl text-white">ArthSaathi</span>
+            <span className="font-semibold text-xl text-gray-900">ArthSaathi</span>
           </div>
 
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList className="gap-6">
-              <NavigationMenuItem>
-                <NavigationMenuLink 
-                  href="#about" 
-                  className={cn(navigationMenuTriggerStyle(), "bg-transparent text-white/90 hover:text-white hover:bg-white/10 focus:bg-white/10 focus:text-white")}
-                >
-                  About
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+            <NavigationMenuList className="gap-1">
               <NavigationMenuItem>
                 <NavigationMenuLink 
                   href="#features" 
-                  className={cn(navigationMenuTriggerStyle(), "bg-transparent text-white/90 hover:text-white hover:bg-white/10 focus:bg-white/10 focus:text-white")}
+                  className={cn(
+                    navigationMenuTriggerStyle(), 
+                    "bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus:text-gray-900 font-medium px-4 py-2 h-auto"
+                  )}
                 >
                   Features
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink 
-                  href="#testimonials" 
-                  className={cn(navigationMenuTriggerStyle(), "bg-transparent text-white/90 hover:text-white hover:bg-white/10 focus:bg-white/10 focus:text-white")}
+                  href="#OurMission" 
+                  className={cn(
+                    navigationMenuTriggerStyle(), 
+                    "bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus:text-gray-900 font-medium px-4 py-2 h-auto"
+                  )}
                 >
-                  Testimonials
+                  Mission
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink 
-                  href="#contact" 
-                  className={cn(navigationMenuTriggerStyle(), "bg-transparent text-white/90 hover:text-white hover:bg-white/10 focus:bg-white/10 focus:text-white")}
+                  href="#Testimonial" 
+                  className={cn(
+                    navigationMenuTriggerStyle(), 
+                    "bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus:text-gray-900 font-medium px-4 py-2 h-auto"
+                  )}
+                >
+                  Testimonial
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink 
+                  href="#Contact" 
+                  className={cn(
+                    navigationMenuTriggerStyle(), 
+                    "bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus:text-gray-900 font-medium px-4 py-2 h-auto"
+                  )}
                 >
                   Contact
                 </NavigationMenuLink>
@@ -64,32 +78,100 @@ const Header = () => {
           </NavigationMenu>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="text-white border-white/30 hover:bg-white hover:text-[#6366f1] transition-all duration-200">
+          <div className="hidden md:flex items-center space-x-3">
+            <Button 
+              variant="ghost" 
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 font-medium px-4 py-2 h-auto"
+               onClick={() => {
+
+                // Handle sign in - this could trigger a modal or redirect
+
+                window.location.href = '/dashboard';
+
+              }}
+            >
               Sign In
+            </Button>
+            <Button 
+              className="bg-gray-900 hover:bg-gray-800 text-white font-medium px-4 py-2 h-auto rounded-md shadow-sm"
+                onClick={() => {
+
+                // Handle sign up - this could trigger a modal or redirect
+
+                window.location.href = '/dashboard';
+
+              }}
+            >
+              Sign Up
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-white"
+            className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-gradient-to-r from-[#6366f1]/95 via-[#8b5cf6]/95 to-[#a855f7]/95 backdrop-blur-md border-b border-white/20 shadow-lg">
-            <nav className="flex flex-col space-y-4 p-6">
-              <a href="#about" className="text-white/90 hover:text-white transition-colors duration-200 py-2">About</a>
-              <a href="#features" className="text-white/90 hover:text-white transition-colors duration-200 py-2">Features</a>
-              <a href="#testimonials" className="text-white/90 hover:text-white transition-colors duration-200 py-2">Testimonials</a>
-              <a href="#contact" className="text-white/90 hover:text-white transition-colors duration-200 py-2">Contact</a>
-              <div className="pt-4">
-                <Button variant="outline" className="w-full text-white border-white/30 hover:bg-white hover:text-[#6366f1]">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-lg">
+            <nav className="flex flex-col space-y-1 p-4">
+              <a 
+                href="#features" 
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 py-3 px-3 rounded-md font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Features
+              </a>
+              <a 
+                href="#OurMission" 
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 py-3 px-3 rounded-md font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Mission
+              </a>
+              <a 
+                href="#Testimonial" 
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 py-3 px-3 rounded-md font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Testimonial
+              </a>
+              <a 
+                href="#Contact" 
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 py-3 px-3 rounded-md font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact
+              </a>
+              <div className="pt-4 space-y-2">
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-gray-600 hover:text-gray-900 hover:bg-gray-50 font-medium justify-start"
+                    onClick={() => {
+
+                    window.location.href = '/dashboard';
+
+                    setIsMenuOpen(false);
+
+                  }}
+                >
                   Sign In
+                </Button>
+                <Button 
+                  className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium"
+                   onClick={() => {
+
+                    window.location.href = '/dashboard';
+
+                    setIsMenuOpen(false);
+
+                  }}
+                >
+                  Sign Up
                 </Button>
               </div>
             </nav>
