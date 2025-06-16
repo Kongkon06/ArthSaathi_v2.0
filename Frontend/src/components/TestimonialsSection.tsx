@@ -72,14 +72,7 @@ const TestimonialsSection = () => {
     }
   ];
 
-  const partners = [
-    { name: "JPMorgan Chase", logo: "JP", color: "from-blue-500 to-blue-600" },
-    { name: "Wells Fargo", logo: "WF", color: "from-red-500 to-red-600" },
-    { name: "Bank of America", logo: "BA", color: "from-blue-600 to-indigo-600" },
-    { name: "Goldman Sachs", logo: "GS", color: "from-gray-700 to-gray-800" },
-    { name: "Vanguard", logo: "VG", color: "from-red-600 to-red-700" },
-    { name: "Fidelity", logo: "FD", color: "from-green-600 to-green-700" }
-  ];
+  
 
   return (
     <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
@@ -153,27 +146,8 @@ const TestimonialsSection = () => {
             </div>
           ))}
         </div>
-
-        {/* Partner Logos */}
-        <div className={`text-center transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`} style={{ transitionDelay: '800ms' }}>
-          <p className="text-gray-500 mb-12 text-lg">Partnered with leading financial institutions</p>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center">
-            {partners.map((partner, index) => (
-              <div 
-                key={index}
-                className="group relative transition-all duration-300 hover:scale-110"
-              >
-                <div className={`w-16 h-16 bg-gradient-to-br ${partner.color} rounded-2xl shadow-lg flex items-center justify-center font-bold text-white border-0 hover:shadow-xl transition-all duration-300 group-hover:rotate-3`}>
-                  {partner.logo}
-                </div>
-                <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+</div>
+      
       
       <style>{`
         .bg-grid-pattern {

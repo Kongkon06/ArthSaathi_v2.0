@@ -1,87 +1,199 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
 
 const Footer = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   const footerLinks = {
-    Product: ["Features", "Pricing", "Security", "API", "Mobile App"],
-    Education: ["Courses", "Workshops", "Blog", "Webinars", "Resources"],
-    Company: ["About", "Careers", "Press", "Contact", "Privacy"],
-    Support: ["Help Center", "Community", "Status", "Documentation", "Updates"]
+    About: ["Features", "Pricing", "Contact", "Blog"],
+    Documentation: ["FAQ", "Support"],
+    Social: ["X (Twitter)", "LinkedIn", "YouTube"]
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
+  const linkVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.4 }
+    }
   };
 
   return (
-    <footer className="bg-trust-navy text-white py-16">
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="grid lg:grid-cols-5 gap-12 mb-12">
-          {/* Brand Column */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-family-blue rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">FF</span>
-              </div>
-              <span className="font-display font-bold text-xl">FamilyFinance</span>
-            </div>
-            
-            <p className="text-white/80 mb-6 leading-relaxed max-w-md">
-              Empowering families to build wealth together through AI-powered financial planning, 
-              smart analytics, and comprehensive education.
-            </p>
-            
-            <div className="space-y-4">
-              <p className="font-semibold">Stay updated with our newsletter</p>
-              <div className="flex gap-3">
-                <Input 
-                  placeholder="Enter your email"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                />
-                <Button className="bg-primary hover:bg-primary/90">
-                  Subscribe
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Links Columns */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="font-semibold mb-4">{category}</h3>
-              <ul className="space-y-3">
-                {links.map((link, index) => (
-                  <li key={index}>
-                    <a 
-                      href="#" 
-                      className="text-white/70 hover:text-white transition-colors duration-200"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Section */}
-        <div className="border-t border-white/10 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-white/60 text-sm">
-              © 2024 FamilyFinance. All rights reserved.
-            </div>
-            
-            <div className="flex items-center gap-6 text-sm">
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Terms of Service
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                Cookie Settings
-              </a>
-            </div>
-          </div>
-        </div>
+    <footer ref={ref} className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }} />
       </div>
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" />
+
+      <motion.div
+        className="relative container mx-auto px-6 py-16"
+        variants={containerVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+      >
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-12 gap-12 mb-16">
+          {/* Brand Section */}
+          <motion.div className="lg:col-span-6" variants={itemVariants}>
+            <motion.div 
+              className="flex items-center space-x-3 mb-8"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">n</span>
+              </div>
+              <span className="font-bold text-2xl tracking-tight">nock</span>
+            </motion.div>
+            
+            <motion.div
+              className="space-y-6"
+              variants={itemVariants}
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold leading-tight max-w-lg">
+                The range of functionalities offered on the platforms includes{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                  the ability to connect
+                </span>
+              </h2>
+              
+              <p className="text-slate-300 text-lg leading-relaxed max-w-md">
+                With existing algorithmic strategies that reduce risk and automatically execute buy and sell orders.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    size="lg"
+                    className="bg-white text-slate-900 hover:bg-slate-100 font-semibold px-8 py-3 rounded-xl shadow-lg transition-all duration-300"
+                  >
+                    Get started ✨
+                  </Button>
+                </motion.div>
+                
+                <motion.button
+                  className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-300 font-medium px-4"
+                  whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center">
+                    <div className="w-0 h-0 border-l-[6px] border-l-white border-y-[4px] border-y-transparent ml-0.5" />
+                  </div>
+                  Watch how it works
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Links Section */}
+          <motion.div 
+            className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12"
+            variants={itemVariants}
+          >
+            {Object.entries(footerLinks).map(([category, links], categoryIndex) => (
+              <motion.div 
+                key={category}
+                variants={linkVariants}
+                custom={categoryIndex}
+              >
+                <h3 className="font-semibold text-white mb-6 text-lg">{category}</h3>
+                <ul className="space-y-4">
+                  {links.map((link, index) => (
+                    <motion.li 
+                      key={index}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <a 
+                        href="#" 
+                        className="text-slate-400 hover:text-white transition-colors duration-300 text-base leading-relaxed block"
+                      >
+                        {link}
+                      </a>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Status Indicator */}
+        <motion.div
+          className="flex items-center justify-between border-t border-slate-700/50 pt-8"
+          variants={itemVariants}
+        >
+          <motion.div 
+            className="flex items-center gap-3"
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50 animate-pulse" />
+            <span className="text-slate-300 font-medium">All systems operational</span>
+          </motion.div>
+
+          <div className="flex items-center gap-8 text-sm text-slate-400">
+            <span>© 2024 nock. All rights reserved</span>
+            <motion.a 
+              href="#"
+              className="hover:text-white transition-colors duration-300"
+              whileHover={{ y: -2 }}
+            >
+              Privacy Policy
+            </motion.a>
+            <motion.a 
+              href="#"
+              className="hover:text-white transition-colors duration-300"
+              whileHover={{ y: -2 }}
+            >
+              Terms of Use
+            </motion.a>
+          </div>
+        </motion.div>
+
+        {/* Risk Disclaimer */}
+        <motion.div
+          className="mt-8 pt-6 border-t border-slate-700/30"
+          variants={itemVariants}
+        >
+          <p className="text-slate-500 text-sm">
+            There is no risk-free trading
+          </p>
+        </motion.div>
+      </motion.div>
     </footer>
   );
 };
