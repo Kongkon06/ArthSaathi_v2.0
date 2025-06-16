@@ -14,12 +14,12 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 lg:px-6">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-family-blue/10 text-family-blue px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-300/10 text-blue-500 px-4 py-2 rounded-full text-sm font-semibold mb-6">
             Features
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-trust-navy mb-6">
             Exploring the Comprehensive Set of{" "}
-            <span className="text-family-blue">Advanced Features</span>
+            <span className="text-blue-400">Advanced Features</span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
             A Deep Dive into the Tools and Insights that Will Revolutionize Your Financial Management, 
@@ -46,7 +46,7 @@ const FeaturesSection = () => {
                   <div className="mb-6">
                     <div className="flex items-center gap-3 mb-4">
                       <h4 className="font-semibold text-trust-navy">My cards</h4>
-                      <div className="ml-auto bg-family-blue text-white rounded-full w-8 h-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="ml-auto bg-blue-400 text-white rounded-full w-8 h-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <Plus className="w-4 h-4" />
                       </div>
                     </div>
@@ -138,42 +138,42 @@ const FeaturesSection = () => {
               {/* Budget Categories */}
               <div className="space-y-6">
                 <div className="bg-gray-50 rounded-xl p-4 group-hover:bg-gray-100 transition-colors duration-300">
-                  <h4 className="font-semibold text-trust-navy mb-4">Savings</h4>
+                  <h4 className="font-semibold text-indigo-500 mb-4">Savings</h4>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <Target className="w-5 h-5 text-family-blue" />
+                      <Target className="w-5 h-5 text-blue-400" />
                       <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm font-medium">Monthly savings: $200.00</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-family-blue h-2 rounded-full" style={{ width: '65%' }}></div>
+                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: '65%' }}></div>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">$6,000 / Target: $40,000</div>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-3">
-                      <BookOpen className="w-5 h-5 text-success-green" />
+                      <BookOpen className="w-5 h-5 text-green-400" />
                       <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm font-medium">Education</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-success-green h-2 rounded-full" style={{ width: '45%' }}></div>
+                          <div className="bg-green-500 h-2 rounded-full" style={{ width: '45%' }}></div>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">Monthly savings: $800 / Target: $40,000</div>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-3">
-                      <Circle className="w-5 h-5 text-family-orange" />
+                      <Circle className="w-5 h-5 text-orange-300" />
                       <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm font-medium">Emergency Fund</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-family-orange h-2 rounded-full" style={{ width: '80%' }}></div>
+                          <div className="bg-orange-400 h-2 rounded-full" style={{ width: '80%' }}></div>
                         </div>
                       </div>
                     </div>
@@ -198,7 +198,7 @@ const FeaturesSection = () => {
                   </h3>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button 
-                      className="bg-white text-family-blue hover:bg-white/90 font-semibold group-hover:scale-105 transition-transform duration-300"
+                      className="bg-white text-blue-300 hover:bg-white/90 font-semibold group-hover:scale-105 transition-transform duration-300"
                     >
                       Get Started
                     </Button>
