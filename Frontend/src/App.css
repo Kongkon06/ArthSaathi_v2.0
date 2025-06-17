@@ -3,10 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 #root {
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: aqua;
 }
 
 .logo {
@@ -154,7 +154,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
