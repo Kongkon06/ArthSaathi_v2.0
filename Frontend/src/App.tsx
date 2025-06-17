@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 // Landing page components
 import Landingpage from "./pages/Landingpage";
 import NotFound from "./pages/NotFound";
-
+import './App.css'
 // Main app components
 import Sidebar from "./components/sidebar/Sidebar";
 import Home from "./pages/Home";

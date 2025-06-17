@@ -86,7 +86,7 @@ const Header = () => {
 
                 // Handle sign in - this could trigger a modal or redirect
 
-                window.location.href = '/dashboard';
+                window.location.href = '/auth';
 
               }}
             >
