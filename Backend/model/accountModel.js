@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 async function createAccount(req,res){
   try{
   const { firstName,lastName,age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
-  const user = req.user
-  await prisma.accounts.create({
+  const user = req.user;
+  const account =await prisma.accounts.create({
   data:{
   userId: user.userId,
   firstname : firstName,
@@ -20,7 +20,7 @@ async function createAccount(req,res){
   desired_saving : desiredSavings
   }
   })
-  return res.json();
+  return res.json(account);
 
   }catch(error){
     console.error(error);

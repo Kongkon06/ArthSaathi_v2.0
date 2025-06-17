@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 // Landing page components
 import Landingpage from "./pages/Landingpage";
 import NotFound from "./pages/NotFound";
-
+import './App.css'
 // Main app components
 import Sidebar from "./components/sidebar/Sidebar";
 import Home from "./pages/Home";
@@ -17,6 +17,7 @@ import Learn from "./pages/Learn";
 import Investment from "./pages/Investment";
 import Accounts from "./pages/Accounts";
 import Settings from "./pages/settings/Settings";
+import AuthForm from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -44,11 +45,11 @@ const AppLayout = () => {
         <>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/expenses" element={<Expenses />} />
-            <Route path="/learn" element={<Learn />} />
-            <Route path="/investment" element={<Investment />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="accounts" element={<Accounts />} />
+            <Route path="expenses" element={<Expenses />} />
+            <Route path="learn" element={<Learn />} />
+            <Route path="investment" element={<Investment />} />
+            <Route path="settings" element={<Settings />} />
           </Routes>
         </>
       ) : (
@@ -83,14 +84,10 @@ const App = () => {
 
   // Check authentication status on app load
   useEffect(() => {
-    const authStatus = localStorage.getItem('isAuthenticated');
-    setIsAuthenticated(authStatus === 'true');
+    const authStatus = localStorage.getItem('token');
+    setIsAuthenticated(authStatus !== null && authStatus !== '');
+    console.log("Authentication status:", authStatus);
   }, []);
-
-  const handleSignIn = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('isAuthenticated', 'true');
-  };
 
 
   return (
@@ -105,7 +102,14 @@ const App = () => {
             element={
               isAuthenticated ? 
               <Navigate to="/dashboard" replace /> : 
-              <Landingpage onSignIn={handleSignIn} />
+              <Landingpage />
+            } 
+          />
+          {/* Authentication route */}
+          <Route 
+            path="/auth" 
+            element={
+              <AuthForm />
             } 
           />
           

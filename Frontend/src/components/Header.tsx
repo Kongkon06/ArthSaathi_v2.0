@@ -14,8 +14,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-      <div className="container mx-auto px-4 lg:px-6 max-w-7xl">
+    <div className="container mx-auto px-4 lg:px-6 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
@@ -86,7 +85,7 @@ const Header = () => {
 
                 // Handle sign in - this could trigger a modal or redirect
 
-                window.location.href = '/dashboard';
+                window.location.href = '/auth';
 
               }}
             >
@@ -98,7 +97,7 @@ const Header = () => {
 
                 // Handle sign up - this could trigger a modal or redirect
 
-                window.location.href = '/dashboard';
+                window.location.href = '/auth';
 
               }}
             >
@@ -153,7 +152,7 @@ const Header = () => {
                   className="w-full text-gray-600 hover:text-gray-900 hover:bg-gray-50 font-medium justify-start"
                     onClick={() => {
 
-                    window.location.href = '/dashboard';
+                    window.location.href = '/auth';
 
                     setIsMenuOpen(false);
 
@@ -165,7 +164,7 @@ const Header = () => {
                   className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium"
                    onClick={() => {
 
-                    window.location.href = '/dashboard';
+                    window.location.href = '/auth';
 
                     setIsMenuOpen(false);
 
@@ -178,7 +177,6 @@ const Header = () => {
           </div>
         )}
       </div>
-    </header>
   );
 };
 
