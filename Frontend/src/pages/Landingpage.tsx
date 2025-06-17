@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeatureSection";
 import OurMissionSection from "@/components/OurMissionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import FloatingCTACard from "@/components/FloatinCTACard";
 import Footer from "@/components/Footer";
 import { gsap } from "gsap";
 import ScrollSmoother from "gsap/ScrollSmoother";
@@ -53,6 +54,7 @@ const Landingpage = () => {
         <FeaturesSection />
         <OurMissionSection />
         <TestimonialsSection />
+        <FloatingCTACard />
         <Footer />
       </div>
     </div>
