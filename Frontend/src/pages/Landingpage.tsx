@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeatureSection";
@@ -12,17 +11,9 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-
-interface LandingpageProps {
-  onSignIn: () => void;
-}
-
-const Landingpage = ({ onSignIn }: LandingpageProps) => {
-  const navigate = useNavigate();
+const Landingpage = () => {
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollSmoother); // ✅ register plugin first
-
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
@@ -30,17 +21,33 @@ const Landingpage = ({ onSignIn }: LandingpageProps) => {
       effects: true,
     });
 
-    return () => smoother.kill();
-  }, []);
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("a[href^='#']") as HTMLAnchorElement | null;
+      if (!target) return;
 
-  const handleSignIn = () => {
-    onSignIn();
-    navigate("/dashboard");
-  };
+      const hash = target.getAttribute("href");
+      if (!hash || hash === "#") return;
+
+      const el = document.querySelector(hash);
+      if (el) {
+        e.preventDefault();
+        smoother.scrollTo(el, true); // true = smooth scroll
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick);
+
+    return () => {
+      smoother.kill();
+      document.removeEventListener("click", handleAnchorClick);
+    };
+  }, []);
 
   return (
     <div id="smooth-wrapper" className="min-h-screen">
-      <Header />
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <Header />
+      </div>
       <div id="smooth-content">
         <HeroSection />
         <FeaturesSection />

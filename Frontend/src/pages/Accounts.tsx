@@ -111,9 +111,6 @@ const Accounts = () => {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([{ name: "", relation: "" }]);
   const [accountToEdit, setAccountToEdit] = useState<Account | null>(null);
   const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "balance" | "income" | "created">("created");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [showBalances, setShowBalances] = useState(true);
   
   const [accounts, setAccounts] = useState<Account[]>([
@@ -275,33 +272,6 @@ const Accounts = () => {
     setOpenDialog(true);
   };
 
-  // Filter and sort accounts
-  const filteredAndSortedAccounts = accounts
-    .filter((account) => {
-      const matchesTab = activeTab === "all" || account.accountType === activeTab;
-      const matchesSearch = searchQuery === "" || 
-        `${account.firstName} ${account.lastName}`.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesTab && matchesSearch;
-    })
-    .sort((a, b) => {
-      let comparison = 0;
-      switch (sortBy) {
-        case "name":
-          comparison = `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
-          break;
-        case "balance":
-          comparison = a.balance - b.balance;
-          break;
-        case "income":
-          comparison = a.income - b.income;
-          break;
-        case "created":
-          comparison = a.createdAt.getTime() - b.createdAt.getTime();
-          break;
-      }
-      return sortOrder === "asc" ? comparison : -comparison;
-    });
-
   const getAccountTypeIcon = (type: Account["accountType"]) => {
     switch (type) {
       case "family":
@@ -408,8 +378,7 @@ const Accounts = () => {
         <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
           <TabsContent value={activeTab} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredAndSortedAccounts.length > 0 ? (
-                filteredAndSortedAccounts.map((account) => (
+              {accounts.map((account) => (
                   <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md">
                     <CardHeader className="pb-3 bg-gradient-to-r from-slate-50 to-slate-100/50">
                       <div className="flex justify-between items-start">
@@ -531,24 +500,7 @@ const Accounts = () => {
                     </CardFooter>
                   </Card>
                 ))
-              ) : (
-                <div className="col-span-full flex flex-col items-center justify-center p-12 text-center">
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-full mb-6">
-                    <Wallet className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">No accounts found</h3>
-                  <p className="text-muted-foreground mb-6 max-w-md">
-                    {searchQuery 
-                      ? `No accounts match "${searchQuery}". Try adjusting your search.`
-                      : activeTab === "all"
-                      ? "You haven't created any accounts yet. Start by creating your first account."
-                      : `You don't have any ${activeTab} accounts yet.`}
-                  </p>
-                  <Button onClick={() => setOpenDialog(true)} size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600">
-                    <Plus className="h-5 w-5 mr-2" /> Create Your First Account
-                  </Button>
-                </div>
-              )}
+              }
             </div>
           </TabsContent>
         </Tabs>

@@ -3,13 +3,17 @@ import userRoutes from './controller/userController.js';
 import accountRoutes from './controller/accountController.js';
 import transactionRoutes from './controller/transactionController.js';
 import auth from './middleware/auth.js';
-
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const App = express();
 App.use(express.json());
-
+App.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}))
 // Swagger configuration
 const swaggerOptions = {
   definition: {
