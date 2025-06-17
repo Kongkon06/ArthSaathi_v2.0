@@ -53,22 +53,12 @@ const FloatingCTACard = () => {
     }
   } as const;
 
-  const globeVariants = {
-    hidden: { opacity: 0, scale: 0.8, rotate: -10 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      rotate: 0,
-      transition: { duration: 1, ease: "easeOut" as const }
-    }
-  } as const;
-
   return (
-    <div className="relative py-24 px-4 lg:px-6">
+    <div className="relative px-4 lg:px-6 pb-24">
       {/* Floating CTA Card */}
       <motion.div
         ref={ref}
-        className="container mx-auto max-w-6xl"
+        className="container mx-auto max-w-4xl relative z-20 -mb-32"
         variants={cardVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -104,23 +94,6 @@ const FloatingCTACard = () => {
                 ease: "easeInOut" as const
               }}
             />
-            
-            {/* Floating Dots Pattern */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(147, 51, 234, 0.1) 1px, transparent 0)`,
-                backgroundSize: '40px 40px'
-              }}
-              animate={{
-                backgroundPosition: ['0px 0px', '40px 40px'],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "linear" as const
-              }}
-            />
 
             {/* Subtle Wave Pattern */}
             <motion.div
@@ -140,17 +113,17 @@ const FloatingCTACard = () => {
             />
           </div>
 
-          <div className="relative grid lg:grid-cols-2 items-center gap-12 p-8 lg:p-16">
+          <div className="relative grid lg:grid-cols-1 items-center gap-12 p-8 lg:p-16">
             {/* Content Section */}
-            <motion.div className="space-y-8" variants={contentVariants}>
+            <motion.div className="space-y-8 text-center" variants={contentVariants}>
               <div className="space-y-6">
                 <motion.h2 
                   className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
                   variants={contentVariants}
                 >
-                  Experience superior{" "}
+                  Transform Your{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600">
-                    skip tracing
+                    Financial Wellness
                   </span>
                 </motion.h2>
                 
@@ -158,7 +131,7 @@ const FloatingCTACard = () => {
                   className="text-gray-600 text-lg lg:text-xl font-medium"
                   variants={contentVariants}
                 >
-                  150+ data points per search.
+                  Join thousands of families who are taking control of their financial future with our innovative platform.
                 </motion.p>
               </div>
 
@@ -175,97 +148,6 @@ const FloatingCTACard = () => {
                   </motion.span>
                 </Button>
               </motion.div>
-            </motion.div>
-
-            {/* Globe Visualization */}
-            <motion.div 
-              className="relative flex items-center justify-center"
-              variants={globeVariants}
-            >
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96">
-                {/* Main Globe */}
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: `conic-gradient(from 45deg, 
-                      rgba(34, 197, 94, 0.8) 0deg,
-                      rgba(34, 197, 94, 0.6) 60deg,
-                      rgba(34, 197, 94, 0.4) 120deg,
-                      rgba(34, 197, 94, 0.2) 180deg,
-                      rgba(34, 197, 94, 0.1) 240deg,
-                      rgba(34, 197, 94, 0.3) 300deg,
-                      rgba(34, 197, 94, 0.8) 360deg
-                    )`
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 30,
-                    repeat: Infinity,
-                    ease: "linear" as const
-                  }}
-                />
-
-                {/* Dot Pattern Overlay */}
-                <div className="absolute inset-0 rounded-full overflow-hidden">
-                  <motion.div
-                    className="w-full h-full"
-                    style={{
-                      backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)`,
-                      backgroundSize: '8px 8px',
-                      maskImage: 'radial-gradient(circle, black 70%, transparent 70%)',
-                      WebkitMaskImage: 'radial-gradient(circle, black 70%, transparent 70%)'
-                    }}
-                    animate={{
-                      backgroundPosition: ['0px 0px', '8px 8px'],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      ease: "linear" as const
-                    }}
-                  />
-                </div>
-
-                {/* Pulsing Rings */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute inset-0 rounded-full border border-green-400/30"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      opacity: [0.3, 0.1, 0.3],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: i * 1,
-                      ease: "easeInOut" as const
-                    }}
-                  />
-                ))}
-
-                {/* Floating Data Points */}
-                {[...Array(8)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-green-400 rounded-full shadow-lg shadow-green-400/50"
-                    style={{
-                      left: `${20 + (i * 10)}%`,
-                      top: `${15 + (i * 8)}%`,
-                    }}
-                    animate={{
-                      y: [-5, 5, -5],
-                      opacity: [0.5, 1, 0.5],
-                      scale: [0.8, 1.2, 0.8],
-                    }}
-                    transition={{
-                      duration: 2 + (i * 0.2),
-                      repeat: Infinity,
-                      ease: "easeInOut" as const
-                    }}
-                  />
-                ))}
-              </div>
             </motion.div>
           </div>
         </motion.div>

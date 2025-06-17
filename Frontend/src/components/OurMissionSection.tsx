@@ -13,22 +13,22 @@ const OurMissionSection = () => {
     {
       value: "65%",
       label: "Reduction in financial stress",
-      color: "text-family-blue"
+      color: "text-blue-400"
     },
     {
       value: "40%", 
       label: "Increase in savings rate",
-      color: "text-family-blue"
+      color: "text-blue-400"
     },
     {
       value: "3x",
       label: "Financial literacy improvement", 
-      color: "text-family-blue"
+      color: "text-blue-400"
     },
     {
       value: "85%",
       label: "User satisfaction",
-      color: "text-family-blue"
+      color: "text-blue-400"
     }
   ];
 
@@ -60,7 +60,7 @@ const OurMissionSection = () => {
       <div className="container mx-auto px-4 lg:px-6">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-family-blue/10 text-family-blue px-6 py-3 rounded-full text-sm font-semibold mb-8">
+          <div className="inline-flex items-center gap-2 bg-blue-300/10 text-blue-400 px-6 py-3 rounded-full text-sm font-semibold mb-8">
             Our Mission
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-trust-navy mb-8">
@@ -96,7 +96,7 @@ const OurMissionSection = () => {
           {/* Left Content */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-3xl md:text-4xl font-display font-bold text-family-blue mb-6">
+              <h3 className="text-3xl md:text-4xl font-display font-bold text-blue-500 mb-6">
                 Improving Financial Resilience
               </h3>
               <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
@@ -122,11 +122,11 @@ const OurMissionSection = () => {
                   animationDelay: `${index * 100}ms`
                 }}
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-family-blue/10 rounded-lg flex items-center justify-center group-hover:bg-family-blue group-hover:scale-110 transition-all duration-300">
-                  <feature.icon className="w-6 h-6 text-family-blue group-hover:text-white transition-colors duration-300" />
+                <div className="flex-shrink-0 w-12 h-12 bg-blue-200/30 rounded-lg flex items-center justify-center group-hover:bg-blue-400 group-hover:scale-110 transition-all duration-300">
+                  <feature.icon className="w-6 h-6 text-blue-400 group-hover:text-white transition-colors duration-300" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-trust-navy group-hover:text-family-blue transition-colors duration-300">
+                  <h4 className="font-semibold text-trust-navy group-hover:text-blue-400 transition-colors duration-300">
                     {feature.title}
                   </h4>
                 </div>

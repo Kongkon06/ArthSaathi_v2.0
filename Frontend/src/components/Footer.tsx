@@ -44,7 +44,7 @@ const Footer = () => {
   };
 
   return (
-    <footer ref={ref} className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+    <footer ref={ref} className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden pt-40">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
@@ -71,10 +71,10 @@ const Footer = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">n</span>
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-2xl">Arth</span>
               </div>
-              <span className="font-bold text-2xl tracking-tight">nock</span>
+              <span className="font-bold text-2xl tracking-tight">Saathi</span>
             </motion.div>
             
             <motion.div
@@ -82,28 +82,18 @@ const Footer = () => {
               variants={itemVariants}
             >
               <h2 className="text-3xl lg:text-4xl font-bold leading-tight max-w-lg">
-                The range of functionalities offered on the platforms includes{" "}
+                 The platform aims to empower users by providing them with the tools they need to achieve{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                  the ability to connect
+                  financial wellness
                 </span>
               </h2>
               
               <p className="text-slate-300 text-lg leading-relaxed max-w-md">
-                With existing algorithmic strategies that reduce risk and automatically execute buy and sell orders.
+                 and make informed decisions about their financial future.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button 
-                    size="lg"
-                    className="bg-white text-slate-900 hover:bg-slate-100 font-semibold px-8 py-3 rounded-xl shadow-lg transition-all duration-300"
-                  >
-                    Get started ✨
-                  </Button>
-                </motion.div>
+               
                 
                 <motion.button
                   className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-300 font-medium px-4"
@@ -157,16 +147,11 @@ const Footer = () => {
           className="flex items-center justify-between border-t border-slate-700/50 pt-8"
           variants={itemVariants}
         >
-          <motion.div 
-            className="flex items-center gap-3"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50 animate-pulse" />
-            <span className="text-slate-300 font-medium">All systems operational</span>
-          </motion.div>
+          
+
 
           <div className="flex items-center gap-8 text-sm text-slate-400">
-            <span>© 2024 nock. All rights reserved</span>
+            <span>© 2025 ArthSaathi. All rights reserved</span>
             <motion.a 
               href="#"
               className="hover:text-white transition-colors duration-300"
@@ -184,15 +169,7 @@ const Footer = () => {
           </div>
         </motion.div>
 
-        {/* Risk Disclaimer */}
-        <motion.div
-          className="mt-8 pt-6 border-t border-slate-700/30"
-          variants={itemVariants}
-        >
-          <p className="text-slate-500 text-sm">
-            There is no risk-free trading
-          </p>
-        </motion.div>
+      
       </motion.div>
     </footer>
   );

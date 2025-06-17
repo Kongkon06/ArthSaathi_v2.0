@@ -11,19 +11,19 @@ const TestimonialsSection = () => {
 
   const testimonials = [
     {
-      name: "Sarah Chen",
+      name: "Susmita Das",
       role: "Mother of 2",
-      location: "San Francisco, CA",
+      location: "Dhemaji, Assam",
       rating: 5,
-      quote: "FamilyFinance transformed how we think about money. The AI assistant helped us save $2,400 in our first month, and my kids are finally learning about budgeting through the interactive lessons.",
+      quote: "ArthSaathi transformed how we think about money. The AI assistant helped us save Rs2,400 in our first month, and my kids are finally learning about budgeting through the interactive lessons.",
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
       bgColor: "bg-gradient-to-br from-blue-50 to-indigo-50",
       avatarBg: "bg-gradient-to-br from-blue-400 to-indigo-500"
     },
     {
-      name: "Marcus Johnson",
+      name: "Rajesh Sharma",
       role: "Father of 3",
-      location: "Austin, TX",
+      location: "Jorhat, Assam",
       rating: 5,
       quote: "The investment recommendations are spot-on. We've seen a 12% return in 6 months, and the family collaboration features have made financial planning a fun activity for everyone.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
@@ -31,9 +31,9 @@ const TestimonialsSection = () => {
       avatarBg: "bg-gradient-to-br from-purple-400 to-pink-500"
     },
     {
-      name: "Emily Rodriguez",
+      name: "Anjali Gupta",
       role: "Single Parent",
-      location: "Miami, FL",
+      location: "Guwahati, Assam",
       rating: 5,
       quote: "As a single mom, I needed something simple but powerful. The smart savings analytics showed me where I was overspending, and now I'm on track to buy our first home.",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
@@ -41,9 +41,9 @@ const TestimonialsSection = () => {
       avatarBg: "bg-gradient-to-br from-green-400 to-emerald-500"
     },
     {
-      name: "David Kim",
+      name: "Nabarun Chatterjee",
       role: "Tech Professional",
-      location: "Seattle, WA",
+      location: "Kolkata, India",
       rating: 5,
       quote: "The automated savings features and detailed analytics give me complete control over our family's financial future. It's like having a personal financial advisor available 24/7.",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
@@ -51,21 +51,21 @@ const TestimonialsSection = () => {
       avatarBg: "bg-gradient-to-br from-orange-400 to-amber-500"
     },
     {
-      name: "Lisa Thompson",
+      name: "Tarun Dutta",
       role: "Small Business Owner",
-      location: "Denver, CO",
+      location: "Golaghat, Assam",
       rating: 5,
-      quote: "Managing both business and family finances was overwhelming until FamilyFinance. The intelligent categorization and forecasting have been game-changers for our planning.",
+      quote: "Managing both business and family finances was overwhelming until ArthSaathi. The intelligent categorization and forecasting have been game-changers for our planning.",
       image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=face",
       bgColor: "bg-gradient-to-br from-teal-50 to-cyan-50",
       avatarBg: "bg-gradient-to-br from-teal-400 to-cyan-500"
     },
     {
-      name: "Robert Martinez",
-      role: "Father of 4",
-      location: "Phoenix, AZ",
+      name: "Tonmoy Baruah",
+      role: "Father of 3",
+      location: "Guwahati, Assam",
       rating: 5,
-      quote: "With four kids, budgeting felt impossible. FamilyFinance's family-focused tools helped us organize everything and even start college savings funds for each child.",
+      quote: "With three kids, budgeting and investment felt impossible. Arthsaathi's family-focused tools helped us organize everything and even start college savings funds for each child.",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
       bgColor: "bg-gradient-to-br from-rose-50 to-red-50",
       avatarBg: "bg-gradient-to-br from-rose-400 to-red-500"
@@ -87,8 +87,8 @@ const TestimonialsSection = () => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           <div className="inline-block mb-4">
-            <span className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-              Our happy clients say about us
+            <span className="bg-primary/10 text-primary px-4 py-2 rounded-full text-lg font-medium">
+              Our happy users say about us
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-900 mb-6 leading-tight">
@@ -96,9 +96,7 @@ const TestimonialsSection = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"> nationwide</span>
           </h2>
           <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-            Generative business intelligence drives efficiencies throughout your operations. From 
-            forecasting revenue to analyzing marketing attribution, we give you insights so you 
-            can make better decisions.
+            Discover how ArthSaathi is transforming family finances across India, one testimonial at a time.
           </p>
         </div>
 
