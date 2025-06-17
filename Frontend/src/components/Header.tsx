@@ -9,9 +9,11 @@ import {
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <header className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
@@ -25,7 +27,12 @@ const Header = () => {
                   <div className="w-2 h-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full"></div>
                 </div>
               </div>
-              <span className="font-semibold text-xl text-gray-900">ArthSaathi</span>
+              <span
+                className="font-semibold text-xl text-gray-900 hover:scale-105 transition-transform transition-colors duration-200 cursor-pointer"
+                onClick={() => navigate("/")}
+              >
+                ArthSaathi
+              </span>
             </div>
 
             {/* Desktop Navigation */}
