@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/ArthSaathiLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.santu_bora.Arth_sangi"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b0cf4b28-c783-44e8-9e47-0ff00c2ffee8"
+      }
     }
   }
 }
