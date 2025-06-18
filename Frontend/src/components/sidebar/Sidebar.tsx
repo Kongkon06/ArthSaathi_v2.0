@@ -62,6 +62,7 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
       setActiveSubmenu(null);
       setShowUserMenu(false);
     }
+    console.log(user.email)
   }, [isExpanded]);
 
   // Close user menu when clicking outside
@@ -209,7 +210,7 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-sm text-slate-900 dark:text-white">Deepmoina</p>
+                      <p className="font-medium text-sm text-slate-900 dark:text-white">{user.name || ''}</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[140px]">
                         {user?.email || ""}
                       </p>

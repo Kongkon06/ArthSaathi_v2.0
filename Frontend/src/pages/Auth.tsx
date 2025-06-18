@@ -55,19 +55,19 @@ export default function AuthForm() {
 
   type AuthFormData = SignInFormData | SignUpFormData;
 
-  const assignState = useCallback((fields: AuthFormData) => {
+  const assignState = useCallback((fields: any) => {
     let name = "";
     if ("firstname" in fields && "lastname" in fields) {
       name = fields.firstname + " " + fields.lastname;
     }
+
+    console.log(fields)
     setUser({
-      id: "",
+      id: fields.id ?? '',
       name,
       email: fields.email,
       password: fields.password,
-      phoneNumber: "",
-      address: "",
-      token: "",
+      token: fields.token ?? '',
     });
   }, []);
 
@@ -84,7 +84,8 @@ export default function AuthForm() {
         );
         console.log(res);
         localStorage.setItem("token", res.accessToken);
-        assignState(data)
+        localStorage.setItem("userInfo", JSON.stringify(res.user));
+        assignState(res.user)
         setSuccessMessage("Login successful! Redirecting...");
         
         // Add smooth transition delay
@@ -96,7 +97,6 @@ export default function AuthForm() {
           .signUp({
             email: data.email as string,
             password: data.password as string,
-            confirmPassword: (data as SignUpFormData).confirmPassword,
             firstname: (data as SignUpFormData).firstname,
             lastname: (data as SignUpFormData).lastname,
           })

@@ -22,10 +22,11 @@ async function createUser(req,res){
     password: hash_password
     }
   })
-  const token = await auth.generateToken(user);
+  const token = await auth.generateTokens(user);
   res.json({token});
   return;
   }catch(error){
+    console.error(error)
   res.status(500).json()
   }
   return;

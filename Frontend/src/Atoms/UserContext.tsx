@@ -6,8 +6,6 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  phoneNumber: string;
-  address: string;
   token:string;
 }
 
@@ -24,8 +22,6 @@ const defaultUser: User = {
   name: '',
   email: '',
   password: '',
-  phoneNumber: '',
-  address: '',
   token:''
 };
 

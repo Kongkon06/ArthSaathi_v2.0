@@ -39,6 +39,7 @@ import {
   Bot,
   User
 } from "lucide-react";
+import { useUser } from "@/Atoms/UserContext";
 
 interface ChatMessageProps {
   message: string;
@@ -171,10 +172,10 @@ const chartConfig = {
 };
 
 // Enhanced AI Chat Component
-const AIChatBox = () => {
+const AIChatBox = ({name}:{name:string}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hi Sourabh! I'm ArthSaathi, your AI financial assistant. I can help you analyze your spending, suggest investments, and optimize your financial goals. What would you like to know?", isUser: false }
+    { text: `Hi ${name}! I'm ArthSaathi, your AI financial assistant. I can help you analyze your spending, suggest investments, and optimize your financial goals. What would you like to know?`, isUser: false }
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -183,7 +184,7 @@ const AIChatBox = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isOpen]);
@@ -298,7 +299,7 @@ const AIChatBox = () => {
 function Home() {
   const [selectedCard, setSelectedCard] = useState(0);
   const [timeRange, setTimeRange] = useState("90d");
-
+  const { user,setUser } = useUser()
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date("2024-06-30");
@@ -312,7 +313,27 @@ function Home() {
     startDate.setDate(startDate.getDate() - daysToSubtract);
     return date >= startDate;
   });
-
+  const assignState = ()=>{
+    const fieldsString = localStorage.getItem('userInfo');
+    let fields: any = {};
+    if (fieldsString) {
+      try {
+        fields = JSON.parse(fieldsString);
+      } catch (e) {
+        fields = {};
+      }
+    }
+    setUser({
+      id: fields?.id ?? '',
+      name: fields?.firstname ?? '',
+      email: fields?.email ?? '',
+      password: fields?.password ?? '',
+      token: fields?.token ?? '',
+    });
+  }
+  useEffect(()=>{
+    assignState()
+  },[])
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4" >
       {/* Enhanced Greeting Section */}
@@ -320,7 +341,7 @@ function Home() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Hello Sourabh Ghosh! 👋
+              Hello {user.name}! 👋
             </h1>
             <p className="text-lg text-gray-600">
               Every small step brings you closer to your big dreams.
@@ -493,7 +514,7 @@ function Home() {
       </Card>
       
       {/* AI Chatbox Component */}
-      <AIChatBox />
+      <AIChatBox name={user.name} />
     </div>
   );
 }
