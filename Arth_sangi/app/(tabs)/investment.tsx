@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 const MutualFundSchemesScreen = () => {
   const [showInfoBanner, setShowInfoBanner] = useState(true);
+  const [loadingFundId, setLoadingFundId] = useState(null);
+  type PerformanceDataType = {
+    [fundId: number]: {
+      oneYearReturn: string;
+      threeYearReturn: string;
+      fiveYearReturn: string;
+      recommendation: string;
+      confidence: string;
+    }
+  };
+
+  const [performanceData, setPerformanceData] = useState<PerformanceDataType>({});
+  const [error, setError] = useState(null);
 
   // Mock data for mutual funds
   const mutualFunds = [
@@ -119,9 +134,118 @@ const MutualFundSchemesScreen = () => {
     }
   ];
 
-  const getRiskLevelText = (level:any) => {
+  const getRiskLevelText = (level :number) => {
     return `Risk Level ${level}`;
   };
+
+  // API call function
+  const analyzePerformance = async (fund: any) => {
+  setLoadingFundId(fund.id);
+  setError(null);
+
+  try {
+    const API_ENDPOINT = 'https://arthsaathi-1.onrender.com/predict';
+
+    // Parse values from string format
+    const expenseRatio = parseFloat(fund.expenseRatio.replace('%', '')) || 0;
+    const fundSize = parseFloat(fund.fundSize.replace(/[₹\sCr]/g, '')) || 0;
+    const sharpe = parseFloat(fund.sharpeRatio) || 0;
+    const sortino = parseFloat(fund.sortinoRatio) || 0;
+    const beta = parseFloat(fund.beta) || 0;
+    const fundAge = parseInt(fund.fundAge.replace(/\D/g, '')) || 0;
+
+    // Construct risk level flags
+    const riskLevels = {
+      risk_level_2: fund.riskLevel === 2,
+      risk_level_3: fund.riskLevel === 3,
+      risk_level_4: fund.riskLevel === 4,
+      risk_level_5: fund.riskLevel === 5,
+      risk_level_6: fund.riskLevel === 6,
+    };
+
+    const requestBody = {
+      expense_ratio: expenseRatio,
+      sharpe,
+      sortino,
+      fund_size_cr: fundSize,
+      fund_age_yr: fundAge,
+      sd: 0.19,        // placeholder, can be dynamic
+      beta,
+      alpha: 0.09,     // placeholder, can be dynamic
+      ...riskLevels,
+    };
+
+    const response = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    setPerformanceData(prev => ({
+      ...prev,
+      [fund.id]: data,
+    }));
+
+  } catch (err) {
+    console.error('Error fetching performance data:', err);
+
+    Alert.alert(
+      'Analysis Failed',
+      `Failed to analyze ${fund.name}. Using demo data instead.`,
+      [{ text: 'OK' }]
+    );
+
+    const mockData = {
+      oneYearReturn: (Math.random() * 15 + 5).toFixed(2),
+      threeYearReturn: (Math.random() * 25 + 10).toFixed(2),
+      fiveYearReturn: (Math.random() * 35 + 15).toFixed(2),
+      recommendation: 'BUY',
+      confidence: (Math.random() * 30 + 70).toFixed(1),
+    };
+
+    setPerformanceData(prev => ({
+      ...prev,
+      [fund.id]: mockData,
+    }));
+  } finally {
+    setLoadingFundId(null);
+  }
+};
+
+
+  const PerformanceResults = ({ fundId, data }:any) => (
+    <View className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+      <Text className="text-blue-900 font-semibold mb-3 text-base">AI Performance Prediction</Text>
+      <View className="flex-row justify-between mb-3">
+        <View className="flex-1 items-center">
+          <Text className="text-sm text-blue-600 mb-1">1 Year</Text>
+          <Text className="text-lg font-bold text-green-600">{data.oneYearReturn}%</Text>
+        </View>
+        <View className="flex-1 items-center">
+          <Text className="text-sm text-blue-600 mb-1">3 Year</Text>
+          <Text className="text-lg font-bold text-blue-600">{data.threeYearReturn}%</Text>
+        </View>
+        <View className="flex-1 items-center">
+          <Text className="text-sm text-blue-600 mb-1">5 Year</Text>
+          <Text className="text-lg font-bold text-purple-600">{data.fiveYearReturn}%</Text>
+        </View>
+      </View>
+      <View className="items-center">
+        <Text className="text-sm text-blue-700">
+          Recommendation: <Text className="font-semibold">{data.recommendation}</Text>{' '}
+          ({data.confidence}% confidence)
+        </Text>
+      </View>
+    </View>
+  );
 
   const FundCard = ({ fund }:any) => (
     <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-gray-100">
@@ -177,9 +301,29 @@ const MutualFundSchemesScreen = () => {
       </View>
 
       {/* Analyze Performance Button */}
-      <TouchableOpacity className="bg-blue-100 rounded-xl p-4 items-center">
-        <Text className="text-blue-700 font-semibold text-base">Analyze Performance</Text>
+      <TouchableOpacity 
+        onPress={() => analyzePerformance(fund)}
+        disabled={loadingFundId === fund.id}
+        className={`rounded-xl p-4 items-center ${
+          loadingFundId === fund.id 
+            ? 'bg-gray-100' 
+            : 'bg-blue-100'
+        }`}
+      >
+        {loadingFundId === fund.id ? (
+          <View className="flex-row items-center">
+            <ActivityIndicator size="small" color="#6B7280" className="mr-2" />
+            <Text className="text-gray-500 font-semibold text-base">Analyzing...</Text>
+          </View>
+        ) : (
+          <Text className="text-blue-700 font-semibold text-base">Analyze Performance</Text>
+        )}
       </TouchableOpacity>
+
+      {/* Show performance results if available */}
+      {performanceData[fund.id] && (
+        <PerformanceResults fundId={fund.id} data={performanceData[fund.id]} />
+      )}
     </View>
   );
 
@@ -223,17 +367,8 @@ const MutualFundSchemesScreen = () => {
 
         {/* Fund Cards Grid */}
         <View className="px-4 pb-6">
-          {/* Create pairs for 2-column layout on larger screens */}
-          {Array.from({ length: Math.ceil(mutualFunds.length / 2) }, (_, i) => (
-            <View key={i} className="mb-2">
-              {/* For mobile, show single column */}
-              <View className="flex-1">
-                <FundCard fund={mutualFunds[i * 2]} />
-                {mutualFunds[i * 2 + 1] && (
-                  <FundCard fund={mutualFunds[i * 2 + 1]} />
-                )}
-              </View>
-            </View>
+          {mutualFunds.map(fund => (
+            <FundCard key={fund.id} fund={fund} />
           ))}
         </View>
 

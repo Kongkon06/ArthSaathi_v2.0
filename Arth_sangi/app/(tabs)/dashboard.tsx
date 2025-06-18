@@ -105,7 +105,7 @@ export default function PremiumFinancialDashboard() {
     setLoadingExpenses(true);
 
     // Fetch expenses using accountId (via userId on backend)
-    const userExpenses = await expenseService.getUserExpenses(user.id, user.token);
+    const userExpenses = await expenseService.getUserExpenses(user.token,account?.id ?? 'fs');
     setExpenses(userExpenses);
 
     // Calculate total expenses
@@ -125,28 +125,36 @@ export default function PremiumFinancialDashboard() {
 };
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 50,
-        friction: 7,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    
-    fetchAccount();
-    fetchExpenses();
-  }, []);
+  let isMounted = true;
+
+  Animated.parallel([
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }),
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 600,
+      useNativeDriver: true,
+    }),
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 50,
+      friction: 7,
+      useNativeDriver: true,
+    }),
+  ]).start();
+
+  fetchAccount().then(() => {
+    if (isMounted) fetchExpenses();
+  });
+
+  return () => {
+    isMounted = false;
+  };
+}, []); // ← runs only once, no infinite loop
+
 
   const onRefresh = () => {
     setRefreshing(true);
