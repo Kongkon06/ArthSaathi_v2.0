@@ -29,7 +29,7 @@ export const expenseService = {
   addExpense: async (expenseData: MinimalExpenseData, token: string): Promise<Expense> => {
     try {
       const response = await axios.post(
-        'https://arthsaathi-v2-0.onrender.com/transactions',
+        'https://arthsaathi-v2-0.onrender.com/transaction',
         expenseData,
         {
           headers: {
@@ -45,10 +45,11 @@ export const expenseService = {
     }
   },
 
-  getUserExpenses: async (userId: string, token: string): Promise<Expense[]> => {
+  getUserExpenses: async (token:string, accountId: string): Promise<Expense[]> => {
     try {
+      console.log(accountId);
       const response = await axios.get(
-        `https://arthsaathi-v2-0.onrender.com/transactions/user/${userId}`,
+        `https://arthsaathi-v2-0.onrender.com/transaction/all/${accountId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
