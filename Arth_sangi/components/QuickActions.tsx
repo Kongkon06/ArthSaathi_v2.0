@@ -10,7 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { expenseService } from '@/services/espenseService';
+import { expenseService } from '@/services/expenseService';
 import { useUser } from '@/atoms/UserContext';
 
 interface QuickAction {

@@ -21,7 +21,7 @@ import QuickActions from '@/components/QuickActions';
 import { useUser } from '@/atoms/UserContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { accountService } from '@/services/getAccount';
-import { expenseService, Expense } from '@/services/espenseService';
+import { expenseService, Expense } from '@/services/expenseService';
 import { Account, useAccount } from '@/atoms/AccountContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -234,7 +234,7 @@ export default function PremiumFinancialDashboard() {
           <View style={{flex: 1, minWidth: 0}}>
             <View className="flex-row items-center mb-2 flex-wrap">
               <Text className="text-2xl font-bold text-gray-900 mr-2 flex-shrink" numberOfLines={2} ellipsizeMode="tail">
-                Hello {user.email.split(/\d/)[0]}!
+                Hello {user.firstname}!
               </Text>
               <Text className="text-2xl">👋</Text>
             </View>

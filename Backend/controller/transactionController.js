@@ -28,7 +28,7 @@ const router = express.Router();
  *       201:
  *         description: Transaction created
  */
-router.post('/create', transaction.createTransaction);
+router.post('/', transaction.createTransaction);
 
 /**
  * @swagger
