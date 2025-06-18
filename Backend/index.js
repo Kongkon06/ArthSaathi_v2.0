@@ -9,6 +9,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 const App = express();
 App.use(express.json());
+// cors handling
 App.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],

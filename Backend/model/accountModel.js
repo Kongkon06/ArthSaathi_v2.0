@@ -6,11 +6,21 @@ async function createAccount(req,res){
   try{
   const { firstName,lastName,age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
   const user = req.user;
+  const userData = await prisma.user.findFirst({
+  where:{
+  id:user.userId
+  }
+  });
+  if(!userData){
+  res.status(500).json({
+  msg:'User does not exist'
+    })
+  }
   const account =await prisma.accounts.create({
   data:{
   userId: user.userId,
-  firstname : firstName,
-  lastname: lastName,
+  firstname : userData.firstName,
+  lastname: userData.lastName,
   age:age,
   dependents:dependents,
   account_type: accountType,

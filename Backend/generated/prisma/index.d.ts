@@ -1106,18 +1106,24 @@ export namespace Prisma {
   export type UserMinAggregateOutputType = {
     id: string | null
     email: string | null
+    firstname: string | null
+    lastname: string | null
     password: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
     email: string | null
+    firstname: string | null
+    lastname: string | null
     password: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
+    firstname: number
+    lastname: number
     password: number
     _all: number
   }
@@ -1126,18 +1132,24 @@ export namespace Prisma {
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
+    firstname?: true
+    lastname?: true
     password?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
+    firstname?: true
+    lastname?: true
     password?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
+    firstname?: true
+    lastname?: true
     password?: true
     _all?: true
   }
@@ -1217,6 +1229,8 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: string
     email: string
+    firstname: string
+    lastname: string
     password: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -1240,6 +1254,8 @@ export namespace Prisma {
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
+    firstname?: boolean
+    lastname?: boolean
     password?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -1247,22 +1263,28 @@ export namespace Prisma {
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
+    firstname?: boolean
+    lastname?: boolean
     password?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
+    firstname?: boolean
+    lastname?: boolean
     password?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
+    firstname?: boolean
+    lastname?: boolean
     password?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstname" | "lastname" | "password", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
   }
@@ -1277,6 +1299,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
+      firstname: string
+      lastname: string
       password: string
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1704,6 +1728,8 @@ export namespace Prisma {
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
+    readonly firstname: FieldRef<"User", 'String'>
+    readonly lastname: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
   }
     
@@ -2145,61 +2171,55 @@ export namespace Prisma {
   export type AccountsAvgAggregateOutputType = {
     age: number | null
     dependents: number | null
-    current_balance: number | null
     monthly_income: number | null
     disposable_amount: number | null
     desired_saving: number | null
+    current_balance: number | null
   }
 
   export type AccountsSumAggregateOutputType = {
     age: number | null
     dependents: number | null
-    current_balance: number | null
     monthly_income: number | null
     disposable_amount: number | null
     desired_saving: number | null
+    current_balance: number | null
   }
 
   export type AccountsMinAggregateOutputType = {
     id: string | null
     userId: string | null
-    firstname: string | null
-    lastname: string | null
     age: number | null
     account_type: $Enums.accountType | null
     dependents: number | null
-    current_balance: number | null
     monthly_income: number | null
     disposable_amount: number | null
     desired_saving: number | null
+    current_balance: number | null
   }
 
   export type AccountsMaxAggregateOutputType = {
     id: string | null
     userId: string | null
-    firstname: string | null
-    lastname: string | null
     age: number | null
     account_type: $Enums.accountType | null
     dependents: number | null
-    current_balance: number | null
     monthly_income: number | null
     disposable_amount: number | null
     desired_saving: number | null
+    current_balance: number | null
   }
 
   export type AccountsCountAggregateOutputType = {
     id: number
     userId: number
-    firstname: number
-    lastname: number
     age: number
     account_type: number
     dependents: number
-    current_balance: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance: number
     _all: number
   }
 
@@ -2207,61 +2227,55 @@ export namespace Prisma {
   export type AccountsAvgAggregateInputType = {
     age?: true
     dependents?: true
-    current_balance?: true
     monthly_income?: true
     disposable_amount?: true
     desired_saving?: true
+    current_balance?: true
   }
 
   export type AccountsSumAggregateInputType = {
     age?: true
     dependents?: true
-    current_balance?: true
     monthly_income?: true
     disposable_amount?: true
     desired_saving?: true
+    current_balance?: true
   }
 
   export type AccountsMinAggregateInputType = {
     id?: true
     userId?: true
-    firstname?: true
-    lastname?: true
     age?: true
     account_type?: true
     dependents?: true
-    current_balance?: true
     monthly_income?: true
     disposable_amount?: true
     desired_saving?: true
+    current_balance?: true
   }
 
   export type AccountsMaxAggregateInputType = {
     id?: true
     userId?: true
-    firstname?: true
-    lastname?: true
     age?: true
     account_type?: true
     dependents?: true
-    current_balance?: true
     monthly_income?: true
     disposable_amount?: true
     desired_saving?: true
+    current_balance?: true
   }
 
   export type AccountsCountAggregateInputType = {
     id?: true
     userId?: true
-    firstname?: true
-    lastname?: true
     age?: true
     account_type?: true
     dependents?: true
-    current_balance?: true
     monthly_income?: true
     disposable_amount?: true
     desired_saving?: true
+    current_balance?: true
     _all?: true
   }
 
@@ -2354,15 +2368,13 @@ export namespace Prisma {
   export type AccountsGroupByOutputType = {
     id: string
     userId: string
-    firstname: string
-    lastname: string
     age: number
     account_type: $Enums.accountType
     dependents: number
-    current_balance: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance: number
     _count: AccountsCountAggregateOutputType | null
     _avg: AccountsAvgAggregateOutputType | null
     _sum: AccountsSumAggregateOutputType | null
@@ -2387,15 +2399,13 @@ export namespace Prisma {
   export type AccountsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    firstname?: boolean
-    lastname?: boolean
     age?: boolean
     account_type?: boolean
     dependents?: boolean
-    current_balance?: boolean
     monthly_income?: boolean
     disposable_amount?: boolean
     desired_saving?: boolean
+    current_balance?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     transaction?: boolean | Accounts$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["accounts"]>
@@ -2403,48 +2413,42 @@ export namespace Prisma {
   export type AccountsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    firstname?: boolean
-    lastname?: boolean
     age?: boolean
     account_type?: boolean
     dependents?: boolean
-    current_balance?: boolean
     monthly_income?: boolean
     disposable_amount?: boolean
     desired_saving?: boolean
+    current_balance?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["accounts"]>
 
   export type AccountsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    firstname?: boolean
-    lastname?: boolean
     age?: boolean
     account_type?: boolean
     dependents?: boolean
-    current_balance?: boolean
     monthly_income?: boolean
     disposable_amount?: boolean
     desired_saving?: boolean
+    current_balance?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["accounts"]>
 
   export type AccountsSelectScalar = {
     id?: boolean
     userId?: boolean
-    firstname?: boolean
-    lastname?: boolean
     age?: boolean
     account_type?: boolean
     dependents?: boolean
-    current_balance?: boolean
     monthly_income?: boolean
     disposable_amount?: boolean
     desired_saving?: boolean
+    current_balance?: boolean
   }
 
-  export type AccountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "firstname" | "lastname" | "age" | "account_type" | "dependents" | "current_balance" | "monthly_income" | "disposable_amount" | "desired_saving", ExtArgs["result"]["accounts"]>
+  export type AccountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "age" | "account_type" | "dependents" | "monthly_income" | "disposable_amount" | "desired_saving" | "current_balance", ExtArgs["result"]["accounts"]>
   export type AccountsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     transaction?: boolean | Accounts$transactionArgs<ExtArgs>
@@ -2465,15 +2469,13 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      firstname: string
-      lastname: string
       age: number
       account_type: $Enums.accountType
       dependents: number
-      current_balance: number
       monthly_income: number
       disposable_amount: number
       desired_saving: number
+      current_balance: number
     }, ExtArgs["result"]["accounts"]>
     composites: {}
   }
@@ -2901,15 +2903,13 @@ export namespace Prisma {
   interface AccountsFieldRefs {
     readonly id: FieldRef<"Accounts", 'String'>
     readonly userId: FieldRef<"Accounts", 'String'>
-    readonly firstname: FieldRef<"Accounts", 'String'>
-    readonly lastname: FieldRef<"Accounts", 'String'>
     readonly age: FieldRef<"Accounts", 'Int'>
     readonly account_type: FieldRef<"Accounts", 'accountType'>
     readonly dependents: FieldRef<"Accounts", 'Int'>
-    readonly current_balance: FieldRef<"Accounts", 'Int'>
     readonly monthly_income: FieldRef<"Accounts", 'Int'>
     readonly disposable_amount: FieldRef<"Accounts", 'Int'>
     readonly desired_saving: FieldRef<"Accounts", 'Int'>
+    readonly current_balance: FieldRef<"Accounts", 'Int'>
   }
     
 
@@ -4465,6 +4465,8 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
+    firstname: 'firstname',
+    lastname: 'lastname',
     password: 'password'
   };
 
@@ -4474,15 +4476,13 @@ export namespace Prisma {
   export const AccountsScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    firstname: 'firstname',
-    lastname: 'lastname',
     age: 'age',
     account_type: 'account_type',
     dependents: 'dependents',
-    current_balance: 'current_balance',
     monthly_income: 'monthly_income',
     disposable_amount: 'disposable_amount',
-    desired_saving: 'desired_saving'
+    desired_saving: 'desired_saving',
+    current_balance: 'current_balance'
   };
 
   export type AccountsScalarFieldEnum = (typeof AccountsScalarFieldEnum)[keyof typeof AccountsScalarFieldEnum]
@@ -4628,6 +4628,8 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
+    firstname?: StringFilter<"User"> | string
+    lastname?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     accounts?: XOR<AccountsNullableScalarRelationFilter, AccountsWhereInput> | null
   }
@@ -4635,6 +4637,8 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
+    firstname?: SortOrder
+    lastname?: SortOrder
     password?: SortOrder
     accounts?: AccountsOrderByWithRelationInput
   }
@@ -4645,6 +4649,8 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
+    firstname?: StringFilter<"User"> | string
+    lastname?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     accounts?: XOR<AccountsNullableScalarRelationFilter, AccountsWhereInput> | null
   }, "id" | "email">
@@ -4652,6 +4658,8 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
+    firstname?: SortOrder
+    lastname?: SortOrder
     password?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -4664,6 +4672,8 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
+    firstname?: StringWithAggregatesFilter<"User"> | string
+    lastname?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
   }
 
@@ -4673,15 +4683,13 @@ export namespace Prisma {
     NOT?: AccountsWhereInput | AccountsWhereInput[]
     id?: StringFilter<"Accounts"> | string
     userId?: StringFilter<"Accounts"> | string
-    firstname?: StringFilter<"Accounts"> | string
-    lastname?: StringFilter<"Accounts"> | string
     age?: IntFilter<"Accounts"> | number
     account_type?: EnumaccountTypeFilter<"Accounts"> | $Enums.accountType
     dependents?: IntFilter<"Accounts"> | number
-    current_balance?: IntFilter<"Accounts"> | number
     monthly_income?: IntFilter<"Accounts"> | number
     disposable_amount?: IntFilter<"Accounts"> | number
     desired_saving?: IntFilter<"Accounts"> | number
+    current_balance?: IntFilter<"Accounts"> | number
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     transaction?: XOR<TransactionsNullableScalarRelationFilter, TransactionsWhereInput> | null
   }
@@ -4689,15 +4697,13 @@ export namespace Prisma {
   export type AccountsOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    firstname?: SortOrder
-    lastname?: SortOrder
     age?: SortOrder
     account_type?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
     user?: UserOrderByWithRelationInput
     transaction?: TransactionsOrderByWithRelationInput
   }
@@ -4708,15 +4714,13 @@ export namespace Prisma {
     AND?: AccountsWhereInput | AccountsWhereInput[]
     OR?: AccountsWhereInput[]
     NOT?: AccountsWhereInput | AccountsWhereInput[]
-    firstname?: StringFilter<"Accounts"> | string
-    lastname?: StringFilter<"Accounts"> | string
     age?: IntFilter<"Accounts"> | number
     account_type?: EnumaccountTypeFilter<"Accounts"> | $Enums.accountType
     dependents?: IntFilter<"Accounts"> | number
-    current_balance?: IntFilter<"Accounts"> | number
     monthly_income?: IntFilter<"Accounts"> | number
     disposable_amount?: IntFilter<"Accounts"> | number
     desired_saving?: IntFilter<"Accounts"> | number
+    current_balance?: IntFilter<"Accounts"> | number
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     transaction?: XOR<TransactionsNullableScalarRelationFilter, TransactionsWhereInput> | null
   }, "id" | "userId">
@@ -4724,15 +4728,13 @@ export namespace Prisma {
   export type AccountsOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    firstname?: SortOrder
-    lastname?: SortOrder
     age?: SortOrder
     account_type?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
     _count?: AccountsCountOrderByAggregateInput
     _avg?: AccountsAvgOrderByAggregateInput
     _max?: AccountsMaxOrderByAggregateInput
@@ -4746,15 +4748,13 @@ export namespace Prisma {
     NOT?: AccountsScalarWhereWithAggregatesInput | AccountsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Accounts"> | string
     userId?: StringWithAggregatesFilter<"Accounts"> | string
-    firstname?: StringWithAggregatesFilter<"Accounts"> | string
-    lastname?: StringWithAggregatesFilter<"Accounts"> | string
     age?: IntWithAggregatesFilter<"Accounts"> | number
     account_type?: EnumaccountTypeWithAggregatesFilter<"Accounts"> | $Enums.accountType
     dependents?: IntWithAggregatesFilter<"Accounts"> | number
-    current_balance?: IntWithAggregatesFilter<"Accounts"> | number
     monthly_income?: IntWithAggregatesFilter<"Accounts"> | number
     disposable_amount?: IntWithAggregatesFilter<"Accounts"> | number
     desired_saving?: IntWithAggregatesFilter<"Accounts"> | number
+    current_balance?: IntWithAggregatesFilter<"Accounts"> | number
   }
 
   export type TransactionsWhereInput = {
@@ -4822,6 +4822,8 @@ export namespace Prisma {
   export type UserCreateInput = {
     id?: string
     email: string
+    firstname: string
+    lastname: string
     password: string
     accounts?: AccountsCreateNestedOneWithoutUserInput
   }
@@ -4829,6 +4831,8 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: string
     email: string
+    firstname: string
+    lastname: string
     password: string
     accounts?: AccountsUncheckedCreateNestedOneWithoutUserInput
   }
@@ -4836,6 +4840,8 @@ export namespace Prisma {
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     accounts?: AccountsUpdateOneWithoutUserNestedInput
   }
@@ -4843,6 +4849,8 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     accounts?: AccountsUncheckedUpdateOneWithoutUserNestedInput
   }
@@ -4850,32 +4858,36 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: string
     email: string
+    firstname: string
+    lastname: string
     password: string
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
   }
 
   export type AccountsCreateInput = {
     id?: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
     user: UserCreateNestedOneWithoutAccountsInput
     transaction?: TransactionsCreateNestedOneWithoutAccountInput
   }
@@ -4883,29 +4895,25 @@ export namespace Prisma {
   export type AccountsUncheckedCreateInput = {
     id?: string
     userId: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
     transaction?: TransactionsUncheckedCreateNestedOneWithoutAccountInput
   }
 
   export type AccountsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     transaction?: TransactionsUpdateOneWithoutAccountNestedInput
   }
@@ -4913,57 +4921,49 @@ export namespace Prisma {
   export type AccountsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
     transaction?: TransactionsUncheckedUpdateOneWithoutAccountNestedInput
   }
 
   export type AccountsCreateManyInput = {
     id?: string
     userId: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
   }
 
   export type AccountsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
   }
 
   export type AccountsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
   }
 
   export type TransactionsCreateInput = {
@@ -5051,18 +5051,24 @@ export namespace Prisma {
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    firstname?: SortOrder
+    lastname?: SortOrder
     password?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    firstname?: SortOrder
+    lastname?: SortOrder
     password?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    firstname?: SortOrder
+    lastname?: SortOrder
     password?: SortOrder
   }
 
@@ -5115,61 +5121,55 @@ export namespace Prisma {
   export type AccountsCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    firstname?: SortOrder
-    lastname?: SortOrder
     age?: SortOrder
     account_type?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
   }
 
   export type AccountsAvgOrderByAggregateInput = {
     age?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
   }
 
   export type AccountsMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    firstname?: SortOrder
-    lastname?: SortOrder
     age?: SortOrder
     account_type?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
   }
 
   export type AccountsMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    firstname?: SortOrder
-    lastname?: SortOrder
     age?: SortOrder
     account_type?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
   }
 
   export type AccountsSumOrderByAggregateInput = {
     age?: SortOrder
     dependents?: SortOrder
-    current_balance?: SortOrder
     monthly_income?: SortOrder
     disposable_amount?: SortOrder
     desired_saving?: SortOrder
+    current_balance?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -5615,29 +5615,25 @@ export namespace Prisma {
 
   export type AccountsCreateWithoutUserInput = {
     id?: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
     transaction?: TransactionsCreateNestedOneWithoutAccountInput
   }
 
   export type AccountsUncheckedCreateWithoutUserInput = {
     id?: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
     transaction?: TransactionsUncheckedCreateNestedOneWithoutAccountInput
   }
 
@@ -5659,41 +5655,41 @@ export namespace Prisma {
 
   export type AccountsUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
     transaction?: TransactionsUpdateOneWithoutAccountNestedInput
   }
 
   export type AccountsUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
     transaction?: TransactionsUncheckedUpdateOneWithoutAccountNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
     id?: string
     email: string
+    firstname: string
+    lastname: string
     password: string
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
     id?: string
     email: string
+    firstname: string
+    lastname: string
     password: string
   }
 
@@ -5737,12 +5733,16 @@ export namespace Prisma {
   export type UserUpdateWithoutAccountsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    firstname?: StringFieldUpdateOperationsInput | string
+    lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
   }
 
@@ -5775,30 +5775,26 @@ export namespace Prisma {
 
   export type AccountsCreateWithoutTransactionInput = {
     id?: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
     user: UserCreateNestedOneWithoutAccountsInput
   }
 
   export type AccountsUncheckedCreateWithoutTransactionInput = {
     id?: string
     userId: string
-    firstname: string
-    lastname: string
     age: number
     account_type?: $Enums.accountType
     dependents: number
-    current_balance?: number
     monthly_income: number
     disposable_amount: number
     desired_saving: number
+    current_balance?: number
   }
 
   export type AccountsCreateOrConnectWithoutTransactionInput = {
@@ -5819,30 +5815,26 @@ export namespace Prisma {
 
   export type AccountsUpdateWithoutTransactionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
   }
 
   export type AccountsUncheckedUpdateWithoutTransactionInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    firstname?: StringFieldUpdateOperationsInput | string
-    lastname?: StringFieldUpdateOperationsInput | string
     age?: IntFieldUpdateOperationsInput | number
     account_type?: EnumaccountTypeFieldUpdateOperationsInput | $Enums.accountType
     dependents?: IntFieldUpdateOperationsInput | number
-    current_balance?: IntFieldUpdateOperationsInput | number
     monthly_income?: IntFieldUpdateOperationsInput | number
     disposable_amount?: IntFieldUpdateOperationsInput | number
     desired_saving?: IntFieldUpdateOperationsInput | number
+    current_balance?: IntFieldUpdateOperationsInput | number
   }
 
 

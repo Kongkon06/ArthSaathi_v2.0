@@ -11,6 +11,8 @@ datasource db {
 model User {
   id       String    @id @default(uuid())
   email    String    @unique
+  firstname String   @db.VarChar(255)
+  lastname  String    @db.VarChar(255)
   password String
   accounts Accounts?
 }
@@ -18,8 +20,6 @@ model User {
 model Accounts {
   id                String        @id @default(uuid())
   userId            String        @unique
-  firstname         String        @db.VarChar(255)
-  lastname          String        @db.VarChar(255)
   age               Int
   account_type      accountType   @default(Savings)
   dependents        Int
