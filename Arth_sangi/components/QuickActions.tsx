@@ -50,7 +50,7 @@ const QuickActions: React.FC = () => {
     {
       id: '2',
       title: 'Govt Schemes',
-      icon: 'government-building',
+      icon: 'town-hall',
       color: '#3B82F6',
       bgColor: 'bg-blue-50',
     },
