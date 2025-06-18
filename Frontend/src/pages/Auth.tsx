@@ -16,7 +16,8 @@ const signInSchema = z.object({
 
 const signUpSchema = signInSchema
   .extend({
-    name: z.string().min(2, "Name must be at least 2 characters"),
+    firstname: z.string().min(2, "Name must be at least 2 characters"),
+    lastname: z.string().min(2, "Name must be at least 2 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -54,10 +55,14 @@ export default function AuthForm() {
 
   type AuthFormData = SignInFormData | SignUpFormData;
 
-  const assignState = useCallback((fields : AuthFormData) => {
+  const assignState = useCallback((fields: AuthFormData) => {
+    let name = "";
+    if ("firstname" in fields && "lastname" in fields) {
+      name = fields.firstname + " " + fields.lastname;
+    }
     setUser({
       id: "",
-      name: "",
+      name,
       email: fields.email,
       password: fields.password,
       phoneNumber: "",
@@ -92,8 +97,8 @@ export default function AuthForm() {
             email: data.email as string,
             password: data.password as string,
             confirmPassword: (data as SignUpFormData).confirmPassword,
-            firstName: (data as SignUpFormData).firstname,
-            lastName: (data as SignUpFormData).lastname,
+            firstname: (data as SignUpFormData).firstname,
+            lastname: (data as SignUpFormData).lastname,
           })
           .then((res) => {
             console.log(res.accessToken);
