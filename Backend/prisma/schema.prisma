@@ -44,6 +44,7 @@ model Transactions {
 enum accountType {
   Savings
   Current
+  Family
 }
 
 enum trnxStatus {

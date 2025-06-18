@@ -3,6 +3,8 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 // Step 1: Define the User interface
 export interface User {
   id: string;
+  firstname:string;
+  lastname:string;
   name: string;
   email: string;
   password: string;
@@ -19,6 +21,8 @@ interface UserContextType {
 // Step 3: Create default user object
 const defaultUser: User = {
   id: '',
+  firstname:'',
+  lastname:'',
   name: '',
   email: '',
   password: '',

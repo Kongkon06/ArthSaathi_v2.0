@@ -3,8 +3,6 @@
 import axios from 'axios';
 
 export interface AccountDetails {
-  firstName: string;
-  lastName: string;
   age: number;
   dependents: number;
   currentBalance: number;

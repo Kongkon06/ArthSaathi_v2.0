@@ -1,800 +1,296 @@
-"use client";
-import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-} from "@/components/ui/tabs";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { 
-  Plus, 
-  Users, 
-  //User, 
-  Wallet, 
-  Trash2, 
-  Edit, 
-  DollarSign, 
-  BadgePercent,
-  TrendingUp,
-  PiggyBank,
-  Star,
- // Calendar,
-  Building2,
-  Eye,
-  EyeOff
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import {  TooltipProvider } from "@/components/ui/tooltip";
+import { useState } from 'react';
+import { X, Plus, Trash2, Wallet, TrendingUp, Target, Tag, PiggyBank } from 'lucide-react';
+import { accountService } from '@/services/accountService';
+import { useAccount } from '@/Atoms/AccountContext';
 
-const FormSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  balance: z.string().min(1, "Balance is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  income: z.string().min(1, "Income is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  age: z.string().min(1, "Age is required").refine((val: string) => parseInt(val) >= 18, "Must be at least 18 years old"),
-  dependents: z.string().refine((val: string) => parseInt(val) >= 0, "Cannot be negative"),
-  disposableIncome: z.string().min(1, "Disposable income is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  desiredSavings: z.string().min(1, "Desired savings is required").refine((val: string) => !isNaN(parseFloat(val)), "Must be a valid number"),
-  accountType: z.enum(["current", "savings", "family"]),
-  isDefault: z.boolean(),
-  familyMembers: z.array(z.object({
-    name: z.string().min(1, "Name is required"),
-    relation: z.string().min(1, "Relation is required"),
-  })),
-});
-
-type FormData = z.infer<typeof FormSchema>;
-type FamilyMember = {
-  name: string;
-  relation: string;
-};
-
-type Account = Omit<FormData, 'balance' | 'income' | 'age' | 'dependents' | 'disposableIncome' | 'desiredSavings'> & {
-  id: string;
-  balance: number;
-  income: number;
-  age: number;
-  dependents: number;
-  disposableIncome: number;
-  desiredSavings: number;
-  createdAt: Date;
-};
-
-const Accounts = () => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "current" | "savings" | "family">("all");
-  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([{ name: "", relation: "" }]);
-  const [accountToEdit, setAccountToEdit] = useState<Account | null>(null);
-  const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
-  const [showBalances, setShowBalances] = useState(true);
-  
-  const [accounts, setAccounts] = useState<Account[]>([
-    {
-      id: "1",
-      firstName: "John",
-      lastName: "Doe",
-      balance: 5000,
-      income: 3000,
-      age: 30,
-      dependents: 2,
-      disposableIncome: 1000,
-      desiredSavings: 1500,
-      accountType: "savings",
-      isDefault: true,
-      familyMembers: [],
-      createdAt: new Date('2024-01-15'),
-    },
-    {
-      id: "2",
-      firstName: "Jane",
-      lastName: "Smith",
-      balance: 8000,
-      income: 4500,
-      age: 40,
-      dependents: 1,
-      disposableIncome: 2000,
-      desiredSavings: 2500,
-      accountType: "family",
-      isDefault: false,
-      familyMembers: [
-        { name: "Alice Smith", relation: "Daughter" },
-        { name: "Bob Smith", relation: "Son" },
-      ],
-      createdAt: new Date('2024-02-20'),
-    }
-  ]);
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      balance: "",
-      income: "",
-      age: "",
-      dependents: "0",
-      disposableIncome: "",
-      desiredSavings: "",
-      accountType: "current",
-      isDefault: false,
-      familyMembers: [],
-    },
+const FinancialAccountsDashboard = () => {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { account } = useAccount();
+  const [formData, setFormData] = useState({
+    age: '0',
+    dependents: '0',
+    currentBalance: '0',
+    accountType: 'Current',
+    monthlyIncome: '0',
+    disposableIncome: '1000.00',
+    desiredSavings: '500.00'
   });
 
-  const accountType = form.watch("accountType");
-
-  useEffect(() => {
-    if (accountToEdit) {
-      form.reset({
-        ...accountToEdit,
-        balance: accountToEdit.balance.toString(),
-        income: accountToEdit.income?.toString() || "",
-        age: accountToEdit.age?.toString() || "",
-        dependents: accountToEdit.dependents?.toString() || "0",
-        disposableIncome: accountToEdit.disposableIncome?.toString() || "",
-        desiredSavings: accountToEdit.desiredSavings?.toString() || "",
-        familyMembers: accountToEdit.familyMembers || [],
-      });
-
-      if (accountToEdit.familyMembers) {
-        setFamilyMembers(accountToEdit.familyMembers);
-      }
-    } else {
-      form.reset();
-      setFamilyMembers([{ name: "", relation: "" }]);
-    }
-  }, [accountToEdit, form]);
-
-  const closeAndResetForm = () => {
-    form.reset();
-    setFamilyMembers([{ name: "", relation: "" }]);
-    setAccountToEdit(null);
-    setOpenDialog(false);
+  const handleInputChange = (field:any, value:any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const onSubmit = (data: FormData) => {
-    // Validate disposable income doesn't exceed income
-    const income = parseFloat(data.income);
-    const disposableIncome = parseFloat(data.disposableIncome);
-    const desiredSavings = parseFloat(data.desiredSavings);
-    
-    if (disposableIncome > income) {
-      form.setError("disposableIncome", { message: "Cannot exceed monthly income" });
-      return;
-    }
-    
-    if (desiredSavings > disposableIncome) {
-      form.setError("desiredSavings", { message: "Cannot exceed disposable income" });
-      return;
-    }
+  const handleCreateAccount = () => {
+  const token = localStorage.getItem('token') ||'';
 
-    const accountData: Account = {
-      ...data,
-      id: accountToEdit ? accountToEdit.id : Date.now().toString(),
-      balance: parseFloat(data.balance),
-      income: parseFloat(data.income),
-      age: parseInt(data.age),
-      dependents: parseInt(data.dependents),
-      disposableIncome: parseFloat(data.disposableIncome),
-      desiredSavings: parseFloat(data.desiredSavings),
-      familyMembers: data.accountType === "family" ? familyMembers.filter(m => m.name && m.relation) : [],
-      createdAt: accountToEdit ? accountToEdit.createdAt : new Date(),
-    };
-
-    // Handle default account logic
-    if (accountData.isDefault) {
-      setAccounts((prev) =>
-        prev.map((acc) => ({ ...acc, isDefault: false }))
-      );
-    }
-
-    if (accountToEdit) {
-      setAccounts((prev) =>
-        prev.map((acc) => (acc.id === accountToEdit.id ? accountData : acc))
-      );
-    } else {
-      setAccounts((prev) => [...prev, accountData]);
-    }
-
-    closeAndResetForm();
+  // Convert fields to proper types
+  const accountPayload = {
+    ...formData,
+    age: Number(formData.age),
+    dependents: Number(formData.dependents),
+    currentBalance: parseFloat(formData.currentBalance),
+    monthlyIncome: parseFloat(formData.monthlyIncome),
+    disposableIncome: parseFloat(formData.disposableIncome),
+    desiredSavings: parseFloat(formData.desiredSavings),
   };
 
-  const handleAddFamilyMember = () => {
-    setFamilyMembers([...familyMembers, { name: "", relation: "" }]);
-  };
+  accountService.create(accountPayload, token).then(()=>setShowCreateModal(false));
 
-  const handleRemoveFamilyMember = (index: number) => {
-    if (familyMembers.length > 1) {
-      setFamilyMembers(familyMembers.filter((_, i) => i !== index));
-    }
-  };
+  // Reset form
+  setFormData({
+    age: '0',
+    dependents: '0',
+    currentBalance: '0',
+    accountType: 'Current Account',
+    monthlyIncome: '0',
+    disposableIncome: '1000.00',
+    desiredSavings: '500.00'
+  });
+};
+const AccountCard = (account:any)=>{
+  return <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              {account.account_type == 'Savings' ?<PiggyBank size={20} className="text-green-600" /> : <Wallet size={20} className="text-red-600"/>}
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg">{account.firstname + ' ' + account.lastname}</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-600">{account.account_type} Account</span>
+                <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Default</span>
+              </div>
+            </div>
+          </div>
 
-  const updateFamilyMember = (index: number, field: keyof FamilyMember, value: string) => {
-    const updatedMembers = [...familyMembers];
-    updatedMembers[index][field] = value;
-    setFamilyMembers(updatedMembers);
-  };
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <div className="text-sm text-gray-600 mb-1">Balance</div>
+              <div className="text-2xl font-bold text-green-600">{account.current_balance}</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600 mb-1">Monthly Income</div>
+              <div className="text-2xl font-bold">{account.monthly_income}</div>
+            </div>
+          </div>
 
-  const handleDeleteAccount = () => {
-    if (accountToDelete) {
-      setAccounts((prev) => prev.filter((acc) => acc.id !== accountToDelete.id));
-      setAccountToDelete(null);
-    }
-  };
+          <div className="grid grid-cols-3 gap-4 mb-4 text-sm">
+            <div>
+              <div className="text-gray-600">Age</div>
+              <div className="font-semibold">{account.age}</div>
+            </div>
+            <div>
+              <div className="text-gray-600">Dependents</div>
+              <div className="font-semibold">{account.dependents}</div>
+            </div>
+          </div>
 
-  const handleEditAccount = (account: Account) => {
-    setAccountToEdit(account);
-    setOpenDialog(true);
-  };
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-600">Savings Progress</span>
+              <span className="text-sm font-semibold">₹1,500 / month</span>
+            </div>
+            <div className="text-xs text-gray-500">100.0% of disposable income</div>
+          </div>
 
-  const getAccountTypeIcon = (type: Account["accountType"]) => {
-    switch (type) {
-      case "family":
-        return <Users className="h-5 w-5" />;
-      case "savings":
-        return <PiggyBank className="h-5 w-5" />;
-      default:
-        return <Building2 className="h-5 w-5" />;
-    }
-  };
-
-  const getAccountTypeColor = (type: Account["accountType"]) => {
-    switch (type) {
-      case "family":
-        return "bg-purple-500/10 text-purple-700 border-purple-200";
-      case "savings":
-        return "bg-green-500/10 text-green-700 border-green-200";
-      default:
-        return "bg-blue-500/10 text-blue-700 border-blue-200";
-    }
-  };
-
-  const calculateSavingsProgress = (account: Account) => {
-    return Math.min((account.desiredSavings / account.disposableIncome) * 100, 100);
-  };
-
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
-  const totalIncome = accounts.reduce((sum, acc) => sum + acc.income, 0);
-  const totalSavingsGoal = accounts.reduce((sum, acc) => sum + acc.desiredSavings, 0);
+          <div className="flex gap-2">
+            <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors text-red-600">
+              <Trash2 size={16} />
+              Delete
+            </button>
+          </div>
+        </div>
+}
 
   return (
-    <TooltipProvider>
-      <div className="container mx-auto p-6 space-y-8" >
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              My Accounts
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Manage your personal and family finances with ease
-            </p>
-          </div>
-          
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:min-w-[400px]">
-            <Card className="border-l-4 border-l-blue-500 bg-white">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <Wallet className="h-4 w-4 text-blue-500" />
-                  <p className="text-sm font-medium">Total Balance</p>
-                </div>
-                <p className="text-2xl font-bold">
-                  {showBalances ? `₹${totalBalance.toLocaleString()}` : "₹••••••"}
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-l-4 border-l-green-500 bg-white">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-green-500" />
-                  <p className="text-sm font-medium">Total Income</p>
-                </div>
-                <p className="text-2xl font-bold">
-                  {showBalances ? `₹${totalIncome.toLocaleString()}` : "₹••••••"}
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-l-4 border-l-purple-500 bg-white">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <PiggyBank className="h-4 w-4 text-purple-500" />
-                  <p className="text-sm font-medium">Savings Goal</p>
-                </div>
-                <p className="text-2xl font-bold">
-                  {showBalances ? `₹${totalSavingsGoal.toLocaleString()}` : "₹••••••"}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+    <div className="min-h-screen bg-gray-50 p-6 w-full">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-blue-600 mb-2">My Accounts</h1>
+          <p className="text-gray-600">Manage your personal and family finances with ease</p>
         </div>
-
-        {/* Controls Section */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowBalances(!showBalances)}
-            >
-              {showBalances ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </Button>
-            
-            <Button onClick={() => setOpenDialog(true)} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              <Plus className="h-4 w-4 mr-2" /> Create Account
-            </Button>
-          </div>
-        </div>
-
-        {/* Tabs Section */}
-        <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
-          <TabsContent value={activeTab} className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {accounts.map((account) => (
-                  <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-white">
-                    <CardHeader className="pb-3 bg-gradient-to-r from-slate-50 to-slate-100/50">
-                      <div className="flex justify-between items-start">
-                        <div className="flex gap-3 items-center">
-                          <div className={`p-2 rounded-xl ${getAccountTypeColor(account.accountType)}`}>
-                            {getAccountTypeIcon(account.accountType)}
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg font-semibold">
-                              {account.firstName} {account.lastName}
-                            </CardTitle>
-                            <CardDescription className="capitalize flex items-center gap-2">
-                              {account.accountType} Account
-                              {account.isDefault && (
-                                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
-                                  <Star className="h-3 w-3 mr-1" /> Default
-                                </Badge>
-                              )}
-                            </CardDescription>
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">Balance</p>
-                          <p className="text-2xl font-bold text-green-600">
-                            {showBalances ? `₹${account.balance.toLocaleString()}` : "₹••••••"}
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm text-muted-foreground">Monthly Income</p>
-                          <p className="text-lg font-semibold">
-                            {showBalances ? `₹${account.income.toLocaleString()}` : "₹••••••"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="text-center p-2 bg-slate-50 rounded-lg">
-                          <p className="text-xs text-muted-foreground">Age</p>
-                          <p className="text-sm font-medium">{account.age}</p>
-                        </div>
-                        <div className="text-center p-2 bg-slate-50 rounded-lg">
-                          <p className="text-xs text-muted-foreground">Dependents</p>
-                          <p className="text-sm font-medium">{account.dependents}</p>
-                        </div>
-                        <div className="text-center p-2 bg-slate-50 rounded-lg">
-                          <p className="text-xs text-muted-foreground">Created</p>
-                          <p className="text-sm font-medium">{account.createdAt.toLocaleDateString()}</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <p className="text-sm text-muted-foreground">Savings Progress</p>
-                          <p className="text-sm font-medium">
-                            {showBalances ? `₹${account.desiredSavings.toLocaleString()}` : "₹••••••"} / month
-                          </p>
-                        </div>
-                        <Progress value={calculateSavingsProgress(account)} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          {calculateSavingsProgress(account).toFixed(1)}% of disposable income
-                        </p>
-                      </div>
-
-                      {account.accountType === "family" && account.familyMembers && account.familyMembers.length > 0 && (
-                        <div className="space-y-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
-                          <p className="text-sm font-medium flex items-center gap-2">
-                            <Users className="h-4 w-4" /> Family Members
-                          </p>
-                          <div className="space-y-1">
-                            {account.familyMembers.slice(0, 2).map((member: FamilyMember, idx: number) => (
-                              <div key={idx} className="flex justify-between items-center text-sm">
-                                <span className="font-medium">{member.name}</span>
-                                <Badge variant="outline" className="text-xs">{member.relation}</Badge>
-                              </div>
-                            ))}
-                            {account.familyMembers.length > 2 && (
-                              <p className="text-xs text-muted-foreground">
-                                +{account.familyMembers.length - 2} more members
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                    
-                    <Separator />
-                    <CardFooter
-                      className="pt-4 flex justify-end gap-2"
-                      style={{
-                        position: "relative",
-                        left: 0,
-                        top: -31,
-                        transition: "none",
-                        cursor: "move",
-                      }}
-                    >
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditAccount(account)}
-                        className="hover:bg-blue-50"
-                       
-                      >
-                        <Edit className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setAccountToDelete(account)}
-                        className="hover:bg-red-600 text-black hover:text-white"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1 text-black" /> Delete
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))
-              }
+        
+        {/* Summary Cards */}
+        <div className="flex gap-4">
+          <div className="bg-white p-4 rounded-lg border-2 border-blue-500 shadow-sm min-w-[140px]">
+            <div className="flex items-center gap-2 mb-2">
+              <Wallet size={16} className="text-blue-500" />
+              <span className="text-sm text-gray-600">Total Balance</span>
             </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* Create/Edit Dialog */}
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">
-                {accountToEdit ? "Edit Account" : "Create New Account"}
-              </DialogTitle>
-              <DialogDescription>
-                {accountToEdit 
-                  ? "Update your account information below." 
-                  : "Fill in the details to create a new account."}
-              </DialogDescription>
-            </DialogHeader>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="age"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Age</FormLabel>
-                        <FormControl>
-                          <Input placeholder="25" type="number" min="18" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="dependents"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Number of Dependents</FormLabel>
-                        <FormControl>
-                          <Input placeholder="0" type="number" min="0" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="balance"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Current Balance</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <DollarSign className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                            <Input
-                              placeholder="5000.00"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              className="pl-9"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="accountType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Account Type</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select account type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="current">Current Account</SelectItem>
-                            <SelectItem value="savings">Savings Account</SelectItem>
-                            <SelectItem value="family">Family Account</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />  
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="income"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Monthly Income</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <DollarSign className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                          <Input
-                            placeholder="5000.00"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            className="pl-9"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="disposableIncome"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Disposable Income</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <DollarSign className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                            <Input
-                              placeholder="1000.00"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              className="pl-9"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="desiredSavings"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Desired Monthly Savings</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <BadgePercent className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                            <Input
-                              placeholder="500.00"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              className="pl-9"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Family Members Section */}
-                {accountType === "family" && (
-                  <div className="border rounded-lg p-4 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium flex items-center gap-2">
-                        <Users className="h-4 w-4" /> Family Members
-                      </h3>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleAddFamilyMember}
-                      >
-                        <Plus className="h-4 w-4 mr-1" /> Add Member
-                      </Button>
-                    </div>
-                    {familyMembers.map((member, index) => (
-                      <div key={index} className="grid grid-cols-5 gap-3 items-center">
-                        <div className="col-span-2">
-                          <FormLabel className="text-xs">Name</FormLabel>
-                          <Input
-                            value={member.name}
-                            onChange={(e) => updateFamilyMember(index, "name", e.target.value)}
-                            placeholder="Member name"
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <FormLabel className="text-xs">Relation</FormLabel>
-                          <Input
-                            value={member.relation}
-                            onChange={(e) => updateFamilyMember(index, "relation", e.target.value)}
-                            placeholder="e.g. Spouse, Child"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRemoveFamilyMember(index)}
-                            disabled={familyMembers.length === 1}
-                            className="h-9 mt-auto"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex justify-end gap-3 pt-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={closeAndResetForm}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {accountToEdit ? "Save Changes" : "Create Account"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Delete Confirmation Dialog */}
-        <AlertDialog open={!!accountToDelete} onOpenChange={() => setAccountToDelete(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete Account</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to delete{" "}
-                <span className="font-semibold">
-                  {accountToDelete?.firstName} {accountToDelete?.lastName}
-                </span>
-                's account? This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setAccountToDelete(null)}>Cancel</AlertDialogCancel>
-              <AlertDialogAction 
-                className="bg-red-600 hover:bg-red-700"
-                onClick={handleDeleteAccount}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+            <div className="text-2xl font-bold">₹13,000</div>
+          </div>
+          
+          <div className="bg-white p-4 rounded-lg border-2 border-green-500 shadow-sm min-w-[140px]">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp size={16} className="text-green-500" />
+              <span className="text-sm text-gray-600">Total Income</span>
+            </div>
+            <div className="text-2xl font-bold">₹7500</div>
+          </div>
+          
+          <div className="bg-white p-4 rounded-lg border-2 border-purple-500 shadow-sm min-w-[140px]">
+            <div className="flex items-center gap-2 mb-2">
+              <Target size={16} className="text-purple-500" />
+              <span className="text-sm text-gray-600">Savings Goal</span>
+            </div>
+            <div className="text-2xl font-bold">₹4,000</div>
+          </div>
+        </div>
       </div>
-    </TooltipProvider>
+
+      {/* Action Buttons */}
+      <div className="flex gap-3 mb-8">
+        <button className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+          <Tag size={20} />
+        </button>
+        <button 
+          onClick={() => setShowCreateModal(true)}
+          className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus size={20} />
+          Create Account
+        </button>
+      </div>
+
+      {/* Account Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
+
+        {/* Jane Smith Account */}
+        <AccountCard account={account}/>
+      </div>
+
+      {/* Create Account Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Create New Account</h2>
+              <button 
+                onClick={() => setShowCreateModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <p className="text-gray-600 mb-6">Fill in the details to create a new account.</p>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                  <input 
+                    type="number"
+                    value={formData.age}
+                    onChange={(e) => handleInputChange('age', e.target.value)}
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    min="0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Number of Dependents</label>
+                  <input 
+                    type="number"
+                    value={formData.dependents}
+                    onChange={(e) => handleInputChange('dependents', e.target.value)}
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Balance</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                    <input 
+                      type="number"
+                      value={formData.currentBalance}
+                      onChange={(e) => handleInputChange('currentBalance', e.target.value)}
+                      className="w-full p-2 pl-8 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
+                  <select 
+                    value={formData.accountType}
+                    onChange={(e) => handleInputChange('accountType', e.target.value)}
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="Current">Current Account</option>
+                    <option value="Savings">Savings Account</option>
+                    <option value="Family">Family Account</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Income</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                  <input 
+                    type="number"
+                    value={formData.monthlyIncome}
+                    onChange={(e) => handleInputChange('monthlyIncome', e.target.value)}
+                    className="w-full p-2 pl-8 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Disposable Income</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                    <input 
+                      type="number"
+                      value={formData.disposableIncome}
+                      onChange={(e) => handleInputChange('disposableIncome', e.target.value)}
+                      className="w-full p-2 pl-8 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Desired Monthly Savings</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                    <input 
+                      type="number"
+                      value={formData.desiredSavings}
+                      onChange={(e) => handleInputChange('desiredSavings', e.target.value)}
+                      className="w-full p-2 pl-8 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button 
+                onClick={() => setShowCreateModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateAccount}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default Accounts;
+export default FinancialAccountsDashboard;

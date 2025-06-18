@@ -292,6 +292,8 @@ function Home() {
     }
     setUser({
       id: fields?.id ?? '',
+      firstname:fields?.firstname ?? '',
+      lastname: fields?.lastname ?? '', 
       name: fields?.firstname ?? '',
       email: fields?.email ?? '',
       password: fields?.password ?? '',
@@ -330,7 +332,7 @@ function Home() {
   {
     id: 3,
     title: "Monthly Investment",
-    balance: `${account?.monthly_income}`,
+    balance: `${account?.monthly_income || 0}`,
     change: "+ ₹274",
     changePercent: 15.8,
     icon: PiggyBank,
@@ -357,7 +359,7 @@ function Home() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Hello {user.name}! 👋
+              Hello {user.firstname}! 👋
             </h1>
             <p className="text-lg text-gray-600">
               Every small step brings you closer to your big dreams.
@@ -373,7 +375,7 @@ function Home() {
           </div>
           <div className="hidden md:block">
             <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-              SG
+              {user.firstname[0]+user.lastname[0]}
             </div>
           </div>
         </div>

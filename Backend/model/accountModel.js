@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function createAccount(req,res){
   try{
-  const { firstName,lastName,age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
+  const { age,dependents,currentBalance,accountType,monthlyIncome,disposableIncome,desiredSavings } = req.body;  
   const user = req.user;
   const userData = await prisma.user.findFirst({
   where:{
@@ -19,8 +19,8 @@ async function createAccount(req,res){
   const account =await prisma.accounts.create({
   data:{
   userId: user.userId,
-  firstname : userData.firstName,
-  lastname: userData.lastName,
+  firstname : userData.firstname,
+  lastname: userData.lastname,
   age:age,
   dependents:dependents,
   account_type: accountType,
