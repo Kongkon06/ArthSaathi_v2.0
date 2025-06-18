@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Plus, Trash2, Wallet, TrendingUp, Target, Tag, PiggyBank } from 'lucide-react';
 import { accountService } from '@/services/accountService';
 import { useAccount } from '@/Atoms/AccountContext';
+import { useUser } from '@/Atoms/UserContext';
 
 const FinancialAccountsDashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { account } = useAccount();
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     age: '0',
     dependents: '0',
@@ -44,22 +46,25 @@ const FinancialAccountsDashboard = () => {
     age: '0',
     dependents: '0',
     currentBalance: '0',
-    accountType: 'Current Account',
+    accountType: 'Current',
     monthlyIncome: '0',
     disposableIncome: '1000.00',
     desiredSavings: '500.00'
   });
 };
-const AccountCard = (account:any)=>{
+useEffect(()=>{
+  console.log(account?.account_type);
+},[])
+const AccountCard = ({account}:{account:any})=>{
   return <div className="bg-white rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
               {account.account_type == 'Savings' ?<PiggyBank size={20} className="text-green-600" /> : <Wallet size={20} className="text-red-600"/>}
             </div>
             <div>
-              <h3 className="font-semibold text-lg">{account.firstname + ' ' + account.lastname}</h3>
+              <h3 className="font-semibold text-lg">{user.firstname + ' ' + user.lastname}</h3>
               <div className="flex items-center gap-2">
-                <span className="text-gray-600">{account.account_type} Account</span>
+                <span className="text-black-600">{account.account_type} Account</span>
                 <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Default</span>
               </div>
             </div>
