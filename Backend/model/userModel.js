@@ -4,8 +4,8 @@ const prisma = new PrismaClient();
 
 async function createUser(req,res){
   try{
-  const { email,password } = req.body;
-  if(!email && !password){
+  const { firstname,lastname,email,password } = req.body;
+  if(!email && !password && !firstname && !lastname){
     res.status(411).json('Missing fields');
     return
   }
@@ -17,6 +17,8 @@ async function createUser(req,res){
   const user = await prisma.user.create({
     data:{
     email,
+    firstname,
+    lastname,
     password: hash_password
     }
   })
@@ -47,8 +49,7 @@ async function userLogin(req,res) {
     return 
     }
     const { accessToken ,refreshToken } = await auth.generateTokens(user);
-    const userId = user.id;
-    res.json({accessToken,refreshToken,userId});
+    res.json({accessToken,refreshToken,user});
     return
   }catch(error){
     console.error(error); // Logs the error for server-side debugging
