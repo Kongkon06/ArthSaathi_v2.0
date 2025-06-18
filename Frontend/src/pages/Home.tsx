@@ -40,6 +40,7 @@ import {
   User
 } from "lucide-react";
 import { useUser } from "@/Atoms/UserContext";
+import { useNavigate } from "react-router-dom";
 
 interface ChatMessageProps {
   message: string;
@@ -300,6 +301,7 @@ function Home() {
   const [selectedCard, setSelectedCard] = useState(0);
   const [timeRange, setTimeRange] = useState("90d");
   const { user,setUser } = useUser()
+  const navigate = useNavigate();
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date("2024-06-30");
@@ -321,6 +323,7 @@ function Home() {
         fields = JSON.parse(fieldsString);
       } catch (e) {
         fields = {};
+        navigate('/landing')
       }
     }
     setUser({

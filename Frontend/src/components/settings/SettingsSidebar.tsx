@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { CiUser } from "react-icons/ci";
 import { IoNotificationsOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlinePrivacyTip } from "react-icons/md";
@@ -8,13 +7,9 @@ import { Link, useLocation } from "react-router-dom";
 
 const SettingsSidebar = () => {
   const location = useLocation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isActive = (path:any) => location.pathname === path;
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <div className="m-4 mt-9">

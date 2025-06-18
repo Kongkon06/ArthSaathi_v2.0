@@ -1,6 +1,6 @@
 import { GoGoal, GoPencil } from "react-icons/go";
 import { Progress } from "@/components/ui/progress"; // Ensure this path is correct
-import { Calendar, CircleCheck } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { HiOutlineBell } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
