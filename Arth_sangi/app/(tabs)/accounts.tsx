@@ -46,7 +46,7 @@ const MyAccountsScreen = () => {
 
   const filteredAccounts = account ? [account] : [];
 
-  const AccountCard = ({ account }:any) => (
+  const AccountCard = ({ account,user }:any) => (
     <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
       {/* Header */}
       <View className="flex-row items-start justify-between mb-4">
@@ -59,7 +59,7 @@ const MyAccountsScreen = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row items-center">
-              <Text className="text-lg font-bold text-gray-900 mr-2">{account.firstname + ' ' + account.lastname}</Text>
+              <Text className="text-lg font-bold text-gray-900 mr-2">{user.firstname + ' ' + user.lastname}</Text>
               {account.isDefault && (
                 <View className="bg-yellow-100 px-2 py-1 rounded-full">
                   <Text className="text-xs text-yellow-800 font-medium">⭐ Default</Text>
@@ -180,7 +180,7 @@ const MyAccountsScreen = () => {
         {/* Account Cards */}
         <View className="px-4 pb-6">
           {filteredAccounts.map((account) => (
-            <AccountCard key={account.id} account={account} />
+            <AccountCard key={account.id} account={account} user={user} />
           ))}
         </View>
       </ScrollView>

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import auth from '../services/userAuth';
+import auth from '@/services/userAuth';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useUser } from '@/atoms/UserContext';
 
@@ -24,16 +24,16 @@ interface FormData {
   email: string;
   password: string;
   confirmPassword: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
 }
 
 interface FormErrors {
   email?: string;
   password?: string;
   confirmPassword?: string;
-  firstName?: string;
-  lastName?: string;
+  firstname?: string;
+  lastname?: string;
 }
 
 export default function AuthPage() {
@@ -52,8 +52,8 @@ export default function AuthPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
   });
 
   // Animation values
@@ -87,12 +87,6 @@ export default function AuthPage() {
     if (password.length < 6) {
       return { isValid: false, message: 'Password must be at least 6 characters' };
     }
-   // if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-    //  return { 
-    //    isValid: false, 
-    //    message: 'Password must contain uppercase, lowercase, and number' 
-    //  };
-   // }
     return { isValid: true };
   };
 
@@ -119,13 +113,13 @@ export default function AuthPage() {
           if (value !== formData.password) return 'Passwords do not match';
         }
         break;
-      case 'firstName':
+      case 'firstname':
         if (isSignUp) {
           if (!value) return 'First name is required';
           if (!validateName(value)) return 'First name must be at least 2 characters';
         }
         break;
-      case 'lastName':
+      case 'lastname':
         if (isSignUp) {
           if (!value) return 'Last name is required';
           if (!validateName(value)) return 'Last name must be at least 2 characters';
@@ -135,10 +129,11 @@ export default function AuthPage() {
     return undefined;
   };
 
-  const assignUserDetails = useCallback(({ token , userId }: { token: string, userId?:string }) => {
+  const assignUserDetails = useCallback(({ token , user }: { token: string, user?:any }) => {
     setUser({
-      id: userId ?? '', // This should come from the auth response
-      name: `${formData.firstName} ${formData.lastName}`.trim() || formData.email.split('@')[0],
+      id: user.Id ?? '', // This should come from the auth response
+      firstname: formData.firstname || user.firstname,
+      lastname: formData.lastname || user.lastname,
       email: formData.email,
       password: formData.password,
       phoneNumber: '',
@@ -177,7 +172,7 @@ export default function AuthPage() {
 
     // Validate all required fields
     const fieldsToValidate: (keyof FormData)[] = isSignUp 
-      ? ['firstName', 'lastName', 'email', 'password', 'confirmPassword']
+      ? ['firstname', 'lastname', 'email', 'password', 'confirmPassword']
       : ['email', 'password'];
 
     fieldsToValidate.forEach(field => {
@@ -208,7 +203,7 @@ export default function AuthPage() {
         ]);
       } else {
         const res = await auth({ userDetails: { ...formData }, type: "Login" });
-        assignUserDetails({ token: res.accessToken, userId: res.userId });
+        assignUserDetails({ token: res.accessToken, user: res.user });
         Alert.alert('Success', 'Login successful!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }
         ]);
@@ -230,16 +225,12 @@ export default function AuthPage() {
       email: '',
       password: '',
       confirmPassword: '',
-      firstName: '',
-      lastName: '',
+      firstname: '',
+      lastname: '',
     });
     setErrors({});
     setShowPassword(false);
     setShowConfirmPassword(false);
-  };
-
-  const handleSocialAuth = (provider: 'google' | 'apple') => {
-    Alert.alert('Coming Soon', `${provider} authentication will be available soon!`);
   };
 
   const handleForgotPassword = () => {
@@ -377,10 +368,10 @@ export default function AuthPage() {
               {isSignUp && (
                 <View className="flex-row space-x-3">
                   <View className="flex-1 mr-2">
-                    {renderInput('firstName', 'First Name', { autoCapitalize: 'words' })}
+                    {renderInput('firstname', 'First Name', { autoCapitalize: 'words' })}
                   </View>
                   <View className="flex-1">
-                    {renderInput('lastName', 'Last Name', { autoCapitalize: 'words' })}
+                    {renderInput('lastname', 'Last Name', { autoCapitalize: 'words' })}
                   </View>
                 </View>
               )}
@@ -434,36 +425,6 @@ export default function AuthPage() {
                   </Text>
                 )}
               </TouchableOpacity>
-
-              {/* Divider */}
-              <View className="flex-row items-center my-6">
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="mx-4 text-gray-500 dark:text-gray-400">or</Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-              </View>
-
-              {/* Social Sign In Buttons */}
-              <View className="space-y-3">
-                <TouchableOpacity 
-                  onPress={() => handleSocialAuth('google')}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl py-4 flex-row items-center justify-center space-x-3 active:scale-95 transition-transform duration-150"
-                >
-                  <Ionicons name="logo-google" size={20} color="#EA4335" />
-                  <Text className="text-gray-900 dark:text-white font-medium">
-                    Continue with Google
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                  onPress={() => handleSocialAuth('apple')}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl py-4 flex-row items-center justify-center space-x-3 active:scale-95 transition-transform duration-150"
-                >
-                  <Ionicons name="logo-apple" size={20} color="#000000" />
-                  <Text className="text-gray-900 dark:text-white font-medium">
-                    Continue with Apple
-                  </Text>
-                </TouchableOpacity>
-              </View>
 
               {/* Toggle Auth Mode */}
               <View className="flex-row justify-center items-center mt-8">

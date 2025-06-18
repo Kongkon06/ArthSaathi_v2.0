@@ -3,8 +3,8 @@ interface details {
     email: string;
     password: string;
     confirmPassword: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
 }
 
 export default function ({userDetails, type}: {userDetails: details, type: string}) {
@@ -17,18 +17,19 @@ export default function ({userDetails, type}: {userDetails: details, type: strin
         }
     };
     
-    const register = async (userData: { name: string; email: string; password: string }) => {
+    const register = async (userData: { firstname: string;lastname:string; email: string; password: string }) => {
         try {
         const response = await axios.post('https://arthsaathi-v2-0.onrender.com/user/signup', userData);
         return response.data;
         } catch (error) {
-        throw new Error('Registration failed');
+            console.error(error)
+        throw new Error('Registration failed' );
         }
     };
     
     switch (type) {
         case "SignUp":
-            return register({name: userDetails.firstName, email: userDetails.email, password: userDetails.password });
+            return register({firstname: userDetails.firstname,lastname:userDetails.lastname, email: userDetails.email, password: userDetails.password });
             break;
         case "Login":
             return login(userDetails.email, userDetails.password);
