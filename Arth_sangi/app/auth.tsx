@@ -131,7 +131,7 @@ export default function AuthPage() {
 
   const assignUserDetails = useCallback(({ token , user }: { token: string, user?:any }) => {
     setUser({
-      id: user.Id ?? '', // This should come from the auth response
+      id: user.id ?? '', // This should come from the auth response
       firstname: formData.firstname || user.firstname,
       lastname: formData.lastname || user.lastname,
       email: formData.email,
