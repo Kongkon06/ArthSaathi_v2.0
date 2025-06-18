@@ -41,7 +41,7 @@ const chartData = {
       strokeWidth: 2,
     },
   ],
-  legend: ['Income', 'Expenses'],
+  legend: ['Investment', 'Expenses'],
 };
 
 const chartConfig = {
