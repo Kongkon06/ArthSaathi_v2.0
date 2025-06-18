@@ -17,9 +17,11 @@ import {
 import { LineChart, PieChart } from 'react-native-chart-kit';
 import StatCard from '@/components/StatCard';
 import ChatModal from '@/components/ChatModel';
+import QuickActions from '@/components/QuickActions';
 import { useUser } from '@/atoms/UserContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { accountService } from '@/services/getAccount';
+import { expenseService, Expense } from '@/services/espenseService';
 import { Account, useAccount } from '@/atoms/AccountContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -42,38 +44,6 @@ const chartData = {
   legend: ['Income', 'Expenses'],
 };
 
-// Expense breakdown data
-const expenseData = [
-  {
-    name: 'Food',
-    population: 12000,
-    color: '#6366F1',
-    legendFontColor: '#64748B',
-    legendFontSize: 12,
-  },
-  {
-    name: 'Transport',
-    population: 8000,
-    color: '#10B981',
-    legendFontColor: '#64748B',
-    legendFontSize: 12,
-  },
-  {
-    name: 'Shopping',
-    population: 10000,
-    color: '#F59E0B',
-    legendFontColor: '#64748B',
-    legendFontSize: 12,
-  },
-  {
-    name: 'Bills',
-    population: 10000,
-    color: '#EF4444',
-    legendFontColor: '#64748B',
-    legendFontSize: 12,
-  },
-];
-
 const chartConfig = {
   backgroundGradientFrom: '#ffffff',
   backgroundGradientTo: '#ffffff',
@@ -94,13 +64,19 @@ const chartConfig = {
 
 export default function PremiumFinancialDashboard() {
   const { user } = useUser();
-  const { account,setAccount } = useAccount();
+  const { account, setAccount } = useAccount();
   const [selectedPeriod, setSelectedPeriod] = useState('Last 6 months');
   const [refreshing, setRefreshing] = useState(false);
   const [showPeriodModal, setShowPeriodModal] = useState(false);
   const [showExpenseBreakdown, setShowExpenseBreakdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [pressedStat, setPressedStat] = useState<string | null>(null);
+  
+  // Expense related state
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [expenseChartData, setExpenseChartData] = useState<any[]>([]);
+  const [loadingExpenses, setLoadingExpenses] = useState(false);
   
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -115,10 +91,37 @@ export default function PremiumFinancialDashboard() {
     { id: '3', title: 'Goal Achievement', message: 'Congratulations! You reached your vacation savings goal', time: '1 day ago' },
   ];
 
-  const fetchAccount = async ()=>{
-   const userAccount : Account = await  accountService.getAccount(user.token);
-   setAccount(userAccount);
-  }
+  const fetchAccount = async () => {
+    try {
+      const userAccount: Account = await accountService.getAccount(user.token);
+      setAccount(userAccount);
+    } catch (error) {
+      console.error('Error fetching account:', error);
+    }
+  };
+
+  const fetchExpenses = async () => {
+    try {
+      setLoadingExpenses(true);
+      const userExpenses = await expenseService.getUserExpenses(user.id, user.token, 'monthly');
+      setExpenses(userExpenses);
+      
+      // Calculate total expenses
+      const total = expenseService.calculateTotalExpenses(userExpenses);
+      setTotalExpenses(total);
+      
+      // Format data for pie chart
+      const chartData = expenseService.formatExpenseDataForChart(userExpenses);
+      setExpenseChartData(chartData);
+      
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+      Alert.alert('Error', 'Failed to fetch expenses');
+    } finally {
+      setLoadingExpenses(false);
+    }
+  };
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -138,17 +141,32 @@ export default function PremiumFinancialDashboard() {
         useNativeDriver: true,
       }),
     ]).start();
+    
     fetchAccount();
+    fetchExpenses();
   }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000);
+    Promise.all([fetchAccount(), fetchExpenses()]).finally(() => {
+      setRefreshing(false);
+    });
   };
 
-  // const handleQuickAction = (action: { id: string; title: string; icon: string; color: string; bgColor: string }) => {
-  //   Alert.alert('Quick Action', `${action.title} feature coming soon!`);
-  // };
+  const formatCurrency = (amount: number) => {
+    return `₹${amount.toLocaleString('en-IN')}`;
+  };
+
+  const calculateSavingsRate = () => {
+    const balance = account?.current_balance
+      ? parseFloat(String(account.current_balance).replace(/[₹,]/g, ''))
+      : 0;
+    if (balance > 0 && totalExpenses > 0) {
+      const savingsRate = ((balance / (balance + totalExpenses)) * 100).toFixed(1);
+      return `${savingsRate}%`;
+    }
+    return '0%';
+  };
 
   type QuickAction = {
     id: string;
@@ -157,18 +175,6 @@ export default function PremiumFinancialDashboard() {
     color: string;
     bgColor: string;
   };
-
-  // const QuickActionButton: React.FC<{ item: QuickAction }> = ({ item }) => (
-  //   <TouchableOpacity
-  //     onPress={() => handleQuickAction(item)}
-  //     className="items-center flex-1 mx-2"
-  //   >
-  //     <View className={`w-16 h-16 ${item.bgColor} rounded-2xl items-center justify-center mb-3 border border-gray-100`}>
-  //       <Text className="text-2xl">{item.icon}</Text>
-  //     </View>
-  //     <Text className="text-sm text-gray-700 font-medium text-center">{item.title}</Text>
-  //   </TouchableOpacity>
-  // );
 
   type Notification = {
     id: string;
@@ -200,7 +206,6 @@ export default function PremiumFinancialDashboard() {
     </View>
   );
 
-  
   const today = new Date();
   const formattedDate = today.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -247,7 +252,6 @@ export default function PremiumFinancialDashboard() {
               className="w-12 h-12 items-center justify-center "
             >
               <IconSymbol name="bell-outline" size={20} color="#3B82F6" />
-              
             </TouchableOpacity>
             {/* Profile */}
             <TouchableOpacity className="w-12 h-12 bg-white rounded-2xl items-center justify-center shadow-sm">
@@ -255,11 +259,13 @@ export default function PremiumFinancialDashboard() {
             </TouchableOpacity>
           </View>
         </Animated.View>
+
+        {/* Stats Cards */}
         <View className="mb-2">
           <StatCard
             icon="wallet"
             title="Total Balance"
-            amount={account?.current_balance?? '₹0'}
+            amount={account?.current_balance ?? '₹0'}
             change="10.2%"
             changeColor="text-green-600"
             bgColor="bg-blue-100"
@@ -272,7 +278,7 @@ export default function PremiumFinancialDashboard() {
               <StatCard
                 icon="cash"
                 title="Monthly Expenses"
-                amount="₹0"
+                amount={formatCurrency(totalExpenses)}
                 change="5.2%"
                 changeColor="text-red-500"
                 bgColor="bg-red-100"
@@ -284,19 +290,22 @@ export default function PremiumFinancialDashboard() {
             </View>
             <View className="flex-1 ml-2">
               <StatCard
-            icon="safe"
-            title="Savings Rate"
-            amount="₹0"
-            change="20.5%"
-            changeColor="text-green-600"
-            bgColor="bg-green-100"
-            isMain={pressedStat === 'Savings Rate'}
-            onPressIn={() => setPressedStat('Savings Rate')}
-            onPressOut={() => setPressedStat(null)}
-          />
+                icon="safe"
+                title="Savings Rate"
+                amount={calculateSavingsRate()}
+                change="20.5%"
+                changeColor="text-green-600"
+                bgColor="bg-green-100"
+                isMain={pressedStat === 'Savings Rate'}
+                onPressIn={() => setPressedStat('Savings Rate')}
+                onPressOut={() => setPressedStat(null)}
+              />
             </View>
           </View>
         </View>
+
+        {/* Quick Actions Component */}
+        <QuickActions />
 
         {/* Enhanced Financial Overview */}
         <Animated.View 
@@ -309,7 +318,7 @@ export default function PremiumFinancialDashboard() {
                 Financial Overview
               </Text>
               <Text className="text-gray-500 text-sm">
-                Track your Invesments vs Expenses over time
+                Track your Investments vs Expenses over time
               </Text>
             </View>
             
@@ -356,7 +365,7 @@ export default function PremiumFinancialDashboard() {
         }}
         className="absolute bottom-6 right-5"
       >
-      <ChatModal />
+        <ChatModal />
       </Animated.View>
 
       {/* Notifications Modal with Blur Effect */}
@@ -444,7 +453,7 @@ export default function PremiumFinancialDashboard() {
       >
         <ModalBackdrop>
           <View className="flex-1 justify-end">
-            <View className="bg-white rounded-t-3xl p-6 min-h-[400px]" style={{ 
+            <View className="bg-white rounded-t-3xl p-6 min-h-[500px]" style={{ 
               shadowColor: '#000',
               shadowOffset: { width: 0, height: -4 },
               shadowOpacity: 0.1,
@@ -452,26 +461,77 @@ export default function PremiumFinancialDashboard() {
               elevation: 8,
             }}>
               <View className="w-12 h-1 bg-gray-300 rounded-full self-center mb-6" />
-              <Text className="text-xl font-bold text-gray-900 mb-4">Expense Breakdown</Text>
               
-              <View className="items-center mb-4">
-                <PieChart
-                  data={expenseData}
-                  width={screenWidth - 80}
-                  height={200}
-                  chartConfig={{
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                  }}
-                  accessor="population"
-                  backgroundColor="transparent"
-                  paddingLeft="15"
-                  absolute
-                />
+              <View className="flex-row items-center justify-between mb-6">
+                <Text className="text-xl font-bold text-gray-900">Expense Breakdown</Text>
+                <TouchableOpacity 
+                  onPress={() => setShowExpenseBreakdown(false)}
+                  className="w-8 h-8 items-center justify-center"
+                >
+                  <IconSymbol name="close" size={20} color="#6B7280" />
+                </TouchableOpacity>
               </View>
+              
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {loadingExpenses ? (
+                  <View className="items-center py-8">
+                    <Text className="text-gray-500">Loading expenses...</Text>
+                  </View>
+                ) : expenseChartData.length > 0 ? (
+                  <>
+                    {/* Total Expenses */}
+                    <View className="bg-gray-50 rounded-xl p-4 mb-6">
+                      <Text className="text-sm text-gray-600 mb-1">Total Monthly Expenses</Text>
+                      <Text className="text-2xl font-bold text-gray-900">{formatCurrency(totalExpenses)}</Text>
+                    </View>
+
+                    {/* Pie Chart */}
+                    <View className="items-center mb-6">
+                      <PieChart
+                        data={expenseChartData}
+                        width={screenWidth - 80}
+                        height={220}
+                        chartConfig={{
+                          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                        }}
+                        accessor="population"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
+                        absolute
+                      />
+                    </View>
+
+                    {/* Category Breakdown */}
+                    <View className="space-y-3">
+                      <Text className="text-lg font-semibold text-gray-900 mb-2">Category Details</Text>
+                      {expenseChartData.map((item, index) => (
+                        <View key={index} className="flex-row items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <View className="flex-row items-center">
+                            <View 
+                              className="w-4 h-4 rounded-full mr-3"
+                              style={{ backgroundColor: item.color }}
+                            />
+                            <Text className="text-gray-800 font-medium">{item.name}</Text>
+                          </View>
+                          <Text className="text-gray-900 font-semibold">{formatCurrency(item.population)}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </>
+                ) : (
+                  <View className="items-center py-8">
+                    <IconSymbol name="chart-pie" size={48} color="#D1D5DB" />
+                    <Text className="text-gray-500 mt-4 text-center">No expenses recorded yet</Text>
+                    <Text className="text-gray-400 text-sm mt-2 text-center">
+                      Start adding expenses to see your breakdown
+                    </Text>
+                  </View>
+                )}
+              </ScrollView>
               
               <TouchableOpacity
                 onPress={() => setShowExpenseBreakdown(false)}
-                className="bg-blue-500 p-4 rounded-xl mt-4"
+                className="bg-blue-500 p-4 rounded-xl mt-6"
               >
                 <Text className="text-white font-semibold text-center">Close</Text>
               </TouchableOpacity>
