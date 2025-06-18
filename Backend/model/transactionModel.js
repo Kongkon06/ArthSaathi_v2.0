@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 // Create a transaction
 async function createTransaction(req, res) {
-  const { accountId, amount, type, status } = req.body;
+  const { accountId, amount, type, status, category } = req.body;
 
   // Validate input
   if (!accountId || !amount || !type || !status) {
@@ -48,6 +48,7 @@ async function createTransaction(req, res) {
       const newTransaction = await tx.transactions.create({
         data: {
           accountId,
+          category,
           amount,
           type,
           status,

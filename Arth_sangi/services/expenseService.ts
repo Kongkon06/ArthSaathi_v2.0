@@ -1,17 +1,19 @@
 import axios from 'axios';
 
-export interface ExpenseData {
-  category: string;
+export interface MinimalExpenseData {
+  accountId: string;
   amount: number;
-  description: string;
-  userId: string;
-  date: string;
+  type: 'Credit' | 'Debit';
+  category: string
 }
 
-export interface Expense extends ExpenseData {
+export interface Expense {
   id: string;
+  accountId: string;
+  amount: number;
+  type: 'Credit' | 'Debit';
+  status: 'Success' | 'Failed' | 'Pending';
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface ExpenseStats {
@@ -24,7 +26,7 @@ export interface ExpenseStats {
 }
 
 export const expenseService = {
-  addExpense: async (expenseData: ExpenseData, token: string): Promise<Expense> => {
+  addExpense: async (expenseData: MinimalExpenseData, token: string): Promise<Expense> => {
     try {
       const response = await axios.post(
         'https://arthsaathi-v2-0.onrender.com/transactions',
@@ -78,7 +80,7 @@ export const expenseService = {
 
   updateExpense: async (
     expenseId: string,
-    expenseData: Partial<ExpenseData>,
+    expenseData: Partial<MinimalExpenseData>,
     token: string
   ): Promise<Expense> => {
     try {
@@ -102,9 +104,11 @@ export const expenseService = {
   formatExpenseDataForChart: (expenses: Expense[]) => {
     const categoryMap = new Map<string, number>();
 
+    // Since we don't have category, group by transaction type as a proxy
     expenses.forEach(expense => {
-      const currentAmount = categoryMap.get(expense.category) || 0;
-      categoryMap.set(expense.category, currentAmount + expense.amount);
+      const key = expense.type;
+      const currentAmount = categoryMap.get(key) || 0;
+      categoryMap.set(key, currentAmount + expense.amount);
     });
 
     const chartColors = [
