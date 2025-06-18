@@ -9,7 +9,7 @@ async function createTransaction(req, res) {
   const { accountId, amount, type, status, category } = req.body;
 
   // Validate input
-  if (!accountId || !amount || !type || !status) {
+  if (!accountId || !amount || !type) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
