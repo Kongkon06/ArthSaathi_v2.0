@@ -262,8 +262,8 @@ const MutualFundsPage = () => {
           <div
             key={fund.id}
             onClick={() => handleFundClick(fund)}
-            className={`p-4 border rounded-lg cursor-pointer transition-all transform hover:-translate-y-1 hover:shadow-lg ${
-              selectedFundId === fund.id ? "border-2 border-blue-500 shadow-md bg-blue-50" : "border-gray-200 hover:border-blue-300"
+            className={`p-4 border rounded-lg cursor-pointer transition-all transform hover:-translate-y-1 hover:shadow-lg bg-white ${
+              selectedFundId === fund.id ? "border-2 border-blue-500 shadow-md" : "border-gray-200 hover:border-blue-300"
             }`}
           >
             <div className="flex justify-between items-start mb-3">

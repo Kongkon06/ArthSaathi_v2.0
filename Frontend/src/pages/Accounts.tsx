@@ -318,7 +318,7 @@ const Accounts = () => {
           
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:min-w-[400px]">
-            <Card className="border-l-4 border-l-blue-500">
+            <Card className="border-l-4 border-l-blue-500 bg-white">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
                   <Wallet className="h-4 w-4 text-blue-500" />
@@ -330,7 +330,7 @@ const Accounts = () => {
               </CardContent>
             </Card>
             
-            <Card className="border-l-4 border-l-green-500">
+            <Card className="border-l-4 border-l-green-500 bg-white">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-green-500" />
@@ -342,7 +342,7 @@ const Accounts = () => {
               </CardContent>
             </Card>
             
-            <Card className="border-l-4 border-l-purple-500">
+            <Card className="border-l-4 border-l-purple-500 bg-white">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
                   <PiggyBank className="h-4 w-4 text-purple-500" />
@@ -379,7 +379,7 @@ const Accounts = () => {
           <TabsContent value={activeTab} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {accounts.map((account) => (
-                  <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md">
+                  <Card key={account.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-white">
                     <CardHeader className="pb-3 bg-gradient-to-r from-slate-50 to-slate-100/50">
                       <div className="flex justify-between items-start">
                         <div className="flex gap-3 items-center">
