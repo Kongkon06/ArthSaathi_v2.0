@@ -92,7 +92,9 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
   const handleLogout = useCallback(() => {
     // Implement logout logic here
     console.log('Logging out...');
-    navigate('/login');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    navigate('/auth');
   }, [navigate]);
 
   const menuItems: MenuItem[] = [

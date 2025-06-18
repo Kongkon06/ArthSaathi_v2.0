@@ -131,7 +131,7 @@ const InvestmentStrategy = () => {
     setShowResults(false);
   };
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount:any) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

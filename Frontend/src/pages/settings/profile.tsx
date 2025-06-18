@@ -16,7 +16,6 @@ const Profile: React.FC = () => {
     profilePicture: null
   });
   
-  const [isEditing, setIsEditing] = useState(false);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -89,9 +88,7 @@ const Profile: React.FC = () => {
     }
 
     // Here you would typically save the data to your backend
-    console.log('Saving profile data...', profileData);
-    alert('Profile updated successfully!');
-    setIsEditing(false);
+
   };
 
   const handleDiscardChanges = () => {
@@ -103,7 +100,6 @@ const Profile: React.FC = () => {
       profilePicture: null
     });
     setProfilePreview(null);
-    setIsEditing(false);
   };
 
   const triggerFileInput = () => {
