@@ -68,6 +68,8 @@ export default function AuthForm() {
       email: fields.email,
       password: fields.password,
       token: fields.token ?? '',
+      firstname: "",
+      lastname: ""
     });
   }, []);
 

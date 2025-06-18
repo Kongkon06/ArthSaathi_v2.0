@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import auth from '@/services/userAuth';
+import {userService} from '@/services/userAuth';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useUser } from '@/atoms/UserContext';
 
@@ -196,13 +196,18 @@ export default function AuthPage() {
     
     try {
       if (isSignUp) {
-        const res = await auth({ userDetails: { ...formData }, type: "SignUp" });
-        assignUserDetails({ token: res.token });
+        const res = await userService.signUp({
+          email: formData.email,
+          password: formData.password,
+          firstname: formData.firstname,
+          lastname:formData.lastname
+        });
+        assignUserDetails({ token: res.token ,user:res.user});
         Alert.alert('Success', 'Account created successfully!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }
         ]);
       } else {
-        const res = await auth({ userDetails: { ...formData }, type: "Login" });
+        const res = await userService.login(formData.email,formData.password);
         assignUserDetails({ token: res.accessToken, user: res.user });
         Alert.alert('Success', 'Login successful!', [
           { text: 'OK', onPress: () => router.replace('/(tabs)/dashboard') }

@@ -101,26 +101,28 @@ export default function PremiumFinancialDashboard() {
   };
 
   const fetchExpenses = async () => {
-    try {
-      setLoadingExpenses(true);
-      const userExpenses = await expenseService.getUserExpenses(user.id, user.token, 'monthly');
-      setExpenses(userExpenses);
-      
-      // Calculate total expenses
-      const total = expenseService.calculateTotalExpenses(userExpenses);
-      setTotalExpenses(total);
-      
-      // Format data for pie chart
-      const chartData = expenseService.formatExpenseDataForChart(userExpenses);
-      setExpenseChartData(chartData);
-      
-    } catch (error) {
-      console.error('Error fetching expenses:', error);
-      Alert.alert('Error', 'Failed to fetch expenses');
-    } finally {
-      setLoadingExpenses(false);
-    }
-  };
+  try {
+    setLoadingExpenses(true);
+
+    // Fetch expenses using accountId (via userId on backend)
+    const userExpenses = await expenseService.getUserExpenses(user.id, user.token);
+    setExpenses(userExpenses);
+
+    // Calculate total expenses
+    const total = expenseService.calculateTotalExpenses(userExpenses);
+    setTotalExpenses(total);
+
+    // Format data for chart (grouped by type: Debit/Credit)
+    const chartData = expenseService.formatExpenseDataForChart(userExpenses);
+    setExpenseChartData(chartData);
+
+  } catch (error) {
+    console.error('Error fetching expenses:', error);
+    Alert.alert('Error', 'Failed to fetch expenses');
+  } finally {
+    setLoadingExpenses(false);
+  }
+};
 
   useEffect(() => {
     Animated.parallel([
@@ -166,14 +168,6 @@ export default function PremiumFinancialDashboard() {
       return `${savingsRate}%`;
     }
     return '0%';
-  };
-
-  type QuickAction = {
-    id: string;
-    title: string;
-    icon: string;
-    color: string;
-    bgColor: string;
   };
 
   type Notification = {

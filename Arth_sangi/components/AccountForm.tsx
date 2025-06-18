@@ -48,6 +48,20 @@ const CreateAccountModal = () => {
     .create(data, user.token)
     .then((response) => {
       console.log('Account created:', response);
+    }).then((response)=>{
+      setAccount({
+        id:'',
+        userId:user.id,
+        firstname:user.firstname,
+        lastname:user.lastname,
+        age: Number(formData.age),
+    account_type: formData.accountType,
+    current_balance: Number(formData.currentBalance),
+    dependents: Number(formData.dependents),
+    desired_savings: Number(formData.desiredSavings),
+    disposable_amount: Number(formData.disposableIncome),
+    monthly_income: Number(formData.monthlyIncome),
+      })
     })
     .catch((error) => {
       console.error('Error:', error);

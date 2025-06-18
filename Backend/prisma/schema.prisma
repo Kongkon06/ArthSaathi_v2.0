@@ -28,12 +28,13 @@ model Accounts {
   desired_saving    Int
   current_balance   Int           @default(0)
   user              User          @relation(fields: [userId], references: [id])
-  transaction       Transactions?
+  transaction       Transactions[]
 }
 
 model Transactions {
   id        String     @id @default(uuid())
   accountId String     @unique
+  category String
   status    trnxStatus @default(Success)
   amount    Float      @default(0)
   type      trnxType   @default(Debit)

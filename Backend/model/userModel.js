@@ -23,7 +23,7 @@ async function createUser(req,res){
     }
   })
   const token = await auth.generateTokens(user);
-  res.json({token});
+  res.json({token,user});
   return;
   }catch(error){
     console.error(error)

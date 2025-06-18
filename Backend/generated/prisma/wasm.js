@@ -143,6 +143,7 @@ exports.Prisma.AccountsScalarFieldEnum = {
 exports.Prisma.TransactionsScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
+  category: 'category',
   status: 'status',
   amount: 'amount',
   type: 'type',
@@ -160,7 +161,8 @@ exports.Prisma.QueryMode = {
 };
 exports.accountType = exports.$Enums.accountType = {
   Savings: 'Savings',
-  Current: 'Current'
+  Current: 'Current',
+  Family: 'Family'
 };
 
 exports.trnxStatus = exports.$Enums.trnxStatus = {

@@ -12,6 +12,7 @@ import {
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { expenseService } from '@/services/expenseService';
 import { useUser } from '@/atoms/UserContext';
+import { useAccount } from '@/atoms/AccountContext';
 
 interface QuickAction {
   id: string;
@@ -29,6 +30,7 @@ interface Expense {
 
 const QuickActions: React.FC = () => {
   const { user } = useUser();
+  const { account } = useAccount();
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [expenseData, setExpenseData] = useState<Expense>({
     category: '',
@@ -102,12 +104,15 @@ const QuickActions: React.FC = () => {
 
     setIsLoading(true);
     try {
+      if(account==null){
+        console.log("User doenst has an account")
+        return 
+      }
       await expenseService.addExpense({
         category: expenseData.category,
         amount: Number(expenseData.amount),
-        description: expenseData.description,
-        userId: user.id,
-        date: new Date().toISOString(),
+        type:'Debit',
+        accountId: account?.id ?? '' 
       }, user.token);
 
       Alert.alert('Success', 'Expense added successfully!');
