@@ -12,7 +12,7 @@ import {
     Linking,
     Dimensions
 } from 'react-native';
-import { WebView } from 'react-native-webview';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 // YouTube Data API configuration
 const YOUTUBE_API_KEY = 'AIzaSyAbn0JEFCAiWwM4GKcBpFXNw8xDSw_fwdc'; // Replace with your actual API key
@@ -301,8 +301,21 @@ const FinanceYouTubeDashboard = () => {
     searchFinanceVideos();
   }, []);
 
-  // Video Player Component
-  const VideoPlayer = ({ video }: { video: Video }) => (
+  const VideoPlayer = ({ video }: { video: Video }) => {
+  const [playing, setPlaying] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
+
+  const onStateChange = (state: string) => {
+    if (state === 'ended') {
+      setPlaying(false);
+    }
+  };
+
+  const togglePlaying = () => {
+    setPlaying((prev) => !prev);
+  };
+
+  return (
     <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'black', zIndex: 1000 }}>
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
@@ -318,15 +331,55 @@ const FinanceYouTubeDashboard = () => {
           </TouchableOpacity>
         </View>
         
-        {/* Video Player */}
-        <WebView
-          source={{ uri: `https://www.youtube.com/embed/${video.id}?autoplay=1` }}
-          style={{ flex: 1 }}
-          allowsInlineMediaPlayback={true}
-          mediaPlaybackRequiresUserAction={false}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-        />
+        {/* YouTube Player */}
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+          <YoutubePlayer
+            height={350}
+            play={playing}
+            videoId={video.id}
+            onChangeState={onStateChange}
+            onReady={() => setPlayerReady(true)}
+          />
+          
+          {!playerReady && (
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="large" color="white" />
+              <Text style={{ color: 'white', marginTop: 10 }}>Loading player...</Text>
+            </View>
+          )}
+        </View>
+        
+        {/* Custom Controls */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: 'rgba(0,0,0,0.8)' }}>
+          <TouchableOpacity 
+            onPress={togglePlaying}
+            style={{ 
+              backgroundColor: '#FF0000', 
+              paddingHorizontal: 20, 
+              paddingVertical: 10, 
+              borderRadius: 6,
+              marginRight: 12
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>
+              {playing ? 'Pause' : 'Play'}
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${video.id}`)}
+            style={{ 
+              backgroundColor: '#333', 
+              paddingHorizontal: 16, 
+              paddingVertical: 10, 
+              borderRadius: 6
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 14 }}>
+              Open in YouTube
+            </Text>
+          </TouchableOpacity>
+        </View>
         
         {/* Video Info */}
         <View style={{ padding: 16, backgroundColor: 'rgba(0,0,0,0.9)' }}>
@@ -349,6 +402,7 @@ const FinanceYouTubeDashboard = () => {
       </SafeAreaView>
     </View>
   );
+};
 
   const VideoCard = ({ video }: { video: Video }) => (
     <TouchableOpacity className="mb-4" onPress={() => handleVideoPress(video)}>
