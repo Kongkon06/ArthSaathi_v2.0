@@ -14,8 +14,11 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center pt-32 overflow-hidden">
-      {/* Background gradient - Updated to match reference */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#6366f1] via-[#8b5cf6] to-[#a855f7] opacity-95"></div>
+      {/* Background gradient - Blue gradient with neutral blending */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af] via-[#059669] to-[#10b981] opacity-90"></div>
+      
+      {/* Additional overlay for neutral blending with white and gray tones */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-800/20 via-transparent to-white/10"></div>
       
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -47,17 +50,15 @@ const HeroSection = () => {
             </div>
 
             {/* CTA Buttons with Staggered Animation */}
-            <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 ease-out delay-500 ${
+            <div className={`flex justify-center items-center transition-all duration-1000 ease-out delay-500 ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
             }`}>
-              <Button size="lg" className="bg-white text-[#6366f1] hover:bg-white/90 font-semibold px-8 py-4 text-lg">
+              <Button 
+                size="lg" 
+                className="bg-white text-[#456fe8] hover:bg-white/90 font-semibold px-12 py-6 text-xl rounded-xl hover:scale-105 transition-all duration-300 ease-out shadow-lg hover:shadow-xl"
+              >
                 Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg">
-                <Play className="mr-2 h-5 w-5" />
-                Try Demo
+                <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
             </div>
           </div>
@@ -109,32 +110,20 @@ const HeroSection = () => {
               
               <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl p-4 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-[#6366f1]">AI Score: 92</div>
+                  <div className="text-xl font-bold text-[#456fe8]">AI Score: 92</div>
                   <div className="text-xs text-muted-foreground">Financial Health</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Social Proof */}
+         
           <div className={`flex flex-col sm:flex-row items-center justify-center gap-8 text-white/80 transition-all duration-1000 ease-out delay-1200 ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
           }`}>
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-full border-2 border-white/30"></div>
-                <div className="w-8 h-8 bg-white/20 rounded-full border-2 border-white/30"></div>
-                <div className="w-8 h-8 bg-white/20 rounded-full border-2 border-white/30"></div>
-              </div>
-              <span className="text-sm">Trusted by 50,000+ families</span>
-            </div>
+           
             
-            <div className="flex items-center gap-2">
-              <div className="flex text-yellow-400">
-                {'★'.repeat(5)}
-              </div>
-              <span className="text-sm">4.9/5 rating</span>
-            </div>
+            
           </div>
         </div>
       </div>
