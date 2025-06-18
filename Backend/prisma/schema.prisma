@@ -33,7 +33,7 @@ model Accounts {
 
 model Transactions {
   id        String     @id @default(uuid())
-  accountId String     @unique
+  accountId String
   category String
   status    trnxStatus @default(Success)
   amount    Float      @default(0)
