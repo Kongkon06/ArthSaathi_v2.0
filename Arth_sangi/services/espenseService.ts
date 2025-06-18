@@ -25,7 +25,7 @@ export interface ExpenseStats {
 }
 
 class ExpenseService {
-  private baseUrl = `${API_BASE_URL*}/api/expenses`;
+  private baseUrl = `http://localkhost:3000/user/expenses`;
 
   async addExpense(expenseData: ExpenseData, token: string): Promise<Expense> {
     try {

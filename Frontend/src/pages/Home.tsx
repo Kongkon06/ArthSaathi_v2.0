@@ -41,6 +41,8 @@ import {
 } from "lucide-react";
 import { useUser } from "@/Atoms/UserContext";
 import { useNavigate } from "react-router-dom";
+import { accountService } from "@/services/accountService";
+import { type Account,useAccount } from "@/Atoms/AccountContext";
 
 interface ChatMessageProps {
   message: string;
@@ -56,45 +58,6 @@ interface FinancialCard {
   icon: React.ComponentType<any>;
   type: 'positive' | 'negative';
 }
-
-const cards: FinancialCard[] = [
-  {
-    id: 1,
-    title: "Total Balance",
-    balance: "₹1,00,000",
-    change: "+ ₹9,091",
-    changePercent: 10,
-    icon: Wallet,
-    type: 'positive'
-  },
-  {
-    id: 2,
-    title: "Monthly Expenses",
-    balance: "₹40,000",
-    change: "- ₹1,020",
-    changePercent: -2.5,
-    icon: CreditCard,
-    type: 'negative'
-  },
-  {
-    id: 3,
-    title: "Monthly Investment",
-    balance: "₹2,000",
-    change: "+ ₹274",
-    changePercent: 15.8,
-    icon: PiggyBank,
-    type: 'positive'
-  },
-  {
-    id: 4,
-    title: "Savings Rate",
-    balance: "₹400",
-    change: "+ ₹68",
-    changePercent: 20.5,
-    icon: BarChart3,
-    type: 'positive'
-  },
-];
 
 // Generate more realistic chart data
 const generateChartData = () => {
@@ -302,6 +265,7 @@ function Home() {
   const [timeRange, setTimeRange] = useState("90d");
   const { user,setUser } = useUser()
   const navigate = useNavigate();
+  const { account,setAccount } = useAccount();
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date("2024-06-30");
@@ -334,8 +298,57 @@ function Home() {
       token: fields?.token ?? '',
     });
   }
+  const fetchAccount = async () => {
+    try {
+      const token = localStorage.getItem('token') || '';
+      console.log(token);
+      const userAccount: Account = await accountService.getAccount(token);
+      setAccount(userAccount);
+    } catch (error) {
+      console.error('Error fetching account:', error);
+    }
+  };
+  const cards: FinancialCard[] = [
+  {
+    id: 1,
+    title: "Total Balance",
+    balance: `${account?.current_balance || 0}`,
+    change: "+ ₹9,091",
+    changePercent: 10,
+    icon: Wallet,
+    type: 'positive'
+  },
+  {
+    id: 2,
+    title: "Monthly Income",
+    balance: `${account?.monthly_income || 0}`,
+    change: "- ₹1,020",
+    changePercent: -2.5,
+    icon: CreditCard,
+    type: 'negative'
+  },
+  {
+    id: 3,
+    title: "Monthly Investment",
+    balance: `${account?.monthly_income}`,
+    change: "+ ₹274",
+    changePercent: 15.8,
+    icon: PiggyBank,
+    type: 'positive'
+  },
+  {
+    id: 4,
+    title: "Savings Rate",
+    balance: "₹400",
+    change: "+ ₹68",
+    changePercent: 20.5,
+    icon: BarChart3,
+    type: 'positive'
+  },
+];
   useEffect(()=>{
-    assignState()
+    assignState();
+    fetchAccount();
   },[])
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4" >

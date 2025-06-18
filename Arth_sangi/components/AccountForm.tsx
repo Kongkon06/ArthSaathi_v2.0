@@ -17,8 +17,6 @@ const CreateAccountModal = () => {
   const {setAccount} = useAccount();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
     age: "25",
     dependents: "0",
     currentBalance: "5000.00",
@@ -36,8 +34,6 @@ const CreateAccountModal = () => {
 
   const assignAccount = useCallback(() => {
   const data: AccountDetails = {
-    firstName: formData.firstName,
-    lastName: formData.lastName,
     age: Number(formData.age),
     accountType: formData.accountType,
     currentBalance: Number(formData.currentBalance),
@@ -66,11 +62,6 @@ const CreateAccountModal = () => {
   };
 
   const handleCreateAccount = () => {
-    // Validate required fields
-    if (!formData.firstName || !formData.lastName) {
-      Alert.alert("Error", "Please fill in all required fields");
-      return;
-    }
 
    assignAccount()
     Alert.alert("Success", "Account created successfully!");
@@ -179,40 +170,10 @@ const CreateAccountModal = () => {
                 Fill in the details to create a new account.
               </Text>
 
-              {/* Name Fields */}
-              <View className="flex-row space-x-4 mb-4">
-                <View className="flex-1">
-                  <Text className="text-gray-700 font-medium mb-2">
-                    First Name
-                  </Text>
-                  <TextInput
-                    className="border-2 border-gray-800 rounded-lg px-4 py-3 bg-white"
-                    value={formData.firstName}
-                    onChangeText={(value) =>
-                      handleInputChange("firstName", value)
-                    }
-                    placeholder="Enter first name"
-                  />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-gray-700 font-medium mb-2">
-                    Last Name
-                  </Text>
-                  <TextInput
-                    className="border border-gray-300 rounded-lg px-4 py-3 bg-white"
-                    value={formData.lastName}
-                    onChangeText={(value) =>
-                      handleInputChange("lastName", value)
-                    }
-                    placeholder="Enter last name"
-                  />
-                </View>
-              </View>
-
               {/* Age and Dependents */}
               <View className="flex-row space-x-4 mb-4">
                 <View className="flex-1">
-                  <Text className="text-gray-700 font-medium mb-2">Age</Text>
+                  <Text className="text-gray-700 font-medium mb-2">User's Age</Text>
                   <TextInput
                     className="border border-gray-300 rounded-lg px-4 py-3 bg-white"
                     value={formData.age}

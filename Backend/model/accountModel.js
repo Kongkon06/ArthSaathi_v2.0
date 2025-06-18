@@ -46,10 +46,6 @@ try{
             userId:user.userId
            }
       });
-      if(!account){
-      res.status(411).json({msg:"Invalid id"});
-      return;
-      }
       res.json(account);
   return;
 }catch(error){

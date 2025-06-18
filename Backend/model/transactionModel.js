@@ -5,22 +5,66 @@ const prisma = new PrismaClient();
 
 
 // Create a transaction
-async function createTransaction(req, res){
+async function createTransaction(req, res) {
   const { accountId, amount, type, status } = req.body;
-  try {
-    const transaction = await prisma.transactions.create({
-      data: {
-        accountId,
-        amount,
-        type,
-        status,
-      },
-    });
-    res.status(201).json(transaction);
-  } catch (error) {
-    res.status(400).json({ error: 'Failed to create transaction', details: error.message });
+
+  // Validate input
+  if (!accountId || !amount || !type || !status) {
+    return res.status(400).json({ error: 'Missing required fields' });
   }
-};
+
+  try {
+    const transactionResult = await prisma.$transaction(async (tx) => {
+      // Get current balance
+      const account = await tx.accounts.findUnique({
+        where: { id: accountId },
+      });
+
+      if (!account) {
+        throw new Error('Account not found');
+      }
+
+      let newBalance = account.current_balance;
+
+      // Calculate new balance
+      if (type === 'Debit') {
+        if (account.current_balance < amount) {
+          throw new Error('Insufficient balance');
+        }
+        newBalance -= amount;
+      } else if (type === 'Credit') {
+        newBalance += amount;
+      } else {
+        throw new Error('Invalid transaction type');
+      }
+
+      // Update account balance
+      await tx.accounts.update({
+        where: { id: accountId },
+        data: { current_balance: newBalance },
+      });
+
+      // Create the transaction
+      const newTransaction = await tx.transactions.create({
+        data: {
+          accountId,
+          amount,
+          type,
+          status,
+        },
+      });
+
+      return newTransaction;
+    });
+
+    res.status(200).json(transactionResult);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: 'Failed to create transaction', details: error.message });
+  }
+}
+
 
 // Get all transactions
  async function getAllTransaction(req, res){

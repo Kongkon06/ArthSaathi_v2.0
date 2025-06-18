@@ -211,7 +211,7 @@ const AdvisorScreen = () => {
           colors={['#4F46E5', '#7C3AED', '#EC4899']}
           className="pt-5 pb-8 px-5"
         >
-          <View className="items-center">
+          <View className="items-center mt-8">
             <TouchableOpacity onPress={handleReset} className="self-start mb-2.5">
               <Text className="text-white text-base font-semibold">← Back</Text>
             </TouchableOpacity>
