@@ -28,6 +28,20 @@ interface Expense {
   description: string;
 }
 
+const ModalBackdrop: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <View className="flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+      <View 
+        className="flex-1" 
+        style={{ 
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        {children}
+      </View>
+    </View>
+  );
+  
 const QuickActions: React.FC = () => {
   const { user } = useUser();
   const { account } = useAccount();
@@ -148,20 +162,6 @@ const QuickActions: React.FC = () => {
       </View>
       <Text className="text-sm text-gray-700 font-medium text-center">{item.title}</Text>
     </TouchableOpacity>
-  );
-
-  const ModalBackdrop: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <View className="flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-      <View 
-        className="flex-1" 
-        style={{ 
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          backdropFilter: 'blur(10px)',
-        }}
-      >
-        {children}
-      </View>
-    </View>
   );
 
   return (

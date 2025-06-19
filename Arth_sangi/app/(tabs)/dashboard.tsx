@@ -124,8 +124,14 @@ export default function PremiumFinancialDashboard() {
   }
 };
 
+const assignState = () =>{
+  fetchAccount().then(()=>{
+    if(account?.id != '' ){
+      fetchExpenses();
+    }
+  })
+}
   useEffect(() => {
-  let isMounted = true;
 
   Animated.parallel([
     Animated.timing(fadeAnim, {
@@ -145,14 +151,7 @@ export default function PremiumFinancialDashboard() {
       useNativeDriver: true,
     }),
   ]).start();
-
-  fetchAccount().then(() => {
-    if (isMounted) fetchExpenses();
-  });
-
-  return () => {
-    isMounted = false;
-  };
+  assignState();
 }, []); // ← runs only once, no infinite loop
 
 

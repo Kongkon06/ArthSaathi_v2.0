@@ -227,15 +227,15 @@ const MutualFundSchemesScreen = () => {
       <View className="flex-row justify-between mb-3">
         <View className="flex-1 items-center">
           <Text className="text-sm text-blue-600 mb-1">1 Year</Text>
-          <Text className="text-lg font-bold text-green-600">{data.oneYearReturn}%</Text>
+          <Text className="text-lg font-bold text-green-600">{String(data.predictions['1_year_return']).slice(0, 4)}%</Text>
         </View>
         <View className="flex-1 items-center">
           <Text className="text-sm text-blue-600 mb-1">3 Year</Text>
-          <Text className="text-lg font-bold text-blue-600">{data.threeYearReturn}%</Text>
+          <Text className="text-lg font-bold text-blue-600">{String(data.predictions['3_year_return']).slice(0, 4)}%</Text>
         </View>
         <View className="flex-1 items-center">
           <Text className="text-sm text-blue-600 mb-1">5 Year</Text>
-          <Text className="text-lg font-bold text-purple-600">{data.fiveYearReturn}%</Text>
+          <Text className="text-lg font-bold text-purple-600">{String(data.predictions['5_year_return']).slice(0, 4)}%</Text>
         </View>
       </View>
       <View className="items-center">
