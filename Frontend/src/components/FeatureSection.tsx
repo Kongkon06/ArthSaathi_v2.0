@@ -34,11 +34,10 @@ const FeaturesSection = () => {
             <CardContent className="p-8 h-full">
               <div className="flex flex-col h-full">
                 <h3 className="text-2xl font-display font-bold text-trust-navy mb-4">
-                  Multi-Account Integration
+                  AI Investment Strategies
                 </h3>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
-                  Unify your financial world in one place. Connect and manage multiple financial accounts, 
-                  whether they are personal, business, or investment accounts.
+                 Personalized investment recommendations tailored to your family's goals, risk tolerance, and timeline.
                 </p>
                 
                 {/* Credit Card Section */}
@@ -83,11 +82,10 @@ const FeaturesSection = () => {
           <Card className="lg:col-span-7 group hover:shadow-2xl transition-all duration-500 border-0 bg-white overflow-hidden hover:-translate-y-1">
             <CardContent className="p-8 h-full">
               <h3 className="text-2xl font-display font-bold text-trust-navy mb-4">
-                Simplified Transaction Tracking
+                Financial Education Hub
               </h3>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Say goodbye to the hassle of manually categorizing expenses. Our platform automates expense tracking, 
-                helping you understand where your money is going.
+               Interactive lessons, articles, and videos designed for both parents and children.
               </p>
               
               {/* Transaction History Table */}
@@ -128,11 +126,10 @@ const FeaturesSection = () => {
           <Card className="lg:col-span-5 group hover:shadow-2xl transition-all duration-500 border-0 bg-white overflow-hidden hover:-translate-y-1">
             <CardContent className="p-8 h-full">
               <h3 className="text-2xl font-display font-bold text-trust-navy mb-4">
-                Streamlined Budgeting
+               Smart Savings Analytics
               </h3>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Achieve financial discipline with our budgeting tools. Set, track, and manage your budgets effortlessly, 
-                helping you stay on top of your expenses and savings targets.
+              Track expenses automatically and discover personalized ways to save more money each month.
               </p>
               
               {/* Budget Categories */}

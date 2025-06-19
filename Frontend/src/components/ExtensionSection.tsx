@@ -11,6 +11,8 @@ import {
   Shield,
   Zap
 } from "lucide-react";
+import { HiOutlineBell } from "react-icons/hi2";
+import { CiUser } from "react-icons/ci";
 
 const ExtensionSection = () => {
   return (
@@ -78,59 +80,102 @@ const ExtensionSection = () => {
                     {/* Phone Frame */}
                     <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
                       {/* Screen */}
-                      <div className="w-full h-full bg-gradient-to-b from-yellow-400 via-orange-400 to-red-400 rounded-[2rem] p-4 overflow-hidden">
+                      <div className="w-full h-full bg-gray-50 rounded-[2rem] p-4 overflow-hidden">
                         {/* Status Bar */}
-                        <div className="flex justify-between items-center mb-4 text-white text-xs">
+                        <div className="flex justify-between items-center mb-4 text-gray-800 text-xs">
                           <span>9:41</span>
                           <div className="flex gap-1">
-                            <div className="w-4 h-2 bg-white rounded-sm"></div>
-                            <div className="w-4 h-2 bg-white rounded-sm"></div>
-                            <div className="w-4 h-2 bg-white rounded-sm"></div>
+                            <div className="w-4 h-2 bg-gray-400 rounded-sm"></div>
+                            <div className="w-4 h-2 bg-gray-400 rounded-sm"></div>
+                            <div className="w-4 h-2 bg-gray-400 rounded-sm"></div>
                           </div>
                         </div>
                         
                         {/* App Content */}
-                        <div className="space-y-4">
+                        <div className="space-y-4 text-gray-800">
                           {/* Header */}
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-start mb-4">
                             <div>
-                              <div className="text-white text-sm opacity-80">financial health</div>
-                              <div className="text-white text-2xl font-bold">64/100</div>
-                            </div>
-                            <div className="w-8 h-8 bg-white/20 rounded-full"></div>
-                          </div>
-                          
-                          {/* Chart Area */}
-                          <div className="h-20 bg-white/10 rounded-lg flex items-end p-2">
-                            {[...Array(12)].map((_, i) => (
-                              <div 
-                                key={i} 
-                                className="flex-1 bg-white/40 rounded-sm mx-0.5" 
-                                style={{ height: `${Math.random() * 60 + 20}%` }}
-                              ></div>
-                            ))}
-                          </div>
-                          
-                          {/* Cards */}
-                          <div className="space-y-3">
-                            <div className="bg-gray-900 rounded-lg p-3 text-white">
-                              <div className="flex justify-between items-center">
-                                <span className="text-sm opacity-80">total assets</span>
-                                <span className="text-lg font-bold">$14,200</span>
+                              <div className="flex items-center gap-4">
+                                <div className="text-gray-800 text-lg font-semibold flex items-center gap-2">Hello kbora! <span role="img" aria-label="wave">👋</span></div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                                    <HiOutlineBell className="w-4 h-4 text-blue-500" />
+                                  </div>
+                                  <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                                    <CiUser className="w-4 h-4 text-white" />
+                                  </div>
+                                </div>
                               </div>
+                              <div className="text-gray-600 text-sm">Every small step brings you closer to your</div>
+                              <div className="text-gray-600 text-sm">big dreams.</div>
+                              <div className="text-gray-400 text-xs mt-1">Wednesday, June 18, 2025</div>
+                            </div>
+                          </div>
+                          
+                          {/* Total Balance Card */}
+                          <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
+                                  <div className="w-3 h-3 bg-white rounded-sm"></div>
+                                </div>
+                                <span className="text-gray-600 text-sm">Total Balance</span>
+                              </div>
+                              <span className="text-green-500 text-xs">📈 10.2%</span>
+                            </div>
+                            <div className="text-2xl font-bold text-gray-800">₹10000</div>
+                            <div className="text-green-500 text-xs">+₹9,091 from last month</div>
+                          </div>
+                          
+                          {/* Expenses and Savings Cards */}
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-red-50 rounded-lg p-2">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="w-5 h-5 bg-red-100 rounded flex items-center justify-center">
+                                  <div className="w-2 h-2 bg-red-500 rounded-sm"></div>
+                                </div>
+                                <span className="text-red-500 text-xs">📉 5.2%</span>
+                              </div>
+                              <div className="text-xs text-gray-600 mb-1">Monthly Expenses</div>
+                              <div className="text-lg font-bold text-gray-800">₹3000</div>
+                              <div className="text-red-500 text-xs">-₹1,020 from last month</div>
                             </div>
                             
-                            <div className="bg-gray-200 rounded-lg p-3">
-                              <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm text-gray-600">budgets</span>
-                                <span className="text-sm text-gray-600">april</span>
+                            <div className="bg-green-50 rounded-lg p-2">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="w-5 h-5 bg-green-100 rounded flex items-center justify-center">
+                                  <div className="w-2 h-2 bg-green-500 rounded-sm"></div>
+                                </div>
+                                <span className="text-green-500 text-xs">📈 20.5%</span>
                               </div>
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold">$1,600/2000</span>
-                                <span className="text-sm font-medium">80%</span>
+                              <div className="text-xs text-gray-600 mb-1">Savings Rate</div>
+                              <div className="text-lg font-bold text-gray-800">45%</div>
+                              <div className="text-green-500 text-xs">+₹9,091 from last month</div>
+                            </div>
+                          </div>
+                          
+                          {/* Quick Actions */}
+                          <div>
+                            <div className="text-sm font-semibold text-gray-800 mb-2">Quick Actions</div>
+                            <div className="flex gap-2">
+                              <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mb-1">
+                                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">+</div>
+                                </div>
+                                <span className="text-xs text-gray-600">Add Expense</span>
                               </div>
-                              <div className="w-full bg-gray-300 rounded-full h-2 mt-2">
-                                <div className="bg-family-blue h-2 rounded-full" style={{ width: '80%' }}></div>
+                              <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mb-1">
+                                  <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">?</div>
+                                </div>
+                                <span className="text-xs text-gray-600">Govt Schemes</span>
+                              </div>
+                              <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mb-1">
+                                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">⚡</div>
+                                </div>
+                                <span className="text-xs text-gray-600">Saving Goals</span>
                               </div>
                             </div>
                           </div>
