@@ -73,7 +73,7 @@ const HeroSection = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center space-y-4">
                     <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto">
-                      <Play className="h-8 w-8 text-white ml-1" />
+                      <Play className="h-8 w-8 text-white ml-1" /> 
                     </div>
                     <p className="text-white/80 text-lg font-medium">Product Demo Video</p>
                     <p className="text-white/60 text-sm">See ArthSaathi in action</p>

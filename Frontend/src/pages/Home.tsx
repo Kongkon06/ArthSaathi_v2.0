@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { CartesianGrid, XAxis, YAxis } from "recharts";
-import { Area, AreaChart } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, ReferenceLine } from "recharts";
 import {
   Card,
   CardContent,
@@ -127,11 +127,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser }) => (
 const chartConfig = {
   investment: {
     label: "Investment",
-    color: "hsl(217, 91%, 60%)",
+    color: "#10B981",
   },
   expenses: {
     label: "Expenses", 
-    color: "hsl(0, 84%, 60%)",
+    color: "#EF4444",
   },
 };
 
@@ -435,7 +435,7 @@ function Home() {
           <div className="grid flex-1 gap-1 text-center sm:text-left">
             <CardTitle className="text-xl font-bold">Financial Overview</CardTitle>
             <CardDescription className="text-base">
-              Track your investment vs expenses over time
+              Investment vs Expenses Comparison
             </CardDescription>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
@@ -459,74 +459,117 @@ function Home() {
         <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
           <ChartContainer
             config={chartConfig}
-            className="aspect-auto h-[350px] w-full"
+            className="aspect-auto h-[400px] w-full"
           >
-            <AreaChart data={filteredData}>
-              <defs>
-                <linearGradient id="fillInvestment" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--color-investment)" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="var(--color-investment)" stopOpacity={0.1} />
-                </linearGradient>
-                <linearGradient id="fillExpenses" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--color-expenses)" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="var(--color-expenses)" stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                minTickGap={32}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return date.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  });
-                }}
-              />
-              <YAxis 
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
-              />
-              <ChartTooltip
-                cursor={{ strokeDasharray: '3 3' }}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(value) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric"
-                      });
-                    }}
-                    formatter={(value) => [`₹${value.toLocaleString()}`, ""]}
-                    indicator="dot"
-                  />
-                }
-              />
-              <Area
-                dataKey="expenses"
-                type="monotone"
-                fill="url(#fillExpenses)"
-                stroke="var(--color-expenses)"
-                strokeWidth={2}
-                stackId="a"
-              />
-              <Area
-                dataKey="investment"
-                type="monotone"
-                fill="url(#fillInvestment)"
-                stroke="var(--color-investment)"
-                strokeWidth={2}
-                stackId="a"
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-            </AreaChart>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart 
+                data={filteredData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              >
+                <defs>
+                  <linearGradient id="investmentGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.7} />
+                  </linearGradient>
+                  <linearGradient id="expensesGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.7} />
+                  </linearGradient>
+                  <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000000" floodOpacity="0.1"/>
+                  </filter>
+                </defs>
+                <CartesianGrid 
+                  strokeDasharray="3 3" 
+                  stroke="#E5E7EB" 
+                  strokeOpacity={0.6}
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={12}
+                  fontSize={12}
+                  fontWeight={500}
+                  tick={{ fill: '#6B7280' }}
+                  minTickGap={32}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    return date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }}
+                />
+                <YAxis 
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={12}
+                  fontSize={12}
+                  fontWeight={500}
+                  tick={{ fill: '#6B7280' }}
+                  tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+                />
+                <ChartTooltip
+                  cursor={{ 
+                    fill: 'rgba(156, 163, 175, 0.1)',
+                    stroke: 'none'
+                  }}
+                  content={
+                    <ChartTooltipContent
+                      className="rounded-xl border border-gray-200 bg-white/95 backdrop-blur-sm shadow-xl"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric"
+                        });
+                      }}
+                      formatter={(value, name) => [
+                        `₹${value.toLocaleString()}`,
+                        name === 'investment' ? 'Investment' : 'Expenses'
+                      ]}
+                      indicator="dot"
+                    />
+                  }
+                />
+                
+                {/* Investment Bars (Green) */}
+                <Bar
+                  dataKey="investment"
+                  fill="url(#investmentGradient)"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                />
+                
+                {/* Expenses Bars (Red) */}
+                <Bar
+                  dataKey="expenses"
+                  fill="url(#expensesGradient)"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                />
+                
+                <ChartLegend 
+                  content={
+                    <ChartLegendContent 
+                      className="flex justify-center gap-6 mt-4"
+                      nameKey="dataKey"
+                    >
+                      <span className="flex items-center gap-2 text-sm font-medium">
+                        <div className="w-3 h-3 rounded-sm bg-green-500" />
+                        Investment
+                      </span>
+                      <span className="flex items-center gap-2 text-sm font-medium">
+                        <div className="w-3 h-3 rounded-sm bg-red-500" />
+                        Expenses
+                      </span>
+                    </ChartLegendContent>
+                  }
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </ChartContainer>
         </CardContent>
       </Card>
