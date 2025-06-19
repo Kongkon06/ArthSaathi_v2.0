@@ -95,6 +95,7 @@ export default function PremiumFinancialDashboard() {
     try {
       const userAccount: Account = await accountService.getAccount(user.token);
       setAccount(userAccount);
+      fetchExpenses();
     } catch (error) {
       console.error('Error fetching account:', error);
     }
@@ -152,7 +153,7 @@ const assignState = () =>{
     }),
   ]).start();
   assignState();
-}, []); // ← runs only once, no infinite loop
+}, [fetchExpenses]); // ← runs only once, no infinite loop
 
 
   const onRefresh = () => {
