@@ -74,8 +74,8 @@ const ChatModal = () => {
         monthlyIncome: account.monthly_income || 0,
         disposableIncome: account.disposable_amount || 0,
         desiredSavings: account.desired_savings || 0,
-        firstname: account.firstname || 'User',
-        lastname: account.lastname || '',
+        firstname: user.firstname || 'User',
+        lastname: user.lastname || '',
       };
       setUserFinancialData(financialData);
     }
