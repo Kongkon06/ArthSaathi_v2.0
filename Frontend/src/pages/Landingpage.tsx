@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeatureSection";
+import ExtensionSection from "@/components/ExtensionSection";
 import OurMissionSection from "@/components/OurMissionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FloatingCTACard from "@/components/FloatinCTACard";
@@ -52,6 +53,7 @@ const Landingpage = () => {
       <div id="smooth-content">
         <HeroSection />
         <FeaturesSection />
+        <ExtensionSection />
         <OurMissionSection />
         <TestimonialsSection />
         <FloatingCTACard />

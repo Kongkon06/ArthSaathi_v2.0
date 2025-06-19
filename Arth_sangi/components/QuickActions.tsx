@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -64,7 +64,7 @@ const QuickActions: React.FC = () => {
     {
       id: '2',
       title: 'Govt Schemes',
-      icon: 'government-building',
+      icon: 'town-hall',
       color: '#3B82F6',
       bgColor: 'bg-blue-50',
     },
@@ -104,6 +104,19 @@ const QuickActions: React.FC = () => {
         Alert.alert('Coming Soon', `${action.title} feature coming soon!`);
     }
   };
+
+  // Use useCallback to prevent unnecessary re-renders
+  const handleAmountChange = useCallback((text: string) => {
+    setExpenseData(prev => ({ ...prev, amount: text }));
+  }, []);
+
+  const handleDescriptionChange = useCallback((text: string) => {
+    setExpenseData(prev => ({ ...prev, description: text }));
+  }, []);
+
+  const handleCategoryChange = useCallback((category: string) => {
+    setExpenseData(prev => ({ ...prev, category }));
+  }, []);
 
   const handleAddExpense = async () => {
     if (!expenseData.category || !expenseData.amount || !expenseData.description) {
@@ -191,7 +204,7 @@ const QuickActions: React.FC = () => {
                 </TouchableOpacity>
               </View>
               
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                 <View className="space-y-4">
                   {/* Category Selection */}
                   <View>
@@ -200,12 +213,13 @@ const QuickActions: React.FC = () => {
                       horizontal 
                       showsHorizontalScrollIndicator={false}
                       className="mb-2"
+                      keyboardShouldPersistTaps="handled"
                     >
                       <View className="flex-row space-x-2 px-1">
                         {expenseCategories.map((category) => (
                           <TouchableOpacity
                             key={category}
-                            onPress={() => setExpenseData({...expenseData, category})}
+                            onPress={() => handleCategoryChange(category)}
                             className={`px-4 py-2 rounded-full border ${
                               expenseData.category === category 
                                 ? 'bg-blue-100 border-blue-300' 
@@ -232,7 +246,7 @@ const QuickActions: React.FC = () => {
                       <Text className="absolute left-4 top-4 text-gray-500 text-base font-semibold">₹</Text>
                       <TextInput
                         value={expenseData.amount}
-                        onChangeText={(text) => setExpenseData({...expenseData, amount: text})}
+                        onChangeText={handleAmountChange}
                         placeholder="0"
                         keyboardType="numeric"
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 pl-8 text-base font-semibold text-gray-800"
@@ -246,7 +260,7 @@ const QuickActions: React.FC = () => {
                     <Text className="text-sm font-semibold text-gray-700 mb-2">Description</Text>
                     <TextInput
                       value={expenseData.description}
-                      onChangeText={(text) => setExpenseData({...expenseData, description: text})}
+                      onChangeText={handleDescriptionChange}
                       placeholder="What did you spend on?"
                       multiline
                       numberOfLines={3}
