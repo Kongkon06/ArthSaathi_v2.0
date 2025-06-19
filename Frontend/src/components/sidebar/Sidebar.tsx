@@ -13,11 +13,7 @@ import {
   ChevronLeft, 
   ChevronRight, 
   LogOut, 
-  ChevronDown,
-  Bell,
-  Moon,
-  Sun,
-  User
+  ChevronDown
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useUser } from "@/Atoms/UserContext";
@@ -51,7 +47,6 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
   const navigate = useNavigate();
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
@@ -82,12 +77,6 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
 
   }, [isExpanded]);
 
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prev => !prev);
-    // You can implement actual dark mode logic here
-    document.documentElement.classList.toggle('dark');
-  }, []);
 
   const handleLogout = useCallback(() => {
     // Implement logout logic here
@@ -217,52 +206,11 @@ const Sidebar = ({ isExpanded, toggleSidebar }: SidebarProps) => {
                         {user?.email || ""}
                       </p>
                     </div>
-                    <ChevronDown size={16} className={cn(
-                      "text-slate-400 transition-transform duration-200",
-                      showUserMenu && "rotate-180"
-                    )} />
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-
-          {/* User Menu Dropdown */}
-          <AnimatePresence>
-            {isExpanded && showUserMenu && (
-              <motion.div
-                ref={userMenuRef}
-                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-full left-4 right-4 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-2 z-50"
-              >
-                <Link 
-                  to="/profile" 
-                  className="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                >
-                  <User size={16} />
-                  <span>View Profile</span>
-                </Link>
-                <button 
-                  onClick={toggleDarkMode}
-                  className="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors w-full text-left"
-                >
-                  {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-                  <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                </button>
-                <Link 
-                  to="/notifications" 
-                  className="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                >
-                  <Bell size={16} />
-                  <span>Notifications</span>
-                  <span className="ml-auto bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Navigation Menu */}

@@ -89,11 +89,8 @@ export default function AuthForm() {
         localStorage.setItem("userInfo", JSON.stringify(res.user));
         assignState(res.user)
         setSuccessMessage("Login successful! Redirecting...");
+        navigate('/')
         
-        // Add smooth transition delay
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
       } else {
         await userService
           .signUp({
