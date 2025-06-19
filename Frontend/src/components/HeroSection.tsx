@@ -1,15 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import demoVideo from "../assets/demo.mp4";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 200);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!videoRef.current) return;
+      const rect = videoRef.current.getBoundingClientRect();
+      // If the video is out of view (scrolled past), pause it
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -70,6 +87,17 @@ const HeroSection = () => {
             <div className="relative">
               {/* Video Placeholder */}
               <div className="relative aspect-video bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden shadow-2xl">
+                <video
+                  ref={videoRef}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  src={demoVideo}
+                  controls
+                  autoPlay
+                  muted
+                  poster="/video-poster.png" // Optional: placeholder image
+                />
+                {/* Optionally, keep overlay for fallback or remove below */}
+                {/*
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center space-y-4">
                     <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto">
@@ -79,6 +107,7 @@ const HeroSection = () => {
                     <p className="text-white/60 text-sm">See ArthSaathi in action</p>
                   </div>
                 </div>
+                */}
                 
                 {/* Simulated Interface Preview */}
                 <div className="absolute inset-4 bg-gradient-to-br from-white/5 to-white/10 rounded-xl border border-white/10">
