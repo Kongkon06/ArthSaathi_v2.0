@@ -135,11 +135,12 @@ const QuickActions: React.FC = () => {
         console.log("User doenst has an account")
         return 
       }
+      console.log(account.id);
       await expenseService.addExpense({
         category: expenseData.category,
         amount: Number(expenseData.amount),
         type:'Debit',
-        accountId: account?.id ?? '' 
+        accountId: account.id ?? '' 
       }, user.token);
 
       Alert.alert('Success', 'Expense added successfully!');

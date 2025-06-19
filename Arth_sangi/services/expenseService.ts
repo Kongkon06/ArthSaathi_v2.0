@@ -11,6 +11,7 @@ export interface Expense {
   id: string;
   accountId: string;
   amount: number;
+  category: string;
   type: 'Credit' | 'Debit';
   status: 'Success' | 'Failed' | 'Pending';
   createdAt: string;
@@ -107,7 +108,7 @@ export const expenseService = {
 
     // Since we don't have category, group by transaction type as a proxy
     expenses.forEach(expense => {
-      const key = expense.type;
+      const key = expense.category;
       const currentAmount = categoryMap.get(key) || 0;
       categoryMap.set(key, currentAmount + expense.amount);
     });
