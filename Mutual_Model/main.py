@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 # Secure API key usagee
-genai.configure(api_key="AIzaSyCcXsT36P3Uyxu-CCmG3VIXwFflPRUAU2A")
+genai.configure(api_key="Your_API_key")
 
 # Enable CORS
 app.add_middleware(
