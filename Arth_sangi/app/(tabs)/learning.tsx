@@ -15,7 +15,7 @@ import {
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 // YouTube Data API configuration
-const YOUTUBE_API_KEY = 'AIzaSyAbn0JEFCAiWwM4GKcBpFXNw8xDSw_fwdc'; // Replace with your actual API key
+const YOUTUBE_API_KEY = 'Your-Api_key'; // Replace with your actual API key
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Finance-focused search terms for discovering videos
