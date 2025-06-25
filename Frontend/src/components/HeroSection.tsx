@@ -86,10 +86,10 @@ const HeroSection = () => {
           }`}>
             <div className="relative">
               {/* Video Placeholder */}
-              <div className="relative aspect-video bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden shadow-2xl">
+              <div className="relative aspect-video bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-visible shadow-2xl">
                 <video
                   ref={videoRef}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-contain rounded-2xl"
                   src={demoVideo}
                   controls
                   autoPlay
@@ -109,7 +109,7 @@ const HeroSection = () => {
                 </div>
                 */}
                 
-                {/* Simulated Interface Preview */}
+                {/* Simulated Interface Preview 
                 <div className="absolute inset-4 bg-gradient-to-br from-white/5 to-white/10 rounded-xl border border-white/10">
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-4">
@@ -126,7 +126,7 @@ const HeroSection = () => {
                       <div className="h-2 bg-white/10 rounded w-2/3"></div>
                     </div>
                   </div>
-                </div>
+                </div>*/}
               </div>
 
               {/* Floating Elements */}
