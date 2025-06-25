@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import {
     Dimensions,
     SafeAreaView,
@@ -13,7 +13,6 @@ import {
     Alert,
     Platform,
 } from 'react-native';
-//import { BlurView } from 'expo-blur';
 import { LineChart, PieChart } from 'react-native-chart-kit';
 import StatCard from '@/components/StatCard';
 import ChatModal from '@/components/ChatModel';
@@ -26,7 +25,6 @@ import { Account, useAccount } from '@/atoms/AccountContext';
 
 const screenWidth = Dimensions.get('window').width;
 
-// Enhanced chart data with multiple datasets
 const chartData = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
@@ -62,6 +60,31 @@ const chartConfig = {
   },
 };
 
+type Notification = {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+};
+
+const NotificationItem = memo(({ item }: { item: Notification }) => (
+  <View className="p-4 bg-gray-50 rounded-xl mb-3">
+    <Text className="font-semibold text-gray-800 mb-1">{item.title}</Text>
+    <Text className="text-sm text-gray-600 mb-2">{item.message}</Text>
+    <Text className="text-xs text-gray-400">{item.time}</Text>
+  </View>
+));
+
+const ModalBackdrop = memo(({ children }: React.PropsWithChildren<{}>) => (
+  <View className="flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+    <View 
+      className="flex-1" 
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(10px)' }}>
+      {children}
+    </View>
+  </View>
+));
+
 export default function PremiumFinancialDashboard() {
   const { user } = useUser();
   const { account, setAccount } = useAccount();
@@ -71,13 +94,11 @@ export default function PremiumFinancialDashboard() {
   const [showExpenseBreakdown, setShowExpenseBreakdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [pressedStat, setPressedStat] = useState<string | null>(null);
-  
-  // Expense related state
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [expenseChartData, setExpenseChartData] = useState<any[]>([]);
   const [loadingExpenses, setLoadingExpenses] = useState(false);
-  
+
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
@@ -91,82 +112,48 @@ export default function PremiumFinancialDashboard() {
     { id: '3', title: 'Goal Achievement', message: 'Congratulations! You reached your vacation savings goal', time: '1 day ago' },
   ];
 
-  const fetchAccount = async () => {
+  const fetchAccount = useCallback(async () => {
     try {
       const userAccount: Account = await accountService.getAccount(user.token);
       setAccount(userAccount);
-      fetchExpenses();
+      fetchExpenses(userAccount?.id);
     } catch (error) {
       console.error('Error fetching account:', error);
     }
-  };
+  }, [user.token, setAccount]);
 
-  const fetchExpenses = async () => {
-  try {
-    setLoadingExpenses(true);
-
-    // Fetch expenses using accountId (via userId on backend)
-    const userExpenses = await expenseService.getUserExpenses(user.token,account?.id ?? 'fs');
-    setExpenses(userExpenses);
-
-    // Calculate total expenses
-    const total = expenseService.calculateTotalExpenses(userExpenses);
-    setTotalExpenses(total);
-
-    // Format data for chart (grouped by type: Debit/Credit)
-    const chartData = expenseService.formatExpenseDataForChart(userExpenses);
-    setExpenseChartData(chartData);
-
-  } catch (error) {
-    console.error('Error fetching expenses:', error);
-    Alert.alert('Error', 'Failed to fetch expenses');
-  } finally {
-    setLoadingExpenses(false);
-  }
-};
-
-const assignState = () =>{
-  fetchAccount().then(()=>{
-    if(account?.id != '' ){
-      fetchExpenses();
+  const fetchExpenses = useCallback(async (accountId?: string) => {
+    try {
+      setLoadingExpenses(true);
+      const userExpenses = await expenseService.getUserExpenses(user.token, (accountId || account?.id) ?? 'fs');
+      setExpenses(userExpenses);
+      setTotalExpenses(expenseService.calculateTotalExpenses(userExpenses));
+      setExpenseChartData(expenseService.formatExpenseDataForChart(userExpenses));
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+      Alert.alert('Error', 'Failed to fetch expenses');
+    } finally {
+      setLoadingExpenses(false);
     }
-  })
-}
+  }, [user.token, account?.id]);
+
   useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 600, useNativeDriver: true }),
+      Animated.spring(scaleAnim, { toValue: 1, tension: 50, friction: 7, useNativeDriver: true }),
+    ]).start();
+    fetchAccount();
+  }, [fetchAccount]);
 
-  Animated.parallel([
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 800,
-      useNativeDriver: true,
-    }),
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 600,
-      useNativeDriver: true,
-    }),
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      tension: 50,
-      friction: 7,
-      useNativeDriver: true,
-    }),
-  ]).start();
-  assignState();
-}, [fetchExpenses]); // ← runs only once, no infinite loop
-
-
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
-    Promise.all([fetchAccount(), fetchExpenses()]).finally(() => {
+    Promise.all([fetchAccount()]).finally(() => {
       setRefreshing(false);
     });
-  };
+  }, [fetchAccount]);
 
-  const formatCurrency = (amount: number) => {
-    return `₹${amount.toLocaleString('en-IN')}`;
-  };
-
+  const formatCurrency = (amount: number) => `₹${amount.toLocaleString('en-IN')}`;
   const calculateSavingsRate = () => {
     const balance = account?.current_balance
       ? parseFloat(String(account.current_balance).replace(/[₹,]/g, ''))
@@ -177,36 +164,6 @@ const assignState = () =>{
     }
     return '0%';
   };
-
-  type Notification = {
-    id: string;
-    title: string;
-    message: string;
-    time: string;
-  };
-
-  const NotificationItem: React.FC<{ item: Notification }> = ({ item }) => (
-    <View className="p-4 bg-gray-50 rounded-xl mb-3">
-      <Text className="font-semibold text-gray-800 mb-1">{item.title}</Text>
-      <Text className="text-sm text-gray-600 mb-2">{item.message}</Text>
-      <Text className="text-xs text-gray-400">{item.time}</Text>
-    </View>
-  );
-
-  // Enhanced Modal Backdrop with Blur Effect
-  const ModalBackdrop: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <View className="flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-      <View 
-        className="flex-1" 
-        style={{ 
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          backdropFilter: 'blur(10px)',
-        }}
-      >
-        {children}
-      </View>
-    </View>
-  );
 
   const today = new Date();
   const formattedDate = today.toLocaleDateString('en-US', {
@@ -219,7 +176,6 @@ const assignState = () =>{
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }} className="bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
       <ScrollView 
         className="flex-1 px-5 pt-2" 
         showsVerticalScrollIndicator={false}

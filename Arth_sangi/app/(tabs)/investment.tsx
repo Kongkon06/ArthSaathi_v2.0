@@ -139,10 +139,10 @@ const MutualFundSchemesScreen = () => {
   };
 
   // API call function
-  const analyzePerformance = async (fund: any) => {
-  setLoadingFundId(fund.id);
-  setError(null);
-
+   const analyzePerformance = async (fund: any) => {
+    if (loadingFundId === fund.id) return; // Prevent duplicate requests
+    setLoadingFundId(fund.id);
+    setError(null);
   try {
     const API_ENDPOINT = 'https://arthsaathi-1.onrender.com/predict';
 
