@@ -7,7 +7,7 @@ import { useAccount } from '@/atoms/AccountContext';
 import { accountService } from '@/services/getAccount';
 
 // Add your Gemini API key here
-const GEMINI_API_KEY = "AIzaSyCcXsT36P3Uyxu-CCmG3VIXwFflPRUAU2A";
+const GEMINI_API_KEY = "Your_Api_key";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
 interface Message {
