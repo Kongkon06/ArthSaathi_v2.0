@@ -25,7 +25,7 @@ const ExtensionSection = () => {
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-trust-navy mb-6">
             Transform Your Family Financial Future with Our{" "}
-            <span className="text-family-blue">Smart Finnancial App!</span>
+            <span className="text-family-blue">Smart Financial App!</span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
             Take control of your finances, eliminate unnecessar expenses, and build wealth with expert guidance for investment strategy at your fingertips.
