@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // 1. Account interface
 export interface Account {
+ // savingsGoal: number;
   id: string;
   userId: string;
   firstname: string;
@@ -18,7 +19,7 @@ export interface Account {
 // 2. Context type for single account
 interface AccountContextType {
   account: Account | null;
-  setAccount: (account: Account) => void;
+  setAccount: (acc: Account | null) => void;
   updateAccountField: (field: keyof Account, value: string | number) => void;
 }
 

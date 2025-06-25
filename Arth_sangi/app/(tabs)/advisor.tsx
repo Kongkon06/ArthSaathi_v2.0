@@ -112,9 +112,14 @@ const AdvisorScreen = () => {
     };
   }, [calculateInvestmentPlan, calculateAssetAllocation, formData.timeHorizon, formData.currentSavings]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+ const handleInputChange = (field: string, value: string) => {
+    let safeValue = value;
+    if (['income', 'age', 'timeHorizon', 'currentSavings', 'monthlyExpenses'].includes(field)) {
+      safeValue = value.replace(/[^0-9]/g, '');
+    }
+    setFormData(prev => ({ ...prev, [field]: safeValue }));
   };
+
 
   const handleSubmit = () => {
     if (!formData.income || !formData.age || !formData.monthlyExpenses || !formData.timeHorizon) {

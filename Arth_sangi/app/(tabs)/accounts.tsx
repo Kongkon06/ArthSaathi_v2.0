@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Modal,
     SafeAreaView,
@@ -7,6 +7,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Alert
 } from 'react-native';
 import AccountForm from '../../components/AccountForm'
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -15,38 +16,48 @@ import { accountService } from '@/services/getAccount';
 import { useUser } from '@/atoms/UserContext';
 
 const MyAccountsScreen = () => {
-  const { account } = useAccount();
+  const { account, setAccount } = useAccount();
   const { user } = useUser();
   const [sortBy, setSortBy] = useState('Date Created');
   const [showSortModal, setShowSortModal] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const summaryCards = [
     {
       title: 'Total Balance',
-      amount: '₹16,500',
+      amount: account ? `₹${account.current_balance}` : '₹0',
       icon: 'credit-card-outline',
       borderColor: 'border-blue-400',
       bgColor: 'bg-blue-50'
     },
     {
       title: 'Total Income',
-      amount: '₹10,300',
+      amount: account ? `₹${account.monthly_income}` : '₹0',
       icon: 'chart-line',
       borderColor: 'border-green-400',
       bgColor: 'bg-green-50'
     },
     {
       title: 'Savings Goal',
-      amount: '₹5,200',
+      amount: '₹5,200', // Placeholder, replace with actual logic
       icon: 'safe',
       borderColor: 'border-purple-400',
       bgColor: 'bg-purple-50'
     }
   ];
-
   const filteredAccounts = account ? [account] : [];
 
-  const AccountCard = ({ account,user }:any) => (
+  const handleDelete = useCallback(async (id: string) => {
+    try {
+      await accountService.deleteAccount(id, user.token);
+      setAccount(null);
+    } catch (error) {
+      Alert.alert('Delete Failed', 'Unable to delete account.');
+    }
+  }, [user.token, setAccount]);
+
+
+  const AccountCard = React.memo(({ account, user }: any) => (
     <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
       {/* Header */}
       <View className="flex-row items-start justify-between mb-4">
@@ -126,19 +137,18 @@ const MyAccountsScreen = () => {
       )}
 
       {/* Action Buttons */}
-      <View className="flex-row justify-end space-x-3">
-        <TouchableOpacity onPress={() => accountService.deleteAccount(account.id, user.token)} className="flex-row items-center bg-red-100 px-4 py-2 rounded-lg">
+        <View className="flex-row justify-end space-x-3">
+        <TouchableOpacity onPress={() => handleDelete(account.id)} className="flex-row items-center bg-red-100 px-4 py-2 rounded-lg">
           <IconSymbol name='delete-forever-outline' size={20} color='black'/>
           <Text className="text-red-600 text-sm font-medium">Delete</Text>
         </TouchableOpacity>
       </View>
     </View>
-  );
+  ));
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 pt-12">
+   <SafeAreaView className="flex-1 bg-gray-50 pt-12">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className="px-4 pt-4 pb-6">
